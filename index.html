@@ -1,0 +1,612 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Supercept GTM Dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<style>
+  :root{
+    --primary:#0B0BD6;
+    --primary-06:rgba(11,11,214,0.06);
+    --primary-12:rgba(11,11,214,0.12);
+    --secondary:#914BF9;
+    --secondary-10:rgba(145,75,249,0.10);
+    --accent:#19F991;
+    --accent-darker:#19A674;
+    --accent-darker-10:rgba(25,166,116,0.10);
+    --showcase-green:#12A050;
+    --ebony:#1E232C;
+    --ebony-70:#6A6E74;
+    --ebony-65:#737780;
+    --ebony-50:#8F9299;
+    --mercury:#E8E8E8;
+    --surface-light:#F7F7FA;
+    --white:#FFFFFF;
+    --border:rgba(30,35,44,0.10);
+    --border-strong:rgba(30,35,44,0.18);
+    --success-bg:rgba(25,166,116,0.10);
+    --success-text:#0F6E56;
+    --danger-bg:rgba(217,71,71,0.10);
+    --danger-text:#A32D2D;
+    --warn-bg:rgba(186,117,23,0.10);
+    --warn-text:#854F0B;
+    --info-bg:rgba(11,11,214,0.06);
+    --info-text:#0C447C;
+    --r-sm:6px;
+    --r-md:10px;
+    --r-lg:12px;
+    --r-xl:16px;
+    --shadow-resting:0 2px 6px rgba(15,23,42,0.04), 0 16px 40px -16px rgba(15,23,42,0.08);
+    --max:1280px;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{
+    background:var(--white);
+    color:var(--ebony);
+    font-family:"IBM Plex Sans",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+    font-weight:400;
+    font-size:14px;
+    line-height:1.5;
+    letter-spacing:0;
+    -webkit-font-smoothing:antialiased;
+    text-rendering:optimizeLegibility;
+  }
+  .num{font-variant-numeric:tabular-nums;font-feature-settings:"tnum"}
+
+  .wrap{max-width:var(--max);margin:0 auto;padding:0 28px}
+  @media (max-width:640px){.wrap{padding:0 16px}}
+
+  /* Masthead */
+  header.masthead{padding:32px 0 24px;border-bottom:1px solid var(--border);margin-bottom:32px}
+  .masthead-row{
+    display:flex;align-items:flex-start;justify-content:space-between;
+    gap:24px;flex-wrap:wrap;
+  }
+  .brand{display:flex;align-items:baseline;gap:12px;margin-bottom:6px}
+  .brand .mark{font-weight:600;font-size:22px;line-height:1;letter-spacing:-0.01em;color:var(--ebony)}
+  .brand .divider{height:16px;width:1px;background:var(--border-strong);align-self:center}
+  .brand .label{
+    text-transform:uppercase;letter-spacing:0.18em;
+    font-size:11px;font-weight:600;color:var(--primary);
+  }
+  .masthead-meta{font-size:12px;color:var(--ebony-70);margin-top:4px}
+  .freshness{text-align:right;color:var(--ebony-70);font-size:13px;line-height:1.45}
+  .freshness .dot{
+    display:inline-block;width:7px;height:7px;border-radius:50%;
+    background:var(--accent-darker);margin-right:6px;vertical-align:middle;
+  }
+  .freshness.stale .dot{background:#F2DC13}
+  .freshness small{
+    display:block;font-size:11px;margin-top:4px;
+    text-transform:uppercase;letter-spacing:0.18em;font-weight:600;
+  }
+
+  /* Section labels */
+  .sl{
+    font-size:13px;font-weight:600;color:var(--ebony);
+    margin:0 0 4px;letter-spacing:0;
+  }
+  .sr{
+    font-size:11.5px;color:var(--ebony-70);
+    margin:0 0 14px;line-height:1.5;
+  }
+
+  /* Metric card primitives */
+  .mc{
+    background:var(--surface-light);
+    border-radius:var(--r-md);
+    padding:14px 16px;
+  }
+  .mc.featured{
+    background:var(--white);
+    border:1px solid var(--border-strong);
+  }
+  .mc .lbl{
+    margin:0 0 4px;font-size:11.5px;color:var(--ebony-70);font-weight:500;
+  }
+  .mc .val{
+    margin:0;font-size:24px;font-weight:500;line-height:1;letter-spacing:-0.01em;
+    color:var(--ebony);
+    font-variant-numeric:tabular-nums;font-feature-settings:"tnum";
+  }
+  .mc .val.success{color:var(--accent-darker)}
+  .mc .val.muted{color:var(--ebony-50)}
+  .mc .val.info{color:var(--primary)}
+  .mc .sub{
+    margin:4px 0 0;font-size:11px;color:var(--ebony-70);line-height:1.4;
+  }
+  .mc .conn{
+    margin:8px 0 0;padding-top:8px;
+    border-top:1px solid var(--border);
+    font-size:11.5px;color:var(--ebony-70);
+    display:flex;justify-content:space-between;align-items:baseline;
+  }
+  .mc .conn b{
+    color:var(--ebony);font-weight:500;font-size:13px;
+    font-variant-numeric:tabular-nums;
+  }
+  .mc-ph{
+    background:var(--surface-light);border-radius:var(--r-md);
+    padding:14px 16px;opacity:0.6;
+  }
+  .mc-ph .lbl{margin:0 0 4px;font-size:11.5px;color:var(--ebony-70);font-weight:500}
+  .mc-ph .val{margin:0;font-size:24px;font-weight:500;color:var(--ebony-50);font-variant-numeric:tabular-nums;line-height:1}
+  .mc-ph .sub{margin:4px 0 0;font-size:11px;color:var(--ebony-70)}
+
+  /* Card grids */
+  .mc-grid-4{
+    display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
+    gap:10px;margin-bottom:12px;
+  }
+  .mc-grid-2{
+    display:grid;grid-template-columns:repeat(2,1fr);
+    gap:10px;margin-bottom:12px;
+  }
+  @media (max-width:520px){.mc-grid-2{grid-template-columns:1fr}}
+
+  /* Panel (used for charts, funnel, pipeline) */
+  .panel{
+    background:var(--white);
+    border:1px solid var(--border);
+    border-radius:var(--r-lg);
+    padding:20px 22px;
+    margin-bottom:14px;
+    box-shadow:var(--shadow-resting);
+  }
+  .panel-title{
+    margin:0 0 10px;font-size:13px;font-weight:600;color:var(--ebony);
+  }
+  .panel-legend{
+    display:flex;gap:18px;flex-wrap:wrap;margin-bottom:14px;
+    font-size:11.5px;color:var(--ebony-70);
+  }
+  .panel-legend span{display:flex;align-items:center;gap:6px}
+  .panel-legend i{
+    width:10px;height:10px;border-radius:2px;display:inline-block;
+  }
+
+  /* Divider */
+  .div{height:1px;background:var(--border);margin:32px 0}
+
+  /* Sequence card (sc) */
+  .seq-grid{
+    display:grid;grid-template-columns:repeat(auto-fit,minmax(310px,1fr));
+    gap:12px;margin-bottom:20px;
+  }
+  .sc{
+    background:var(--white);
+    border:1px solid var(--border);
+    border-radius:var(--r-lg);
+    padding:16px 18px;
+    box-shadow:var(--shadow-resting);
+  }
+  .sc-head{
+    display:flex;justify-content:space-between;align-items:flex-start;
+    gap:10px;margin-bottom:12px;
+  }
+  .sc-head .name{margin:0;font-size:12.5px;font-weight:500;line-height:1.4;color:var(--ebony)}
+  .sc-head .meta{
+    margin:4px 0 0;font-size:11px;color:var(--ebony-70);
+    font-variant-numeric:tabular-nums;
+  }
+  .sc-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:6px}
+  .ss{
+    background:var(--surface-light);border-radius:var(--r-sm);
+    padding:8px 10px;min-width:0;
+  }
+  .ss .l{margin:0 0 2px;font-size:10.5px;color:var(--ebony-70);font-weight:500}
+  .ss .v{
+    margin:0;font-size:16px;font-weight:500;line-height:1.1;
+    color:var(--ebony);
+    font-variant-numeric:tabular-nums;font-feature-settings:"tnum";
+  }
+  .ss .v.success{color:var(--accent-darker)}
+  .ss .v.danger{color:var(--danger-text)}
+  .ss .v.info{color:var(--primary)}
+  .ss .v.muted{color:var(--ebony-50)}
+  .ss .v.warn{color:var(--warn-text)}
+
+  /* Pills (status badges) */
+  .pill{
+    display:inline-block;font-size:11px;font-weight:600;
+    padding:3px 10px;border-radius:99px;line-height:1.4;
+    flex-shrink:0;text-transform:lowercase;letter-spacing:0;
+  }
+  .pill.active{background:var(--success-bg);color:var(--success-text)}
+  .pill.paused{background:var(--surface-light);color:var(--ebony-70)}
+  .pill.danger{background:var(--danger-bg);color:var(--danger-text)}
+  .pill.warn{background:var(--warn-bg);color:var(--warn-text)}
+  .pill.success{background:var(--success-bg);color:var(--success-text)}
+  .pill.info{background:var(--info-bg);color:var(--info-text)}
+
+  /* Funnel */
+  #funnel{padding:6px 0}
+  .funnel-row{display:flex;flex-direction:column;align-items:center;margin-bottom:2px}
+  .funnel-drop{
+    font-size:11.5px;color:var(--ebony-70);padding:5px 0;text-align:center;
+  }
+  .funnel-drop b{color:var(--ebony);font-weight:500}
+  .funnel-bar{
+    border-radius:var(--r-sm);padding:11px 16px;
+    display:flex;justify-content:space-between;align-items:center;gap:10px;
+    box-sizing:border-box;color:var(--white);
+  }
+  .funnel-bar .left p:first-child{
+    margin:0;font-size:12.5px;font-weight:500;color:var(--white);
+  }
+  .funnel-bar .left p:last-child{
+    margin:2px 0 0;font-size:11px;color:rgba(255,255,255,0.78);
+  }
+  .funnel-bar .right{
+    text-align:right;flex-shrink:0;
+    font-size:20px;font-weight:500;
+    font-variant-numeric:tabular-nums;font-feature-settings:"tnum";
+  }
+
+  /* Pipeline */
+  .pipeline-flow{
+    display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));
+    gap:1px;background:var(--border);border-radius:var(--r-md);
+    overflow:hidden;margin-bottom:10px;
+  }
+  .pstage{
+    background:var(--white);padding:14px 12px;text-align:center;
+  }
+  .pstage .lbl{
+    margin:0 0 4px;font-size:11px;color:var(--ebony-70);font-weight:500;
+  }
+  .pstage .val{
+    margin:0;font-size:24px;font-weight:500;line-height:1;letter-spacing:-0.01em;
+    color:var(--ebony);
+    font-variant-numeric:tabular-nums;font-feature-settings:"tnum";
+  }
+  .pstage .val.muted{color:var(--ebony-50)}
+
+  /* Inline notes */
+  .note{
+    font-size:11.5px;color:var(--ebony-70);
+    background:var(--surface-light);border-radius:var(--r-md);
+    padding:10px 12px;margin-top:10px;line-height:1.5;
+  }
+  .note.setup{display:flex;align-items:flex-start;gap:8px}
+  .note .icon{flex-shrink:0;margin-top:1px;color:var(--primary)}
+  .note .icon svg{width:14px;height:14px;display:block;stroke:currentColor;stroke-width:1.75;fill:none}
+
+  /* Footer */
+  footer{
+    margin-top:80px;padding:32px 0 40px;
+    border-top:1px solid var(--border);
+    color:var(--ebony-70);font-size:12.5px;
+    display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:14px;
+  }
+  footer a{color:var(--primary);text-decoration:none;font-weight:500}
+  footer a:hover{text-decoration:underline}
+  footer code{
+    font-family:"IBM Plex Sans",sans-serif;font-size:12px;
+    color:var(--ebony);background:var(--surface-light);
+    padding:2px 8px;border-radius:var(--r-sm);
+  }
+
+  /* Loading + error */
+  .loading{padding:80px 0;text-align:center;color:var(--ebony-70);font-size:13px}
+  .error{
+    padding:20px;background:var(--warn-bg);border:1px solid rgba(186,117,23,0.30);
+    border-radius:var(--r-md);color:var(--warn-text);font-size:13px;margin:20px 0;
+  }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+  <header class="masthead">
+    <div class="masthead-row">
+      <div>
+        <div class="brand">
+          <span class="mark">Supercept</span>
+          <span class="divider"></span>
+          <span class="label">GTM Dashboard</span>
+        </div>
+        <div class="masthead-meta" id="masthead-meta">Loading...</div>
+      </div>
+      <div class="freshness" id="freshness">
+        <div><span class="dot"></span><span id="as-of">Loading...</span></div>
+        <small id="freshness-label">Live</small>
+      </div>
+    </div>
+  </header>
+
+  <div id="app">
+    <div class="loading">Loading dashboard data...</div>
+  </div>
+
+  <footer>
+    <div>Source: <code>data.json</code> · refreshed daily via Cowork pipeline plus on-demand</div>
+    <div><a href="https://www.notion.so/36e406423d7181e69e88e5d0d718f4a3">PRD</a> &middot; <a href="https://www.notion.so/36e406423d718113b3f6c9d33c8d9488">Metrics spec</a></div>
+  </footer>
+
+</div>
+
+<script>
+const INLINE_DATA = {"last_updated":"2026-05-28T19:00:00+10:00","as_of_label":"28 May 2026","feed_label":"HubSpot live · outbound feed 27 May 10:48 UTC · ANZ filter active","icp":{"combined":{"total":4679,"core_5_19":2721,"core_pct":58.2,"borderline_3_4":1134,"borderline_pct":24.2,"high_value_20p":824,"high_value_pct":17.6,"ceo_contacts":2959,"ceo_1st":319,"ceo_1st_pct":10.8,"cro_contacts":1190,"cro_1st":222,"cro_1st_pct":18.7},"hubspot":{"total":1854,"core_5_19":990,"core_pct":53.4,"borderline_3_4":612,"borderline_pct":33.0,"high_value_20p":252,"hv_20_49":173,"hv_50p":79,"ceo_contacts":1134,"ceo_1st":199,"ceo_1st_pct":17.5,"cro_contacts":615,"cro_1st":131,"cro_1st_pct":21.3},"non_hubspot":{"total":2825,"core_5_19":1731,"core_pct":61.3,"borderline_3_4":522,"borderline_pct":18.5,"high_value_20p":572,"hv_20_49":365,"hv_50p":207,"ceo_contacts":1825,"ceo_1st":120,"ceo_1st_pct":6.6,"cro_contacts":575,"cro_1st":91,"cro_1st_pct":15.8}},"bands":{"labels":["3 sellers","4 sellers","5-9 sellers","10-19 sellers","20-49 sellers","50+ sellers"],"hubspot":[308,304,630,360,173,79],"non_hubspot":[92,430,1080,651,365,207]},"sequences":[{"id":"seq1","reply_id":"1658117","list_id":"182","name":"LI connect only - ANZ 2nd Degree Connection CEOs at 3+ Rep Companies Using HubSpot","short_name":"CEO HubSpot","status":"active","new":281,"pending":88,"finished":444,"connected":67,"total":831,"accept_rate":12.2,"rate_per_day":50,"runway_days":5.6},{"id":"seq2","reply_id":"1676940","list_id":"183","name":"LI Connect Only - ANZ 2nd Degree Connection CROs at 3+ Rep Companies Using HubSpot","short_name":"CRO HubSpot","status":"active","new":160,"pending":86,"finished":174,"connected":54,"total":428,"accept_rate":20.1,"rate_per_day":50,"runway_days":3.2},{"id":"seq3","reply_id":"1695697","list_id":"184","name":"LI connect only - ANZ 2nd Degree Connection CEOs at 3+ Rep Companies - Non-HubSpot","short_name":"CEO Non-HubSpot","status":"paused","new":699,"pending":0,"finished":0,"connected":0,"total":699,"accept_rate":null,"rate_per_day":50,"runway_days":14.0},{"id":"seq4","reply_id":"1695700","list_id":"185","name":"LI Connect Only - ANZ 2nd Degree Connection CROs at 3+ Rep Companies - Non-HubSpot","short_name":"CRO Non-HubSpot","status":"paused","new":175,"pending":0,"finished":0,"connected":0,"total":175,"accept_rate":null,"rate_per_day":50,"runway_days":3.5}],"funnel":{"icp_contacts":4149,"enrolled":2133,"enrolled_pct_of_icp":51.4,"invite_sent":913,"invite_sent_pct_of_enrolled":42.8,"connected":121,"connected_pct_of_invited":13.3,"note":"non-HubSpot sequences currently paused (874 contacts queued, 0 invites sent)"},"pipeline":{"stages":[{"key":"awaiting_booking","label":"Awaiting booking","deals":1},{"key":"intake_booked","label":"Intake booked","deals":1},{"key":"decision_pending","label":"Decision pending","deals":null},{"key":"accepted","label":"Accepted","deals":null},{"key":"onboarding","label":"Onboarding","deals":null}],"note":"Live applications populate once outbound sequences activate."},"ga4":{"status":"pending","setup_note":"Windsor.ai GA4 connector live for property G-HC97LYRCFE. Cowork pipeline build pending to wire weekly snapshot.","sessions":null,"users":null,"engaged_pct":null,"qualified":null,"qualified_cvr":null,"intake":null,"intake_cvr":null,"disqualified":null,"disqualified_cvr":null},"linkedin":{"status":"fallback","setup_note":"PerfectPost MCP connected. Follower count exposed via fallback until live read confirmed.","followers":15611,"new_followers_30d":69,"profile_views":null,"impressions":null,"engagement":null}};
+
+const fmt = n => n === null || n === undefined ? '—' : (typeof n === 'number' ? n.toLocaleString('en-AU') : n);
+const fmtPct = n => n === null || n === undefined ? '—' : n.toFixed(1) + '%';
+
+function runwayPill(days, status) {
+  if (status === 'paused') return { cls:'paused', text:'paused' };
+  if (days < 3) return { cls:'danger', text:'~' + days.toFixed(1) + 'd ⚠' };
+  if (days < 7) return { cls:'warn', text:'~' + days.toFixed(1) + 'd' };
+  return { cls:'success', text:'~' + days.toFixed(1) + 'd' };
+}
+
+function runwayValClass(days, status) {
+  if (status === 'paused') return 'muted';
+  if (days < 3) return 'danger';
+  if (days < 7) return 'warn';
+  return 'success';
+}
+
+async function loadData() {
+  try {
+    const res = await fetch('data.json?t=' + Date.now());
+    if (!res.ok) throw new Error('not-ok');
+    const data = await res.json();
+    render(data);
+  } catch (e) {
+    console.info('Using inline fallback data:', e.message);
+    render(INLINE_DATA);
+  }
+}
+
+function render(d) {
+  // freshness
+  const fetched = new Date(d.last_updated);
+  const now = new Date();
+  const hours = (now - fetched) / 36e5;
+  document.getElementById('as-of').textContent = d.as_of_label;
+  document.getElementById('freshness-label').textContent = hours < 24 ? 'Live' : 'Stale';
+  document.getElementById('masthead-meta').textContent = d.feed_label;
+  if (hours >= 24) document.getElementById('freshness').classList.add('stale');
+
+  document.getElementById('app').innerHTML = `
+
+    <!-- COMBINED ICP -->
+    <p class="sl">ICP database — combined ANZ</p>
+    <p class="sr">All ANZ companies · No. Sellers = 3, 4, 5-9, 10-19, 20-49, 50+ · Company Country = Australia or New Zealand</p>
+    <div class="mc-grid-4">
+      <div class="mc featured"><p class="lbl">Total ICP</p><p class="val">${fmt(d.icp.combined.total)}</p><p class="sub">all ANZ companies</p></div>
+      <div class="mc featured"><p class="lbl">Core ICP (5-19)</p><p class="val success">${fmt(d.icp.combined.core_5_19)}</p><p class="sub">${d.icp.combined.core_pct}% of combined</p></div>
+      <div class="mc featured"><p class="lbl">Borderline (3-4)</p><p class="val muted">${fmt(d.icp.combined.borderline_3_4)}</p><p class="sub">${d.icp.combined.borderline_pct}% of combined</p></div>
+      <div class="mc featured"><p class="lbl">High value (20+)</p><p class="val info">${fmt(d.icp.combined.high_value_20p)}</p><p class="sub">${d.icp.combined.high_value_pct}% of combined</p></div>
+    </div>
+    <div class="mc-grid-2">
+      <div class="mc featured"><p class="lbl">CEO contacts</p><p class="val">${fmt(d.icp.combined.ceo_contacts)}</p><p class="sub">all ANZ ICP companies</p><div class="conn">1st connections<b>${fmt(d.icp.combined.ceo_1st)} · ${d.icp.combined.ceo_1st_pct}%</b></div></div>
+      <div class="mc featured"><p class="lbl">CRO contacts</p><p class="val">${fmt(d.icp.combined.cro_contacts)}</p><p class="sub">all ANZ ICP companies</p><div class="conn">1st connections<b>${fmt(d.icp.combined.cro_1st)} · ${d.icp.combined.cro_1st_pct}%</b></div></div>
+    </div>
+
+    <div class="div"></div>
+
+    <!-- HUBSPOT ICP -->
+    <p class="sl">ICP database — HubSpot ANZ</p>
+    <p class="sr">HubSpot Technologies = True · No. Sellers = 3, 4, 5-9, 10-19, 20-49, 50+ · Company Country = Australia or New Zealand</p>
+    <div class="mc-grid-4">
+      <div class="mc"><p class="lbl">Total ICP</p><p class="val">${fmt(d.icp.hubspot.total)}</p><p class="sub">HubSpot ANZ companies</p></div>
+      <div class="mc"><p class="lbl">Core ICP (5-19)</p><p class="val success">${fmt(d.icp.hubspot.core_5_19)}</p><p class="sub">${d.icp.hubspot.core_pct}%</p></div>
+      <div class="mc"><p class="lbl">Borderline (3-4)</p><p class="val muted">${fmt(d.icp.hubspot.borderline_3_4)}</p><p class="sub">${d.icp.hubspot.borderline_pct}%</p></div>
+      <div class="mc"><p class="lbl">High value (20+)</p><p class="val info">${fmt(d.icp.hubspot.high_value_20p)}</p><p class="sub">20-49: ${d.icp.hubspot.hv_20_49} · 50+: ${d.icp.hubspot.hv_50p}</p></div>
+    </div>
+    <div class="mc-grid-2">
+      <div class="mc"><p class="lbl">CEO contacts</p><p class="val">${fmt(d.icp.hubspot.ceo_contacts)}</p><p class="sub">at HubSpot ICP companies</p><div class="conn">1st connections<b>${fmt(d.icp.hubspot.ceo_1st)} · ${d.icp.hubspot.ceo_1st_pct}%</b></div></div>
+      <div class="mc"><p class="lbl">CRO contacts</p><p class="val">${fmt(d.icp.hubspot.cro_contacts)}</p><p class="sub">at HubSpot ICP companies</p><div class="conn">1st connections<b>${fmt(d.icp.hubspot.cro_1st)} · ${d.icp.hubspot.cro_1st_pct}%</b></div></div>
+    </div>
+
+    <div class="div"></div>
+
+    <!-- NON-HUBSPOT ICP -->
+    <p class="sl">ICP database — non-HubSpot ANZ</p>
+    <p class="sr">HubSpot Technologies ≠ True · No. Sellers = 3, 4, 5-9, 10-19, 20-49, 50+ · Company Country = Australia or New Zealand</p>
+    <div class="mc-grid-4">
+      <div class="mc"><p class="lbl">Total ICP</p><p class="val">${fmt(d.icp.non_hubspot.total)}</p><p class="sub">non-HubSpot ANZ companies</p></div>
+      <div class="mc"><p class="lbl">Core ICP (5-19)</p><p class="val success">${fmt(d.icp.non_hubspot.core_5_19)}</p><p class="sub">${d.icp.non_hubspot.core_pct}%</p></div>
+      <div class="mc"><p class="lbl">Borderline (3-4)</p><p class="val muted">${fmt(d.icp.non_hubspot.borderline_3_4)}</p><p class="sub">${d.icp.non_hubspot.borderline_pct}%</p></div>
+      <div class="mc"><p class="lbl">High value (20+)</p><p class="val info">${fmt(d.icp.non_hubspot.high_value_20p)}</p><p class="sub">20-49: ${d.icp.non_hubspot.hv_20_49} · 50+: ${d.icp.non_hubspot.hv_50p}</p></div>
+    </div>
+    <div class="mc-grid-2">
+      <div class="mc"><p class="lbl">CEO contacts</p><p class="val">${fmt(d.icp.non_hubspot.ceo_contacts)}</p><p class="sub">at non-HubSpot ICP companies</p><div class="conn">1st connections<b>${fmt(d.icp.non_hubspot.ceo_1st)} · ${d.icp.non_hubspot.ceo_1st_pct}%</b></div></div>
+      <div class="mc"><p class="lbl">CRO contacts</p><p class="val">${fmt(d.icp.non_hubspot.cro_contacts)}</p><p class="sub">at non-HubSpot ICP companies</p><div class="conn">1st connections<b>${fmt(d.icp.non_hubspot.cro_1st)} · ${d.icp.non_hubspot.cro_1st_pct}%</b></div></div>
+    </div>
+
+    <!-- BAND CHART -->
+    <div class="panel">
+      <p class="panel-title">Companies by seller band — HubSpot vs non-HubSpot</p>
+      <div class="panel-legend">
+        <span><i style="background:var(--primary)"></i>HubSpot ANZ</span>
+        <span><i style="background:var(--secondary)"></i>Non-HubSpot ANZ</span>
+      </div>
+      <div style="position:relative;width:100%;height:220px"><canvas id="bandChart"></canvas></div>
+    </div>
+
+    <div class="div"></div>
+
+    <!-- OUTBOUND ENGINE -->
+    <p class="sl">Outbound engine — Reply.io</p>
+    <p class="sr">New = queued, not yet in sequence · Pending = invite sent, awaiting acceptance · Finished = sequence complete · Connected = accepted · Runway at 50/day assumed rate</p>
+    <div class="seq-grid">
+      ${d.sequences.map(s => {
+        const runway = runwayPill(s.runway_days, s.status);
+        const runwayLabel = s.status === 'paused' ? 'If active' : 'Runway';
+        const runwayValCls = runwayValClass(s.runway_days, s.status);
+        return `
+          <div class="sc">
+            <div class="sc-head">
+              <div>
+                <p class="name">${s.name}</p>
+                <p class="meta">${s.reply_id} &middot; List ${s.list_id}</p>
+              </div>
+              <span class="pill ${runway.cls}">${runway.text}</span>
+            </div>
+            <div class="sc-stats">
+              <div class="ss"><p class="l">New</p><p class="v ${s.status === 'paused' ? 'info' : (s.short_name === 'CRO HubSpot' && s.new === 160 ? 'danger' : '')}">${fmt(s.new)}</p></div>
+              <div class="ss"><p class="l">Pending</p><p class="v ${s.pending === 0 ? 'muted' : ''}">${fmt(s.pending)}</p></div>
+              <div class="ss"><p class="l">Finished</p><p class="v ${s.finished === 0 ? 'muted' : ''}">${fmt(s.finished)}</p></div>
+              <div class="ss"><p class="l">Connected</p><p class="v ${s.connected > 0 ? 'success' : 'muted'}">${fmt(s.connected)}</p></div>
+            </div>
+            <div class="sc-stats">
+              <div class="ss"><p class="l">Total</p><p class="v">${fmt(s.total)}</p></div>
+              <div class="ss"><p class="l">Accept rate</p><p class="v ${s.accept_rate === null ? 'muted' : ''}">${s.accept_rate === null ? '—' : s.accept_rate + '%'}</p></div>
+              <div class="ss"><p class="l">Rate</p><p class="v">${s.rate_per_day}/d</p></div>
+              <div class="ss"><p class="l">${runwayLabel}</p><p class="v ${runwayValCls}">~${s.runway_days.toFixed(1)}d${s.status !== 'paused' && s.runway_days < 7 ? ' ⚠' : ''}</p></div>
+            </div>
+          </div>
+        `;
+      }).join('')}
+    </div>
+
+    <div class="div"></div>
+
+    <!-- OUTREACH FUNNEL -->
+    <p class="sl">Outreach funnel</p>
+    <p class="sr">ICP contacts in HubSpot database → enrolled in Reply.io sequences → invite sent → connected · ${d.funnel.note}</p>
+    <div class="panel">
+      <div id="funnel"></div>
+    </div>
+
+    <div class="div"></div>
+
+    <!-- BETA PIPELINE -->
+    <p class="sl">Beta pipeline</p>
+    <p class="sr">HubSpot pipeline 1663910348 · test records excluded · stages match private beta lifecycle</p>
+    <div class="panel">
+      <div class="pipeline-flow">
+        ${d.pipeline.stages.map(st => `
+          <div class="pstage">
+            <p class="lbl">${st.label}</p>
+            <p class="val ${st.deals === null ? 'muted' : ''}">${st.deals === null ? '—' : st.deals}</p>
+          </div>
+        `).join('')}
+      </div>
+      <p style="margin:0;font-size:11.5px;color:var(--ebony-70)">${d.pipeline.note}</p>
+    </div>
+
+    <div class="div"></div>
+
+    <!-- GA4 -->
+    <p class="sl">Website — GA4</p>
+    <p class="sr">Key events live from 28 May 2026 · GA4 property G-HC97LYRCFE</p>
+    <div class="mc-grid-4">
+      <div class="${d.ga4.sessions === null ? 'mc-ph' : 'mc'}"><p class="lbl">Sessions</p><p class="val">${fmt(d.ga4.sessions)}</p><p class="sub">this week</p></div>
+      <div class="${d.ga4.qualified === null ? 'mc-ph' : 'mc'}"><p class="lbl">Qualified applications</p><p class="val">${fmt(d.ga4.qualified)}</p><p class="sub">beta_application_qualified</p></div>
+      <div class="${d.ga4.disqualified === null ? 'mc-ph' : 'mc'}"><p class="lbl">Disqualified</p><p class="val">${fmt(d.ga4.disqualified)}</p><p class="sub">beta_application_disqualified</p></div>
+      <div class="${d.ga4.intake === null ? 'mc-ph' : 'mc'}"><p class="lbl">Intake calls booked</p><p class="val">${fmt(d.ga4.intake)}</p><p class="sub">intake_call_booked</p></div>
+      <div class="${d.ga4.qualified_cvr === null ? 'mc-ph' : 'mc'}"><p class="lbl">Conversion rate</p><p class="val">${fmt(d.ga4.qualified_cvr)}</p><p class="sub">qualified / sessions</p></div>
+    </div>
+    ${d.ga4.status === 'pending' ? `
+      <div class="note setup">
+        <span class="icon"><svg viewBox="0 0 24 24"><path d="M9 2v6"/><path d="M15 2v6"/><path d="M12 17v5"/><path d="M5 8h14a2 2 0 0 1 2 2v5a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4v-5a2 2 0 0 1 2-2z"/></svg></span>
+        <span>${d.ga4.setup_note}</span>
+      </div>
+    ` : ''}
+
+    <div class="div"></div>
+
+    <!-- LINKEDIN -->
+    <p class="sl">LinkedIn — Aaron's profile</p>
+    <p class="sr">Personal profile analytics via PerfectPost MCP</p>
+    <div class="mc-grid-4">
+      <div class="mc"><p class="lbl">Followers</p><p class="val">${fmt(d.linkedin.followers)}</p><p class="sub">+${d.linkedin.new_followers_30d} last 30d</p></div>
+      <div class="${d.linkedin.impressions === null ? 'mc-ph' : 'mc'}"><p class="lbl">Impressions</p><p class="val">${fmt(d.linkedin.impressions)}</p><p class="sub">this week</p></div>
+      <div class="${d.linkedin.engagement === null ? 'mc-ph' : 'mc'}"><p class="lbl">Engagement rate</p><p class="val">${fmt(d.linkedin.engagement)}</p><p class="sub">interactions / impressions</p></div>
+      <div class="${d.linkedin.profile_views === null ? 'mc-ph' : 'mc'}"><p class="lbl">Profile views</p><p class="val">${fmt(d.linkedin.profile_views)}</p><p class="sub">this week</p></div>
+    </div>
+    ${d.linkedin.status === 'fallback' ? `
+      <div class="note setup">
+        <span class="icon"><svg viewBox="0 0 24 24"><path d="M9 2v6"/><path d="M15 2v6"/><path d="M12 17v5"/><path d="M5 8h14a2 2 0 0 1 2 2v5a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4v-5a2 2 0 0 1 2-2z"/></svg></span>
+        <span>${d.linkedin.setup_note}</span>
+      </div>
+    ` : ''}
+
+  `;
+
+  // Bar chart
+  setTimeout(() => {
+    const ctx = document.getElementById('bandChart');
+    if (!ctx || !window.Chart) return;
+    new Chart(ctx.getContext('2d'), {
+      type: 'bar',
+      data: {
+        labels: d.bands.labels,
+        datasets: [
+          { label: 'HubSpot ANZ', data: d.bands.hubspot, backgroundColor: '#0B0BD6', borderRadius: 3, borderSkipped: false },
+          { label: 'Non-HubSpot ANZ', data: d.bands.non_hubspot, backgroundColor: '#914BF9', borderRadius: 3, borderSkipped: false }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { display: false },
+          tooltip: { callbacks: { label: (c) => c.dataset.label + ': ' + c.raw.toLocaleString() } }
+        },
+        scales: {
+          x: { grid: { color: 'rgba(30,35,44,0.06)' }, ticks: { color: '#6A6E74', font: { size: 11, family: 'IBM Plex Sans' }, autoSkip: false, maxRotation: 30 } },
+          y: { grid: { color: 'rgba(30,35,44,0.06)' }, ticks: { color: '#6A6E74', font: { size: 11, family: 'IBM Plex Sans' }, callback: (v) => v.toLocaleString() } }
+        }
+      }
+    });
+  }, 0);
+
+  // Funnel
+  const container = document.getElementById('funnel');
+  if (container) {
+    const stages = [
+      { label: 'ICP contacts in HubSpot', sub: 'CEO + CRO, all ANZ ICP companies', n: d.funnel.icp_contacts, pct: null },
+      { label: 'Enrolled in sequences', sub: 'across all 4 Reply.io sequences', n: d.funnel.enrolled, pct: d.funnel.enrolled_pct_of_icp + '% of ICP' },
+      { label: 'Invite sent', sub: 'active HubSpot sequences · non-HS paused', n: d.funnel.invite_sent, pct: d.funnel.invite_sent_pct_of_enrolled + '% of enrolled' },
+      { label: 'Connected', sub: 'accepted LinkedIn connection', n: d.funnel.connected, pct: d.funnel.connected_pct_of_invited + '% of invited' }
+    ];
+    // Brand-blue gradient from light to deep for funnel depth
+    const colors = ['#0B0BD6', '#1B26C9', '#2640BC', '#3357AF'];
+    const colorsAlt = ['#0B0BD6', '#0A50B0', '#0A6B92', '#0F6E56']; // blue-to-green journey
+    const maxN = stages[0].n;
+    const minW = 22, maxW = 100;
+    const w = (n) => Math.round(minW + (maxW - minW) * Math.sqrt(n / maxN));
+
+    container.innerHTML = '';
+    stages.forEach((s, i) => {
+      const row = document.createElement('div');
+      row.className = 'funnel-row';
+      if (i > 0) {
+        const drop = document.createElement('div');
+        drop.className = 'funnel-drop';
+        drop.innerHTML = '▾ <b>' + s.pct + '</b>';
+        row.appendChild(drop);
+      }
+      const bar = document.createElement('div');
+      bar.className = 'funnel-bar';
+      bar.style.width = w(s.n) + '%';
+      bar.style.background = colorsAlt[i];
+      bar.innerHTML = `
+        <div class="left">
+          <p>${s.label}</p>
+          <p>${s.sub}</p>
+        </div>
+        <div class="right">${s.n.toLocaleString('en-AU')}</div>
+      `;
+      row.appendChild(bar);
+      container.appendChild(row);
+    });
+  }
+}
+
+loadData();
+</script>
+
+</body>
+</html>
