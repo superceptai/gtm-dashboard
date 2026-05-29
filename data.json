@@ -1,7 +1,7 @@
 {
-  "last_updated": "2026-05-29T16:00:00+10:00",
-  "as_of_label": "29 May 2026",
-  "feed_label": "HubSpot ICP 28 May · Reply.io feed 28 May 21:09 AEST · GA4 live · ANZ filter active",
+  "last_updated": "2026-05-30T07:59:19+10:00",
+  "as_of_label": "30 May 2026",
+  "feed_label": "HubSpot ICP 30 May \u00b7 Reply.io feed 30 May 07:47 AEST \u00b7 GA4 live \u00b7 LinkedIn fallback",
   "icp": {
     "combined": {
       "total": 4679,
@@ -11,12 +11,12 @@
       "borderline_pct": 24.2,
       "high_value_20p": 824,
       "high_value_pct": 17.6,
-      "ceo_contacts": 2959,
+      "ceo_contacts": 3140,
       "ceo_1st": 319,
-      "ceo_1st_pct": 10.8,
-      "cro_contacts": 1190,
+      "ceo_1st_pct": 10.2,
+      "cro_contacts": 1258,
       "cro_1st": 222,
-      "cro_1st_pct": 18.7
+      "cro_1st_pct": 17.6
     },
     "hubspot": {
       "total": 1854,
@@ -27,12 +27,12 @@
       "high_value_20p": 252,
       "hv_20_49": 173,
       "hv_50p": 79,
-      "ceo_contacts": 1134,
+      "ceo_contacts": 1202,
       "ceo_1st": 199,
-      "ceo_1st_pct": 17.5,
-      "cro_contacts": 615,
+      "ceo_1st_pct": 16.6,
+      "cro_contacts": 641,
       "cro_1st": 131,
-      "cro_1st_pct": 21.3
+      "cro_1st_pct": 20.4
     },
     "non_hubspot": {
       "total": 2825,
@@ -43,18 +43,39 @@
       "high_value_20p": 572,
       "hv_20_49": 365,
       "hv_50p": 207,
-      "ceo_contacts": 1825,
+      "ceo_contacts": 1938,
       "ceo_1st": 120,
-      "ceo_1st_pct": 6.6,
-      "cro_contacts": 575,
+      "ceo_1st_pct": 6.2,
+      "cro_contacts": 617,
       "cro_1st": 91,
-      "cro_1st_pct": 15.8
+      "cro_1st_pct": 14.7
     }
   },
   "bands": {
-    "labels": ["3 sellers", "4 sellers", "5-9 sellers", "10-19 sellers", "20-49 sellers", "50+ sellers"],
-    "hubspot": [308, 304, 630, 360, 173, 79],
-    "non_hubspot": [92, 430, 1080, 651, 365, 207]
+    "labels": [
+      "3 sellers",
+      "4 sellers",
+      "5-9 sellers",
+      "10-19 sellers",
+      "20-49 sellers",
+      "50+ sellers"
+    ],
+    "hubspot": [
+      308,
+      304,
+      630,
+      360,
+      173,
+      79
+    ],
+    "non_hubspot": [
+      92,
+      430,
+      1080,
+      651,
+      365,
+      207
+    ]
   },
   "sequences": [
     {
@@ -65,13 +86,13 @@
       "short_name": "CEO HubSpot",
       "status": "active",
       "new": 256,
-      "pending": 112,
-      "finished": 444,
-      "connected": 84,
+      "pending": 109,
+      "finished": 447,
+      "connected": 82,
       "total": 831,
-      "accept_rate": 13.1,
-      "rate_per_day": 15.4,
-      "runway_days": 16.6
+      "accept_rate": 12.9,
+      "rate_per_day": 32.6,
+      "runway_days": 8.0
     },
     {
       "id": "seq2",
@@ -80,14 +101,14 @@
       "name": "LI Connect Only - ANZ 2nd Degree Connection CROs at 3+ Rep Companies Using HubSpot",
       "short_name": "CRO HubSpot",
       "status": "active",
-      "new": 144,
-      "pending": 102,
-      "finished": 174,
-      "connected": 63,
+      "new": 116,
+      "pending": 129,
+      "finished": 175,
+      "connected": 74,
       "total": 428,
-      "accept_rate": 18.6,
-      "rate_per_day": 14.0,
-      "runway_days": 10.3
+      "accept_rate": 19.6,
+      "rate_per_day": 30.6,
+      "runway_days": 4.0
     },
     {
       "id": "seq3",
@@ -102,8 +123,8 @@
       "connected": 0,
       "total": 1203,
       "accept_rate": null,
-      "rate_per_day": 50,
-      "runway_days": 24.1
+      "rate_per_day": null,
+      "runway_days": null
     },
     {
       "id": "seq4",
@@ -118,36 +139,56 @@
       "connected": 0,
       "total": 176,
       "accept_rate": null,
-      "rate_per_day": 50,
-      "runway_days": 3.5
+      "rate_per_day": null,
+      "runway_days": null
     }
   ],
   "funnel": {
-    "icp_contacts": 4149,
+    "icp_contacts": 4398,
     "enrolled": 2638,
-    "enrolled_pct_of_icp": 63.6,
-    "invite_sent": 979,
-    "invite_sent_pct_of_enrolled": 37.1,
-    "connected": 147,
-    "connected_pct_of_invited": 15.0,
+    "enrolled_pct_of_icp": 60.0,
+    "invite_sent": 1016,
+    "invite_sent_pct_of_enrolled": 38.5,
+    "connected": 156,
+    "connected_pct_of_invited": 15.4,
     "note": "Non-HubSpot sequences currently paused (1,379 contacts queued, 0 invites sent)"
   },
   "pipeline": {
     "stages": [
-      { "key": "awaiting_booking", "label": "Awaiting booking", "deals": 1 },
-      { "key": "intake_booked", "label": "Intake booked", "deals": 1 },
-      { "key": "decision_pending", "label": "Decision pending", "deals": null },
-      { "key": "accepted", "label": "Accepted", "deals": null },
-      { "key": "onboarding", "label": "Onboarding", "deals": null }
+      {
+        "key": "awaiting_booking",
+        "label": "Awaiting booking",
+        "deals": 0
+      },
+      {
+        "key": "intake_booked",
+        "label": "Intake booked",
+        "deals": 0
+      },
+      {
+        "key": "decision_pending",
+        "label": "Decision pending",
+        "deals": 0
+      },
+      {
+        "key": "accepted",
+        "label": "Accepted",
+        "deals": 0
+      },
+      {
+        "key": "onboarding",
+        "label": "Onboarding",
+        "deals": 0
+      }
     ],
     "note": "Live applications populate once outbound sequences activate."
   },
   "ga4": {
     "status": "live",
     "setup_note": "GA4 property G-HC97LYRCFE via Windsor.ai. Aaron and Jack IPs not yet filtered, so self-visits inflate session counts.",
-    "sessions": 15,
-    "users": 9,
-    "engaged_pct": "53.3%",
+    "sessions": 17,
+    "users": 11,
+    "engaged_pct": "47.1%",
     "qualified": 0,
     "qualified_cvr": "0.0%",
     "intake": 0,
@@ -155,17 +196,35 @@
     "disqualified": 0,
     "disqualified_cvr": "0.0%",
     "daily": [
-      { "date": "24 May", "sessions": 6 },
-      { "date": "25 May", "sessions": 1 },
-      { "date": "26 May", "sessions": 1 },
-      { "date": "27 May", "sessions": 1 },
-      { "date": "28 May", "sessions": 5 },
-      { "date": "29 May", "sessions": 1 }
+      {
+        "date": "24 May",
+        "sessions": 6
+      },
+      {
+        "date": "25 May",
+        "sessions": 1
+      },
+      {
+        "date": "26 May",
+        "sessions": 1
+      },
+      {
+        "date": "27 May",
+        "sessions": 1
+      },
+      {
+        "date": "28 May",
+        "sessions": 5
+      },
+      {
+        "date": "29 May",
+        "sessions": 3
+      }
     ]
   },
   "linkedin": {
     "status": "fallback",
-    "setup_note": "PerfectPost MCP connected. Follower count not exposed in profile response and no published posts in last 30 days. Using static fallback values.",
+    "setup_note": "Aaron LinkedIn Followers Feed not yet populated (Cowork task in build). Using static fallback value.",
     "followers": 15611,
     "new_followers_30d": 69,
     "profile_views": null,
