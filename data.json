@@ -1,7 +1,7 @@
 {
-  "last_updated": "2026-05-30T17:57:12+10:00",
+  "last_updated": "2026-05-30T23:15:48+10:00",
   "as_of_label": "30 May 2026",
-  "feed_label": "HubSpot ICP 30 May \u00b7 Reply.io feed 30 May 07:47 AEST \u00b7 GA4 live \u00b7 LinkedIn fallback",
+  "feed_label": "HubSpot ICP 30 May \u00b7 Reply.io feed 30 May 22:42 AEST \u00b7 GA4 live \u00b7 LinkedIn fallback",
   "icp": {
     "combined": {
       "total": 4679,
@@ -85,14 +85,14 @@
       "name": "LI connect only - ANZ 2nd Degree Connection CEOs at 3+ Rep Companies Using HubSpot",
       "short_name": "CEO HubSpot",
       "status": "active",
-      "new": 256,
-      "pending": 109,
-      "finished": 447,
+      "new": 255,
+      "pending": 65,
+      "finished": 492,
       "connected": 82,
       "total": 831,
-      "accept_rate": 12.9,
-      "rate_per_day": 32.6,
-      "runway_days": 8.0
+      "accept_rate": 12.8,
+      "rate_per_day": 15.4,
+      "runway_days": 17.0
     },
     {
       "id": "seq2",
@@ -101,14 +101,14 @@
       "name": "LI Connect Only - ANZ 2nd Degree Connection CROs at 3+ Rep Companies Using HubSpot",
       "short_name": "CRO HubSpot",
       "status": "active",
-      "new": 116,
-      "pending": 129,
-      "finished": 175,
+      "new": 115,
+      "pending": 111,
+      "finished": 194,
       "connected": 74,
       "total": 428,
-      "accept_rate": 19.6,
-      "rate_per_day": 30.6,
-      "runway_days": 4.0
+      "accept_rate": 19.5,
+      "rate_per_day": 18.0,
+      "runway_days": 6.0
     },
     {
       "id": "seq3",
@@ -117,11 +117,11 @@
       "name": "LI connect only - ANZ 2nd Degree Connection CEOs at 3+ Rep Companies - Non-HubSpot",
       "short_name": "CEO Non-HubSpot",
       "status": "paused",
-      "new": 1203,
+      "new": 1394,
       "pending": 0,
       "finished": 0,
       "connected": 0,
-      "total": 1203,
+      "total": 1394,
       "accept_rate": null,
       "rate_per_day": null,
       "runway_days": null
@@ -133,11 +133,11 @@
       "name": "LI Connect Only - ANZ 2nd Degree Connection CROs at 3+ Rep Companies - Non-HubSpot",
       "short_name": "CRO Non-HubSpot",
       "status": "paused",
-      "new": 176,
+      "new": 377,
       "pending": 0,
       "finished": 0,
       "connected": 0,
-      "total": 176,
+      "total": 377,
       "accept_rate": null,
       "rate_per_day": null,
       "runway_days": null
@@ -145,13 +145,13 @@
   ],
   "funnel": {
     "icp_contacts": 4398,
-    "enrolled": 2638,
-    "enrolled_pct_of_icp": 60.0,
-    "invite_sent": 1016,
-    "invite_sent_pct_of_enrolled": 38.5,
+    "enrolled": 3030,
+    "enrolled_pct_of_icp": 68.9,
+    "invite_sent": 1018,
+    "invite_sent_pct_of_enrolled": 33.6,
     "connected": 156,
-    "connected_pct_of_invited": 15.4,
-    "note": "Non-HubSpot sequences currently paused (1,379 contacts queued, 0 invites sent)"
+    "connected_pct_of_invited": 15.3,
+    "note": "Non-HubSpot sequences currently paused (1,771 contacts queued, 0 invites sent)"
   },
   "pipeline": {
     "stages": [
