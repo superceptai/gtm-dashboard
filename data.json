@@ -1,5 +1,5 @@
 {
-  "last_updated": "2026-05-30T10:30:01+10:00",
+  "last_updated": "2026-05-30T17:57:12+10:00",
   "as_of_label": "30 May 2026",
   "feed_label": "HubSpot ICP 30 May \u00b7 Reply.io feed 30 May 07:47 AEST \u00b7 GA4 live \u00b7 LinkedIn fallback",
   "icp": {
@@ -186,9 +186,9 @@
   "ga4": {
     "status": "live",
     "setup_note": "GA4 property G-HC97LYRCFE via Windsor.ai. Aaron and Jack IPs not yet filtered, so self-visits inflate session counts.",
-    "sessions": 17,
-    "users": 11,
-    "engaged_pct": "47.1%",
+    "sessions": 19,
+    "users": 12,
+    "engaged_pct": "42.1%",
     "qualified": 0,
     "qualified_cvr": "0.0%",
     "intake": 0,
@@ -219,6 +219,10 @@
       {
         "date": "29 May",
         "sessions": 3
+      },
+      {
+        "date": "30 May",
+        "sessions": 2
       }
     ]
   },
