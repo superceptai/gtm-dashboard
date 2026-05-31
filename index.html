@@ -215,6 +215,22 @@ const fmtRate = (n) => {
   if (typeof n !== 'number') return String(n);
   return n.toFixed(1) + '/d';
 };
+const fmtFollowerDelta = (li) => {
+  // Prefer longest window with data: 30d > 7d > 24h. Returns "+N last 30d", "-3 last 7d", etc.
+  // Falls back to "last 30d —" while the followers feed is still bootstrapping its history.
+  if (!li) return 'last 30d \u2014';
+  const candidates = [
+    { v: li.followers_30d_delta, label: 'last 30d' },
+    { v: li.followers_7d_delta,  label: 'last 7d'  },
+    { v: li.followers_24h_delta, label: 'last 24h' }
+  ];
+  for (const c of candidates) {
+    if (typeof c.v === 'number') {
+      return (c.v > 0 ? '+' : '') + fmt(c.v) + ' ' + c.label;
+    }
+  }
+  return 'last 30d \u2014';
+};
 const escapeHtml = (s) => {
   if (s === null || s === undefined) return '';
   return String(s)
@@ -443,7 +459,7 @@ function render(d) {
     <p class="sl">LinkedIn \u2014 Aaron's profile</p>
     <p class="sr">Personal profile analytics${d.linkedin && d.linkedin.setup_note ? ' \u00B7 ' + escapeHtml(d.linkedin.setup_note) : ''}</p>
     <div class="mc-grid-4">
-      <div class="mc"><p class="lbl">Followers</p><p class="val">${fmt(d.linkedin.followers)}</p><p class="sub">${d.linkedin.new_followers_30d !== null && d.linkedin.new_followers_30d !== undefined ? '+' + fmt(d.linkedin.new_followers_30d) + ' last 30d' : 'last 30d \u2014'}</p></div>
+      <div class="mc"><p class="lbl">Followers</p><p class="val">${fmt(d.linkedin.followers_current)}</p><p class="sub">${fmtFollowerDelta(d.linkedin)}</p></div>
       <div class="${d.linkedin.impressions === null || d.linkedin.impressions === undefined ? 'mc-ph' : 'mc'}"><p class="lbl">Impressions</p><p class="val">${fmt(d.linkedin.impressions)}</p><p class="sub">this week</p></div>
       <div class="${d.linkedin.engagement === null || d.linkedin.engagement === undefined ? 'mc-ph' : 'mc'}"><p class="lbl">Engagement rate</p><p class="val">${fmtPct(d.linkedin.engagement)}</p><p class="sub">interactions / impressions</p></div>
       <div class="${d.linkedin.profile_views === null || d.linkedin.profile_views === undefined ? 'mc-ph' : 'mc'}"><p class="lbl">Profile views</p><p class="val">${fmt(d.linkedin.profile_views)}</p><p class="sub">this week</p></div>
@@ -526,7 +542,7 @@ function render(d) {
       { label: 'ICP contacts', sub: 'CEO + CRO, all ANZ ICP companies', n: d.funnel.icp_contacts, pct: null },
       { label: 'Enrolled in sequences', sub: 'across all 4 Reply.io sequences', n: d.funnel.enrolled, pct: fmtPct(d.funnel.enrolled_pct_of_icp) + ' of ICP' },
       { label: 'Invite sent', sub: 'active HubSpot sequences \u00B7 non-HS paused', n: d.funnel.invite_sent, pct: fmtPct(d.funnel.invite_sent_pct_of_enrolled) + ' of enrolled' },
-      { label: 'Connected', sub: '1st-degree LinkedIn connections (CEO + CRO)', n: totalConnected, pct: fmtPct(connectedPctOfIcp) + ' of ICP' }
+      { label: 'Connected', sub: '1st-degree LinkedIn connections (CEO + CRO)', n: totalConnected, pct: fmtPct(connectedPctOfIcp) + ' of ICP', inlinePct: fmtPct(connectedPctOfIcp) }
     ];
     const colorsAlt = ['#0B0BD6', '#0A50B0', '#0A6B92', '#0F6E56'];
     const maxN = stages[0].n || 1;
@@ -552,7 +568,7 @@ function render(d) {
           <p>${escapeHtml(s.label)}</p>
           <p>${escapeHtml(s.sub)}</p>
         </div>
-        <div class="right">${fmt(s.n)}</div>
+        <div class="right">${fmt(s.n)}${s.inlinePct ? ' \u00B7 ' + escapeHtml(s.inlinePct) : ''}</div>
       `;
       row.appendChild(bar);
       container.appendChild(row);
