@@ -102,7 +102,17 @@
   .sc-head{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;margin-bottom:12px}
   .sc-head .name{margin:0;font-size:12.5px;font-weight:500;line-height:1.4;color:var(--ebony)}
   .sc-head .meta{margin:4px 0 0;font-size:11px;color:var(--ebony-70);font-variant-numeric:tabular-nums}
+  .sc-section-label{margin:10px 0 6px;font-size:10px;color:var(--ebony-70);text-transform:uppercase;letter-spacing:0.06em;font-weight:500}
+  .sc-section-label:first-of-type{margin-top:0}
   .sc-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:6px}
+  .sc-stats-3{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:6px}
+  .sc-stats-2{display:grid;grid-template-columns:repeat(2,1fr);gap:6px;margin-bottom:6px}
+  .sc-total{display:flex;justify-content:flex-end;font-size:11px;color:var(--ebony-70);padding:6px 2px 0;border-top:1px solid var(--border);margin-top:6px}
+  .sc-total b{color:var(--ebony);font-weight:500;margin-left:4px;font-variant-numeric:tabular-nums}
+  .sc-footnote{margin-top:12px;padding:10px 12px;background:var(--info-bg);border-left:3px solid var(--primary);border-radius:0 var(--r-sm) var(--r-sm) 0}
+  .sc-footnote p{margin:0 0 6px;font-size:11px;line-height:1.5;color:var(--info-text)}
+  .sc-footnote p:last-child{margin-bottom:0}
+  .sc-footnote b{font-weight:500;color:var(--info-text)}
   .ss{background:var(--surface-light);border-radius:var(--r-sm);padding:8px 10px;min-width:0}
   .ss .l{margin:0 0 2px;font-size:10.5px;color:var(--ebony-70);font-weight:500}
   .ss .v{margin:0;font-size:16px;font-weight:500;line-height:1.1;color:var(--ebony);font-variant-numeric:tabular-nums;font-feature-settings:"tnum"}
@@ -188,9 +198,12 @@ const SCHEMA_VERSION_EXPECTED = 1;
 // Feed change log (31 May 2026) for context.
 const ASSUMED_SEND_RATE_PER_DAY = 35;
 
+// Runway is days until the send queue is exhausted. Numerator is s.new (queued for send,
+// CSV Active+Step2). v1.1 incorrectly used s.pending (in-wait, CSV Active+Step255) which
+// measured the wrong cohort. Fixed in v1.2 (31 May 2026).
 const assumedRunway = (s) => {
-  if (typeof s.pending === 'number' && s.pending >= 0) {
-    return s.pending / ASSUMED_SEND_RATE_PER_DAY;
+  if (typeof s.new === 'number' && s.new >= 0) {
+    return s.new / ASSUMED_SEND_RATE_PER_DAY;
   }
   return null;
 };
@@ -315,12 +328,6 @@ function render(d) {
   if (hours >= 24) fEl.classList.add('stale');
   else fEl.classList.remove('stale');
 
-  const newCellClass = (s) => {
-    if (s.status === 'paused') return 'info';
-    if (typeof s.new === 'number' && s.new < 200) return 'danger';
-    return '';
-  };
-
   document.getElementById('app').innerHTML = `
 
     <p class="sl">ICP database \u2014 combined ANZ</p>
@@ -378,14 +385,33 @@ function render(d) {
     <div class="div"></div>
 
     <p class="sl">Outbound engine \u2014 Reply.io</p>
-    <p class="sr">New = queued, not yet in sequence \u00B7 Pending = invite sent, awaiting acceptance \u00B7 Finished = sequence complete \u00B7 Connected = accepted \u00B7 Connection rate read direct from Reply.io UI (Stats > LinkedIn > All time) \u00B7 Rate and runway use assumed 35/d per sequence (Reply.io safety setting) rather than the 7-day actual</p>
+    <p class="sr">Reply.io sequence inspection \u00B7 Bucket labels match Reply.io UI sidebar (Throttled / Active / Finished) \u00B7 Connection rate read direct from Reply.io UI (Stats > LinkedIn > All time) \u00B7 Send rate uses 35/d Reply.io safety setting per sequence</p>
     <div class="seq-grid">
       ${d.sequences.map(s => {
         const arDays = assumedRunway(s);
         const runway = runwayPill(arDays, s.status);
         const runwayLabel = s.status === 'paused' ? 'If active' : 'Runway';
         const runwayValCls = runwayValClass(arDays, s.status);
-        const newCls = newCellClass(s);
+
+        // Derived buckets matching Reply.io UI sidebar exactly
+        const stopped = s.total - s.new - s.pending - s.finished;
+        const activeCount = s.new + stopped;
+        const finishedCount = s.pending + s.finished;
+
+        // Footnote shown only for active sequences with activity
+        const isActive = s.status === 'active';
+        const hasActivity = s.total > 0;
+        const showFootnote = isActive && hasActivity;
+        const inactiveClause = stopped > 0
+          ? ` plus ${fmt(stopped)} currently inactive (opt-outs, bounces, manual stops)`
+          : '';
+        const footnoteHtml = showFootnote ? `
+            <div class="sc-footnote">
+              <p><b>About Active.</b> Includes ${fmt(s.new)} contacts queued for send${inactiveClause}. Runway uses the ${fmt(s.new)} queued count only.</p>
+              <p><b>About Finished.</b> Includes contacts in the post-send waiting period, those who had a request sent and the sequence ran its course, and those who auto-passed because Reply.io detected they were already a 1st-degree connection at step time.</p>
+            </div>
+          ` : '';
+
         return `
           <div class="sc">
             <div class="sc-head">
@@ -395,18 +421,25 @@ function render(d) {
               </div>
               <span class="pill ${runway.cls}">${runway.text}</span>
             </div>
-            <div class="sc-stats">
-              <div class="ss"><p class="l">New</p><p class="v ${newCls}">${fmt(s.new)}</p></div>
-              <div class="ss"><p class="l">Pending</p><p class="v ${s.pending === 0 ? 'muted' : ''}">${fmt(s.pending)}</p></div>
-              <div class="ss"><p class="l">Finished</p><p class="v ${s.finished === 0 ? 'muted' : ''}">${fmt(s.finished)}</p></div>
-              <div class="ss"><p class="l">Connected</p><p class="v ${s.connected > 0 ? 'success' : 'muted'}">${fmt(s.connected)}</p></div>
+            <p class="sc-section-label">Members</p>
+            <div class="sc-stats-3">
+              <div class="ss"><p class="l">Throttled</p><p class="v muted">0</p></div>
+              <div class="ss"><p class="l">Active</p><p class="v">${fmt(activeCount)}</p></div>
+              <div class="ss"><p class="l">Finished</p><p class="v ${finishedCount === 0 ? 'muted' : ''}">${fmt(finishedCount)}</p></div>
             </div>
-            <div class="sc-stats">
-              <div class="ss"><p class="l">Total</p><p class="v">${fmt(s.total)}</p></div>
+            <div class="sc-total">Total enrolled<b>${fmt(s.total)}</b></div>
+            <p class="sc-section-label">Outreach lifetime</p>
+            <div class="sc-stats-3">
+              <div class="ss"><p class="l">Invites sent</p><p class="v ${s.connections_sent > 0 ? '' : 'muted'}">${fmt(s.connections_sent)}</p></div>
+              <div class="ss"><p class="l">Accepted</p><p class="v ${s.connection_requests_accepted > 0 ? 'success' : 'muted'}">${fmt(s.connection_requests_accepted)}</p></div>
               <div class="ss"><p class="l">Connection rate</p><p class="v ${s.connection_rate === null || s.connection_rate === undefined ? 'muted' : ''}">${fmtPct(s.connection_rate)}</p></div>
-              <div class="ss"><p class="l">Rate</p><p class="v">${ASSUMED_SEND_RATE_PER_DAY}/d</p></div>
+            </div>
+            <p class="sc-section-label">Operations</p>
+            <div class="sc-stats-2">
+              <div class="ss"><p class="l">Send rate</p><p class="v">${ASSUMED_SEND_RATE_PER_DAY}/d</p></div>
               <div class="ss"><p class="l">${runwayLabel}</p><p class="v ${runwayValCls}">${fmtDays(arDays)}${s.status !== 'paused' && typeof arDays === 'number' && arDays < 7 ? ' \u26A0' : ''}</p></div>
             </div>
+            ${footnoteHtml}
           </div>
         `;
       }).join('')}
