@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "last_updated": "2026-05-31T10:13:08+10:00",
+  "last_updated": "2026-05-31T11:02:27+10:00",
   "as_of_label": "31 May 2026",
   "feed_label": "fresh",
   "icp": {
@@ -61,8 +61,22 @@
       "20-49 sellers",
       "50+ sellers"
     ],
-    "hubspot": [308, 304, 630, 360, 173, 79],
-    "non_hubspot": [92, 430, 1080, 651, 365, 207]
+    "hubspot": [
+      308,
+      304,
+      630,
+      360,
+      173,
+      79
+    ],
+    "non_hubspot": [
+      92,
+      430,
+      1080,
+      651,
+      365,
+      207
+    ]
   },
   "sequences": [
     {
@@ -138,11 +152,31 @@
   },
   "pipeline": {
     "stages": [
-      {"key": "awaiting_booking", "label": "Awaiting booking", "deals": 0},
-      {"key": "intake_booked", "label": "Intake booked", "deals": 0},
-      {"key": "decision_pending", "label": "Decision pending", "deals": 0},
-      {"key": "accepted", "label": "Accepted", "deals": 0},
-      {"key": "onboarding", "label": "Onboarding", "deals": 0}
+      {
+        "key": "awaiting_booking",
+        "label": "Awaiting booking",
+        "deals": 0
+      },
+      {
+        "key": "intake_booked",
+        "label": "Intake booked",
+        "deals": 0
+      },
+      {
+        "key": "decision_pending",
+        "label": "Decision pending",
+        "deals": 0
+      },
+      {
+        "key": "accepted",
+        "label": "Accepted",
+        "deals": 0
+      },
+      {
+        "key": "onboarding",
+        "label": "Onboarding",
+        "deals": 0
+      }
     ],
     "note": "Live applications populate once outbound sequences activate. ZTEST records excluded."
   },
@@ -159,13 +193,34 @@
     "disqualified": 0,
     "disqualified_cvr": "0.0%",
     "daily": [
-      {"date": "24 May", "sessions": 6},
-      {"date": "25 May", "sessions": 1},
-      {"date": "26 May", "sessions": 1},
-      {"date": "27 May", "sessions": 1},
-      {"date": "28 May", "sessions": 5},
-      {"date": "29 May", "sessions": 3},
-      {"date": "30 May", "sessions": 2}
+      {
+        "date": "24 May",
+        "sessions": 6
+      },
+      {
+        "date": "25 May",
+        "sessions": 1
+      },
+      {
+        "date": "26 May",
+        "sessions": 1
+      },
+      {
+        "date": "27 May",
+        "sessions": 1
+      },
+      {
+        "date": "28 May",
+        "sessions": 5
+      },
+      {
+        "date": "29 May",
+        "sessions": 3
+      },
+      {
+        "date": "30 May",
+        "sessions": 2
+      }
     ]
   },
   "linkedin": {
