@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "last_updated": "2026-05-31T11:02:27+10:00",
+  "last_updated": "2026-05-31T23:08:27+10:00",
   "as_of_label": "31 May 2026",
   "feed_label": "fresh",
   "icp": {
@@ -85,12 +85,12 @@
       "status": "active",
       "total": 831,
       "new": 255,
-      "pending": 65,
-      "finished": 492,
-      "connected": 82,
+      "pending": 55,
+      "finished": 502,
+      "connected": 80,
       "connections_sent": 228,
-      "connection_requests_accepted": 58,
-      "connection_rate": 25.44,
+      "connection_requests_accepted": 60,
+      "connection_rate": 26.32,
       "daily_send_rate": 15.0,
       "runway_days": 17
     },
@@ -100,12 +100,12 @@
       "status": "active",
       "total": 428,
       "new": 115,
-      "pending": 111,
-      "finished": 194,
-      "connected": 74,
+      "pending": 96,
+      "finished": 209,
+      "connected": 73,
       "connections_sent": 215,
-      "connection_requests_accepted": 71,
-      "connection_rate": 33.02,
+      "connection_requests_accepted": 72,
+      "connection_rate": 33.49,
       "daily_send_rate": 18.0,
       "runway_days": 6
     },
@@ -140,14 +140,21 @@
       "runway_days": null
     }
   ],
+  "linkedin": {
+    "followers_current": 15636,
+    "followers_24h_delta": 3,
+    "followers_7d_delta": null,
+    "followers_30d_delta": null,
+    "status": "fresh"
+  },
   "funnel": {
     "icp_contacts": 4398,
     "enrolled": 3030,
     "enrolled_pct_of_icp": 68.9,
-    "invite_sent": 1018,
-    "invite_sent_pct_of_enrolled": 33.6,
-    "connected": 156,
-    "connected_pct_of_invited": 15.3,
+    "invite_sent": 1015,
+    "invite_sent_pct_of_enrolled": 33.5,
+    "connected": 153,
+    "connected_pct_of_invited": 15.1,
     "note": "Non-HubSpot sequences currently paused (1,771 contacts queued, 0 invites sent)"
   },
   "pipeline": {
@@ -183,9 +190,9 @@
   "ga4": {
     "status": "live",
     "setup_note": "GA4 property G-HC97LYRCFE via Windsor.ai. Aaron and Jack IPs not yet filtered, so self-visits inflate session counts.",
-    "sessions": 19,
+    "sessions": 14,
     "users": 12,
-    "engaged_pct": "42.1%",
+    "engaged_pct": "21.4%",
     "qualified": 0,
     "qualified_cvr": "0.0%",
     "intake": 0,
@@ -193,10 +200,6 @@
     "disqualified": 0,
     "disqualified_cvr": "0.0%",
     "daily": [
-      {
-        "date": "24 May",
-        "sessions": 6
-      },
       {
         "date": "25 May",
         "sessions": 1
@@ -220,15 +223,11 @@
       {
         "date": "30 May",
         "sessions": 2
+      },
+      {
+        "date": "31 May",
+        "sessions": 1
       }
     ]
-  },
-  "linkedin": {
-    "status": "fresh",
-    "followers_current": 15633,
-    "followers_24h_delta": null,
-    "followers_7d_delta": null,
-    "followers_30d_delta": null,
-    "feed_timestamp": "2026-05-31T06:07:37+10:00"
   }
 }
