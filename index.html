@@ -384,6 +384,14 @@ function render(d) {
 
     <div class="div"></div>
 
+    <p class="sl">ICP funnel</p>
+    <p class="sr">ICP contacts (CEO + CRO, combined ANZ) \u2192 connected (1st-degree LinkedIn connections in ICP)${d.funnel.note ? ' \u00B7 ' + escapeHtml(d.funnel.note) : ''}</p>
+    <div class="panel">
+      <div id="funnel"></div>
+    </div>
+
+    <div class="div"></div>
+
     <p class="sl">Outbound engine \u2014 Reply.io</p>
     <p class="sr">Reply.io sequence inspection \u00B7 Bucket labels match Reply.io UI sidebar (Throttled / Active / Finished) \u00B7 Connection rate read direct from Reply.io UI (Stats > LinkedIn > All time) \u00B7 Send rate uses 35/d Reply.io safety setting per sequence</p>
     <div class="seq-grid">
@@ -408,7 +416,7 @@ function render(d) {
         const footnoteHtml = showFootnote ? `
             <div class="sc-footnote">
               <p><b>About Active.</b> Includes ${fmt(s.new)} contacts queued for send${inactiveClause}. Runway uses the ${fmt(s.new)} queued count only.</p>
-              <p><b>About Finished.</b> Includes contacts in the post-send waiting period, those who had a request sent and the sequence ran its course, and those who auto-passed because Reply.io detected they were already a 1st-degree connection at step time.</p>
+              <p><b>About Finished.</b> Includes contacts in the post-send waiting period, those who had a request sent and the sequence ran its course, those who auto-passed because Reply.io detected they were already a 1st-degree connection at step time, and those whose previous connection request was withdrawn and are now in LinkedIn's 2-3 month cooldown before another invite can be sent.</p>
             </div>
           ` : '';
 
@@ -443,14 +451,6 @@ function render(d) {
           </div>
         `;
       }).join('')}
-    </div>
-
-    <div class="div"></div>
-
-    <p class="sl">Outreach funnel</p>
-    <p class="sr">ICP contacts (CEO + CRO, combined ANZ) \u2192 enrolled in Reply.io sequences \u2192 invite sent \u2192 connected (1st-degree LinkedIn connections in ICP)${d.funnel.note ? ' \u00B7 ' + escapeHtml(d.funnel.note) : ''}</p>
-    <div class="panel">
-      <div id="funnel"></div>
     </div>
 
     <div class="div"></div>
@@ -573,11 +573,9 @@ function render(d) {
 
     const stages = [
       { label: 'ICP contacts', sub: 'CEO + CRO, all ANZ ICP companies', n: d.funnel.icp_contacts, pct: null },
-      { label: 'Enrolled in sequences', sub: 'across all 4 Reply.io sequences', n: d.funnel.enrolled, pct: fmtPct(d.funnel.enrolled_pct_of_icp) + ' of ICP' },
-      { label: 'Invite sent', sub: 'active HubSpot sequences \u00B7 non-HS paused', n: d.funnel.invite_sent, pct: fmtPct(d.funnel.invite_sent_pct_of_enrolled) + ' of enrolled' },
       { label: 'Connected', sub: '1st-degree LinkedIn connections (CEO + CRO)', n: totalConnected, pct: fmtPct(connectedPctOfIcp) + ' of ICP', inlinePct: fmtPct(connectedPctOfIcp) }
     ];
-    const colorsAlt = ['#0B0BD6', '#0A50B0', '#0A6B92', '#0F6E56'];
+    const colorsAlt = ['#0B0BD6', '#0F6E56'];
     const maxN = stages[0].n || 1;
     const minW = 22, maxW = 100;
     const w = (n) => Math.round(minW + (maxW - minW) * Math.sqrt((n || 0) / maxN));
