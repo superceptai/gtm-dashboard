@@ -1,7 +1,8 @@
 {
-  "last_updated": "2026-05-30T23:15:48+10:00",
-  "as_of_label": "30 May 2026",
-  "feed_label": "HubSpot ICP 30 May \u00b7 Reply.io feed 30 May 22:42 AEST \u00b7 GA4 live \u00b7 LinkedIn fallback",
+  "schema_version": 1,
+  "last_updated": "2026-05-31T10:13:08+10:00",
+  "as_of_label": "31 May 2026",
+  "feed_label": "fresh",
   "icp": {
     "combined": {
       "total": 4679,
@@ -60,86 +61,68 @@
       "20-49 sellers",
       "50+ sellers"
     ],
-    "hubspot": [
-      308,
-      304,
-      630,
-      360,
-      173,
-      79
-    ],
-    "non_hubspot": [
-      92,
-      430,
-      1080,
-      651,
-      365,
-      207
-    ]
+    "hubspot": [308, 304, 630, 360, 173, 79],
+    "non_hubspot": [92, 430, 1080, 651, 365, 207]
   },
   "sequences": [
     {
-      "id": "seq1",
-      "reply_id": "1658117",
-      "list_id": "182",
+      "id": "1658117",
       "name": "LI connect only - ANZ 2nd Degree Connection CEOs at 3+ Rep Companies Using HubSpot",
-      "short_name": "CEO HubSpot",
       "status": "active",
+      "total": 831,
       "new": 255,
       "pending": 65,
       "finished": 492,
       "connected": 82,
-      "total": 831,
-      "accept_rate": 12.8,
-      "rate_per_day": 15.4,
-      "runway_days": 17.0
+      "connections_sent": 228,
+      "connection_requests_accepted": 58,
+      "connection_rate": 25.44,
+      "daily_send_rate": 15.0,
+      "runway_days": 17
     },
     {
-      "id": "seq2",
-      "reply_id": "1676940",
-      "list_id": "183",
+      "id": "1676940",
       "name": "LI Connect Only - ANZ 2nd Degree Connection CROs at 3+ Rep Companies Using HubSpot",
-      "short_name": "CRO HubSpot",
       "status": "active",
+      "total": 428,
       "new": 115,
       "pending": 111,
       "finished": 194,
       "connected": 74,
-      "total": 428,
-      "accept_rate": 19.5,
-      "rate_per_day": 18.0,
-      "runway_days": 6.0
+      "connections_sent": 215,
+      "connection_requests_accepted": 71,
+      "connection_rate": 33.02,
+      "daily_send_rate": 18.0,
+      "runway_days": 6
     },
     {
-      "id": "seq3",
-      "reply_id": "1695697",
-      "list_id": "184",
+      "id": "1695697",
       "name": "LI connect only - ANZ 2nd Degree Connection CEOs at 3+ Rep Companies - Non-HubSpot",
-      "short_name": "CEO Non-HubSpot",
       "status": "paused",
+      "total": 1394,
       "new": 1394,
       "pending": 0,
       "finished": 0,
       "connected": 0,
-      "total": 1394,
-      "accept_rate": null,
-      "rate_per_day": null,
+      "connections_sent": 0,
+      "connection_requests_accepted": 0,
+      "connection_rate": null,
+      "daily_send_rate": null,
       "runway_days": null
     },
     {
-      "id": "seq4",
-      "reply_id": "1695700",
-      "list_id": "185",
+      "id": "1695700",
       "name": "LI Connect Only - ANZ 2nd Degree Connection CROs at 3+ Rep Companies - Non-HubSpot",
-      "short_name": "CRO Non-HubSpot",
       "status": "paused",
+      "total": 377,
       "new": 377,
       "pending": 0,
       "finished": 0,
       "connected": 0,
-      "total": 377,
-      "accept_rate": null,
-      "rate_per_day": null,
+      "connections_sent": 0,
+      "connection_requests_accepted": 0,
+      "connection_rate": null,
+      "daily_send_rate": null,
       "runway_days": null
     }
   ],
@@ -155,33 +138,13 @@
   },
   "pipeline": {
     "stages": [
-      {
-        "key": "awaiting_booking",
-        "label": "Awaiting booking",
-        "deals": 0
-      },
-      {
-        "key": "intake_booked",
-        "label": "Intake booked",
-        "deals": 0
-      },
-      {
-        "key": "decision_pending",
-        "label": "Decision pending",
-        "deals": 0
-      },
-      {
-        "key": "accepted",
-        "label": "Accepted",
-        "deals": 0
-      },
-      {
-        "key": "onboarding",
-        "label": "Onboarding",
-        "deals": 0
-      }
+      {"key": "awaiting_booking", "label": "Awaiting booking", "deals": 0},
+      {"key": "intake_booked", "label": "Intake booked", "deals": 0},
+      {"key": "decision_pending", "label": "Decision pending", "deals": 0},
+      {"key": "accepted", "label": "Accepted", "deals": 0},
+      {"key": "onboarding", "label": "Onboarding", "deals": 0}
     ],
-    "note": "Live applications populate once outbound sequences activate."
+    "note": "Live applications populate once outbound sequences activate. ZTEST records excluded."
   },
   "ga4": {
     "status": "live",
@@ -196,43 +159,21 @@
     "disqualified": 0,
     "disqualified_cvr": "0.0%",
     "daily": [
-      {
-        "date": "24 May",
-        "sessions": 6
-      },
-      {
-        "date": "25 May",
-        "sessions": 1
-      },
-      {
-        "date": "26 May",
-        "sessions": 1
-      },
-      {
-        "date": "27 May",
-        "sessions": 1
-      },
-      {
-        "date": "28 May",
-        "sessions": 5
-      },
-      {
-        "date": "29 May",
-        "sessions": 3
-      },
-      {
-        "date": "30 May",
-        "sessions": 2
-      }
+      {"date": "24 May", "sessions": 6},
+      {"date": "25 May", "sessions": 1},
+      {"date": "26 May", "sessions": 1},
+      {"date": "27 May", "sessions": 1},
+      {"date": "28 May", "sessions": 5},
+      {"date": "29 May", "sessions": 3},
+      {"date": "30 May", "sessions": 2}
     ]
   },
   "linkedin": {
-    "status": "fallback",
-    "setup_note": "Aaron LinkedIn Followers Feed not yet populated (Cowork task in build). Using static fallback value.",
-    "followers": 15611,
-    "new_followers_30d": 69,
-    "profile_views": null,
-    "impressions": null,
-    "engagement": null
+    "status": "fresh",
+    "followers_current": 15633,
+    "followers_24h_delta": null,
+    "followers_7d_delta": null,
+    "followers_30d_delta": null,
+    "feed_timestamp": "2026-05-31T06:07:37+10:00"
   }
 }
