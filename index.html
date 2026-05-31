@@ -180,6 +180,21 @@
 <script>
 const SCHEMA_VERSION_EXPECTED = 1;
 
+// Planning assumption: Reply.io per-sequence safety setting.
+// The dashboard uses this for the Rate cell and runway calculation, overriding the 7-day actual
+// (stored in data.json as s.rate_per_day and s.runway_days). The 7-day actual is artificially low
+// while sequences ramp to steady state, so the dashboard runway view uses the per-sequence ceiling
+// instead to produce a deliberately conservative planning floor. See the Reply.io Sequence Health
+// Feed change log (31 May 2026) for context.
+const ASSUMED_SEND_RATE_PER_DAY = 35;
+
+const assumedRunway = (s) => {
+  if (typeof s.pending === 'number' && s.pending >= 0) {
+    return s.pending / ASSUMED_SEND_RATE_PER_DAY;
+  }
+  return null;
+};
+
 const fmt = (n) => {
   if (n === null || n === undefined) return '\u2014';
   if (typeof n === 'number') return n.toLocaleString('en-AU');
@@ -347,12 +362,13 @@ function render(d) {
     <div class="div"></div>
 
     <p class="sl">Outbound engine \u2014 Reply.io</p>
-    <p class="sr">New = queued, not yet in sequence \u00B7 Pending = invite sent, awaiting acceptance \u00B7 Finished = sequence complete \u00B7 Connected = accepted \u00B7 Runway calculated from 7-day average send rate per sequence</p>
+    <p class="sr">New = queued, not yet in sequence \u00B7 Pending = invite sent, awaiting acceptance \u00B7 Finished = sequence complete \u00B7 Connected = accepted \u00B7 Connection rate read direct from Reply.io UI (Stats > LinkedIn > All time) \u00B7 Rate and runway use assumed 35/d per sequence (Reply.io safety setting) rather than the 7-day actual</p>
     <div class="seq-grid">
       ${d.sequences.map(s => {
-        const runway = runwayPill(s.runway_days, s.status);
+        const arDays = assumedRunway(s);
+        const runway = runwayPill(arDays, s.status);
         const runwayLabel = s.status === 'paused' ? 'If active' : 'Runway';
-        const runwayValCls = runwayValClass(s.runway_days, s.status);
+        const runwayValCls = runwayValClass(arDays, s.status);
         const newCls = newCellClass(s);
         return `
           <div class="sc">
@@ -371,9 +387,9 @@ function render(d) {
             </div>
             <div class="sc-stats">
               <div class="ss"><p class="l">Total</p><p class="v">${fmt(s.total)}</p></div>
-              <div class="ss"><p class="l">Accept rate</p><p class="v ${s.accept_rate === null || s.accept_rate === undefined ? 'muted' : ''}">${fmtPct(s.accept_rate)}</p></div>
-              <div class="ss"><p class="l">Rate</p><p class="v ${s.rate_per_day === null || s.rate_per_day === undefined ? 'muted' : ''}">${fmtRate(s.rate_per_day)}</p></div>
-              <div class="ss"><p class="l">${runwayLabel}</p><p class="v ${runwayValCls}">${fmtDays(s.runway_days)}${s.status !== 'paused' && typeof s.runway_days === 'number' && s.runway_days < 7 ? ' \u26A0' : ''}</p></div>
+              <div class="ss"><p class="l">Connection rate</p><p class="v ${s.connection_rate === null || s.connection_rate === undefined ? 'muted' : ''}">${fmtPct(s.connection_rate)}</p></div>
+              <div class="ss"><p class="l">Rate</p><p class="v">${ASSUMED_SEND_RATE_PER_DAY}/d</p></div>
+              <div class="ss"><p class="l">${runwayLabel}</p><p class="v ${runwayValCls}">${fmtDays(arDays)}${s.status !== 'paused' && typeof arDays === 'number' && arDays < 7 ? ' \u26A0' : ''}</p></div>
             </div>
           </div>
         `;
@@ -383,7 +399,7 @@ function render(d) {
     <div class="div"></div>
 
     <p class="sl">Outreach funnel</p>
-    <p class="sr">ICP contacts in HubSpot database \u2192 enrolled in Reply.io sequences \u2192 invite sent \u2192 connected${d.funnel.note ? ' \u00B7 ' + escapeHtml(d.funnel.note) : ''}</p>
+    <p class="sr">ICP contacts (CEO + CRO, combined ANZ) \u2192 enrolled in Reply.io sequences \u2192 invite sent \u2192 connected (1st-degree LinkedIn connections in ICP)${d.funnel.note ? ' \u00B7 ' + escapeHtml(d.funnel.note) : ''}</p>
     <div class="panel">
       <div id="funnel"></div>
     </div>
@@ -494,11 +510,23 @@ function render(d) {
 
   const container = document.getElementById('funnel');
   if (container) {
+    // Funnel "Connected" stage swapped 31 May 2026 from Reply.io accepted count to total 1st-degree
+    // LinkedIn connections in ICP (CEO 1st + CRO 1st, combined ANZ). Reads from d.icp.combined
+    // directly rather than d.funnel.connected, since the funnel is now a coverage-state story not
+    // an outreach-conversion story. The per-sequence Connection rate metric (above) carries the
+    // outreach-conversion measure.
+    const ceo1st = (d.icp && d.icp.combined && typeof d.icp.combined.ceo_1st === 'number') ? d.icp.combined.ceo_1st : 0;
+    const cro1st = (d.icp && d.icp.combined && typeof d.icp.combined.cro_1st === 'number') ? d.icp.combined.cro_1st : 0;
+    const totalConnected = ceo1st + cro1st;
+    const connectedPctOfIcp = (typeof d.funnel.icp_contacts === 'number' && d.funnel.icp_contacts > 0)
+      ? (totalConnected / d.funnel.icp_contacts) * 100
+      : null;
+
     const stages = [
-      { label: 'ICP contacts in HubSpot', sub: 'CEO + CRO, all ANZ ICP companies', n: d.funnel.icp_contacts, pct: null },
+      { label: 'ICP contacts', sub: 'CEO + CRO, all ANZ ICP companies', n: d.funnel.icp_contacts, pct: null },
       { label: 'Enrolled in sequences', sub: 'across all 4 Reply.io sequences', n: d.funnel.enrolled, pct: fmtPct(d.funnel.enrolled_pct_of_icp) + ' of ICP' },
       { label: 'Invite sent', sub: 'active HubSpot sequences \u00B7 non-HS paused', n: d.funnel.invite_sent, pct: fmtPct(d.funnel.invite_sent_pct_of_enrolled) + ' of enrolled' },
-      { label: 'Connected', sub: 'accepted LinkedIn connection', n: d.funnel.connected, pct: fmtPct(d.funnel.connected_pct_of_invited) + ' of invited' }
+      { label: 'Connected', sub: '1st-degree LinkedIn connections (CEO + CRO)', n: totalConnected, pct: fmtPct(connectedPctOfIcp) + ' of ICP' }
     ];
     const colorsAlt = ['#0B0BD6', '#0A50B0', '#0A6B92', '#0F6E56'];
     const maxN = stages[0].n || 1;
