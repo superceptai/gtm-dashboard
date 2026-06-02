@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "last_updated": "2026-06-02T21:08:02+10:00",
+  "last_updated": "2026-06-02T21:18:33+10:00",
   "as_of_label": "2 Jun 2026",
   "feed_label": "fresh",
   "icp": {
@@ -87,10 +87,10 @@
       "new": 216,
       "pending": 39,
       "finished": 556,
-      "connected": 112,
+      "connected": 107,
       "connections_sent": 265,
-      "connection_requests_accepted": 65,
-      "connection_rate": 24.53,
+      "connection_requests_accepted": 70,
+      "connection_rate": 26.42,
       "daily_send_rate": 12.7,
       "runway_days": 17
     },
@@ -102,10 +102,10 @@
       "new": 42,
       "pending": 100,
       "finished": 277,
-      "connected": 130,
+      "connected": 124,
       "connections_sent": 287,
-      "connection_requests_accepted": 87,
-      "connection_rate": 30.31,
+      "connection_requests_accepted": 93,
+      "connection_rate": 32.4,
       "daily_send_rate": 23.6,
       "runway_days": 2
     },
@@ -151,10 +151,10 @@
     "icp_contacts": 4398,
     "enrolled": 3030,
     "enrolled_pct_of_icp": 68.9,
-    "invite_sent": 1214,
-    "invite_sent_pct_of_enrolled": 40.1,
-    "connected": 242,
-    "connected_pct_of_invited": 19.9,
+    "invite_sent": 1203,
+    "invite_sent_pct_of_enrolled": 39.7,
+    "connected": 231,
+    "connected_pct_of_invited": 19.2,
     "note": "Non-HubSpot sequences currently paused (1,771 contacts queued, 0 invites sent)"
   },
   "pipeline": {
