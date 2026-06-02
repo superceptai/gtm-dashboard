@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
-  "last_updated": "2026-06-02T11:49:35+10:00",
+  "last_updated": "2026-06-02T21:08:02+10:00",
   "as_of_label": "2 Jun 2026",
-  "feed_label": "REPLY_STALE",
+  "feed_label": "fresh",
   "icp": {
     "combined": {
       "total": 4679,
@@ -84,14 +84,14 @@
       "name": "LI connect only - ANZ 2nd Degree Connection CEOs at 3+ Rep Companies Using HubSpot",
       "status": "active",
       "total": 831,
-      "new": 255,
-      "pending": 55,
-      "finished": 502,
-      "connected": 80,
-      "connections_sent": 228,
-      "connection_requests_accepted": 60,
-      "connection_rate": 26.32,
-      "daily_send_rate": 15.0,
+      "new": 216,
+      "pending": 39,
+      "finished": 556,
+      "connected": 112,
+      "connections_sent": 265,
+      "connection_requests_accepted": 65,
+      "connection_rate": 24.53,
+      "daily_send_rate": 12.7,
       "runway_days": 17
     },
     {
@@ -99,15 +99,15 @@
       "name": "LI Connect Only - ANZ 2nd Degree Connection CROs at 3+ Rep Companies Using HubSpot",
       "status": "active",
       "total": 428,
-      "new": 115,
-      "pending": 96,
-      "finished": 209,
-      "connected": 73,
-      "connections_sent": 215,
-      "connection_requests_accepted": 72,
-      "connection_rate": 33.49,
-      "daily_send_rate": 18.0,
-      "runway_days": 6
+      "new": 42,
+      "pending": 100,
+      "finished": 277,
+      "connected": 130,
+      "connections_sent": 287,
+      "connection_requests_accepted": 87,
+      "connection_rate": 30.31,
+      "daily_send_rate": 23.6,
+      "runway_days": 2
     },
     {
       "id": "1695697",
@@ -141,20 +141,20 @@
     }
   ],
   "linkedin": {
-    "followers_current": 15611,
-    "followers_24h_delta": 3,
+    "followers_current": 15662,
+    "followers_24h_delta": 26,
     "followers_7d_delta": null,
     "followers_30d_delta": null,
-    "status": "stale_fallback"
+    "status": "fresh"
   },
   "funnel": {
     "icp_contacts": 4398,
     "enrolled": 3030,
     "enrolled_pct_of_icp": 68.9,
-    "invite_sent": 1015,
-    "invite_sent_pct_of_enrolled": 33.5,
-    "connected": 153,
-    "connected_pct_of_invited": 15.1,
+    "invite_sent": 1214,
+    "invite_sent_pct_of_enrolled": 40.1,
+    "connected": 242,
+    "connected_pct_of_invited": 19.9,
     "note": "Non-HubSpot sequences currently paused (1,771 contacts queued, 0 invites sent)"
   },
   "pipeline": {
@@ -190,15 +190,15 @@
   "ga4": {
     "status": "live",
     "setup_note": "GA4 property G-HC97LYRCFE via Windsor.ai. Aaron and Jack IPs not yet filtered, so self-visits inflate session counts.",
-    "sessions": 14,
-    "users": 12,
-    "engaged_pct": "7.1%",
+    "sessions": 15,
+    "users": 13,
+    "engaged_pct": "6.7%",
     "qualified": 0,
-    "qualified_cvr": "0.0%",
+    "qualified_cvr": "0%",
     "intake": 0,
-    "intake_cvr": "0.0%",
+    "intake_cvr": "0%",
     "disqualified": 0,
-    "disqualified_cvr": "0.0%",
+    "disqualified_cvr": "0%",
     "daily": [
       {
         "date": "27 May",
@@ -223,6 +223,10 @@
       {
         "date": "1 Jun",
         "sessions": 2
+      },
+      {
+        "date": "2 Jun",
+        "sessions": 1
       }
     ]
   }
