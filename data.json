@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
-  "last_updated": "2026-05-31T23:08:27+10:00",
-  "as_of_label": "31 May 2026",
-  "feed_label": "fresh",
+  "last_updated": "2026-06-02T11:49:35+10:00",
+  "as_of_label": "2 Jun 2026",
+  "feed_label": "REPLY_STALE",
   "icp": {
     "combined": {
       "total": 4679,
@@ -141,11 +141,11 @@
     }
   ],
   "linkedin": {
-    "followers_current": 15636,
+    "followers_current": 15611,
     "followers_24h_delta": 3,
     "followers_7d_delta": null,
     "followers_30d_delta": null,
-    "status": "fresh"
+    "status": "stale_fallback"
   },
   "funnel": {
     "icp_contacts": 4398,
@@ -192,7 +192,7 @@
     "setup_note": "GA4 property G-HC97LYRCFE via Windsor.ai. Aaron and Jack IPs not yet filtered, so self-visits inflate session counts.",
     "sessions": 14,
     "users": 12,
-    "engaged_pct": "21.4%",
+    "engaged_pct": "7.1%",
     "qualified": 0,
     "qualified_cvr": "0.0%",
     "intake": 0,
@@ -200,14 +200,6 @@
     "disqualified": 0,
     "disqualified_cvr": "0.0%",
     "daily": [
-      {
-        "date": "25 May",
-        "sessions": 1
-      },
-      {
-        "date": "26 May",
-        "sessions": 1
-      },
       {
         "date": "27 May",
         "sessions": 1
@@ -227,6 +219,10 @@
       {
         "date": "31 May",
         "sessions": 1
+      },
+      {
+        "date": "1 Jun",
+        "sessions": 2
       }
     ]
   }
