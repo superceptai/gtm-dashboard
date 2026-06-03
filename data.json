@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "last_updated": "2026-06-03T19:31:26+10:00",
+  "last_updated": "2026-06-03T23:09:01+10:00",
   "as_of_label": "3 Jun 2026",
   "feed_label": "fresh",
   "icp": {
@@ -84,30 +84,30 @@
       "name": "LI connect only - ANZ 2nd Degree Connection CEOs at 3+ Rep Companies Using HubSpot",
       "status": "active",
       "total": 831,
-      "new": 216,
-      "pending": 39,
+      "new": 196,
+      "pending": 59,
       "finished": 556,
-      "connected": 107,
-      "connections_sent": 265,
-      "connection_requests_accepted": 70,
-      "connection_rate": 26.42,
-      "daily_send_rate": 12.7,
-      "runway_days": 17
+      "connected": 112,
+      "connections_sent": 283,
+      "connection_requests_accepted": 83,
+      "connection_rate": 29.33,
+      "daily_send_rate": 11.1,
+      "runway_days": 18
     },
     {
       "id": "1676940",
       "name": "LI Connect Only - ANZ 2nd Degree Connection CROs at 3+ Rep Companies Using HubSpot",
       "status": "active",
       "total": 428,
-      "new": 42,
-      "pending": 100,
-      "finished": 277,
-      "connected": 124,
-      "connections_sent": 287,
-      "connection_requests_accepted": 93,
-      "connection_rate": 32.4,
-      "daily_send_rate": 23.6,
-      "runway_days": 2
+      "new": 4,
+      "pending": 108,
+      "finished": 304,
+      "connected": 148,
+      "connections_sent": 318,
+      "connection_requests_accepted": 100,
+      "connection_rate": 31.45,
+      "daily_send_rate": 21.0,
+      "runway_days": 0
     },
     {
       "id": "1695697",
@@ -141,8 +141,8 @@
     }
   ],
   "linkedin": {
-    "followers_current": 15662,
-    "followers_24h_delta": 26,
+    "followers_current": 15691,
+    "followers_24h_delta": 29,
     "followers_7d_delta": null,
     "followers_30d_delta": null,
     "status": "fresh"
@@ -151,10 +151,10 @@
     "icp_contacts": 4398,
     "enrolled": 3030,
     "enrolled_pct_of_icp": 68.9,
-    "invite_sent": 1203,
-    "invite_sent_pct_of_enrolled": 39.7,
-    "connected": 231,
-    "connected_pct_of_invited": 19.2,
+    "invite_sent": 1287,
+    "invite_sent_pct_of_enrolled": 42.5,
+    "connected": 260,
+    "connected_pct_of_invited": 20.2,
     "note": "Non-HubSpot sequences currently paused (1,771 contacts queued, 0 invites sent)"
   },
   "pipeline": {
