@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "last_updated": "2026-06-04T23:06:13+10:00",
-  "as_of_label": "4 Jun 2026",
+  "last_updated": "2026-06-05T23:09:50+10:00",
+  "as_of_label": "5 Jun 2026",
   "feed_label": "fresh",
   "icp": {
     "combined": {
@@ -12,12 +12,12 @@
       "borderline_pct": 24.2,
       "high_value_20p": 824,
       "high_value_pct": 17.6,
-      "ceo_contacts": 3140,
-      "ceo_1st": 319,
-      "ceo_1st_pct": 10.2,
-      "cro_contacts": 1258,
-      "cro_1st": 222,
-      "cro_1st_pct": 17.6
+      "ceo_contacts": 3120,
+      "ceo_1st": 332,
+      "ceo_1st_pct": 10.6,
+      "cro_contacts": 1253,
+      "cro_1st": 238,
+      "cro_1st_pct": 19.0
     },
     "hubspot": {
       "total": 1854,
@@ -29,11 +29,11 @@
       "hv_20_49": 173,
       "hv_50p": 79,
       "ceo_contacts": 1202,
-      "ceo_1st": 199,
-      "ceo_1st_pct": 16.6,
+      "ceo_1st": 204,
+      "ceo_1st_pct": 17.0,
       "cro_contacts": 641,
-      "cro_1st": 131,
-      "cro_1st_pct": 20.4
+      "cro_1st": 137,
+      "cro_1st_pct": 21.4
     },
     "non_hubspot": {
       "total": 2825,
@@ -44,18 +44,39 @@
       "high_value_20p": 572,
       "hv_20_49": 365,
       "hv_50p": 207,
-      "ceo_contacts": 1938,
-      "ceo_1st": 120,
-      "ceo_1st_pct": 6.2,
-      "cro_contacts": 617,
-      "cro_1st": 91,
-      "cro_1st_pct": 14.7
+      "ceo_contacts": 1918,
+      "ceo_1st": 128,
+      "ceo_1st_pct": 6.7,
+      "cro_contacts": 612,
+      "cro_1st": 101,
+      "cro_1st_pct": 16.5
     }
   },
   "bands": {
-    "labels": ["3 sellers", "4 sellers", "5-9 sellers", "10-19 sellers", "20-49 sellers", "50+ sellers"],
-    "hubspot": [308, 304, 630, 360, 173, 79],
-    "non_hubspot": [92, 430, 1080, 651, 365, 207]
+    "labels": [
+      "3 sellers",
+      "4 sellers",
+      "5-9 sellers",
+      "10-19 sellers",
+      "20-49 sellers",
+      "50+ sellers"
+    ],
+    "hubspot": [
+      308,
+      304,
+      630,
+      360,
+      173,
+      79
+    ],
+    "non_hubspot": [
+      92,
+      430,
+      1080,
+      651,
+      365,
+      207
+    ]
   },
   "sequences": [
     {
@@ -120,16 +141,16 @@
     }
   ],
   "linkedin": {
-    "followers_current": 15705,
+    "followers_current": 15611,
     "followers_24h_delta": 14,
     "followers_7d_delta": null,
     "followers_30d_delta": null,
-    "status": "fresh"
+    "status": "stale_fallback"
   },
   "funnel": {
-    "icp_contacts": 4398,
+    "icp_contacts": 4373,
     "enrolled": 3043,
-    "enrolled_pct_of_icp": 69.2,
+    "enrolled_pct_of_icp": 69.6,
     "invite_sent": 1372,
     "invite_sent_pct_of_enrolled": 45.1,
     "connected": 295,
@@ -138,20 +159,40 @@
   },
   "pipeline": {
     "stages": [
-      {"key": "awaiting_booking", "label": "Awaiting booking", "deals": 0},
-      {"key": "intake_booked", "label": "Intake booked", "deals": 0},
-      {"key": "decision_pending", "label": "Decision pending", "deals": 0},
-      {"key": "accepted", "label": "Accepted", "deals": 0},
-      {"key": "onboarding", "label": "Onboarding", "deals": 0}
+      {
+        "key": "awaiting_booking",
+        "label": "Awaiting booking",
+        "deals": 0
+      },
+      {
+        "key": "intake_booked",
+        "label": "Intake booked",
+        "deals": 0
+      },
+      {
+        "key": "decision_pending",
+        "label": "Decision pending",
+        "deals": 0
+      },
+      {
+        "key": "accepted",
+        "label": "Accepted",
+        "deals": 0
+      },
+      {
+        "key": "onboarding",
+        "label": "Onboarding",
+        "deals": 0
+      }
     ],
     "note": "Live applications populate once outbound sequences activate. ZTEST records excluded."
   },
   "ga4": {
     "status": "live",
     "setup_note": "GA4 property G-HC97LYRCFE via Windsor.ai. Aaron and Jack IPs not yet filtered, so self-visits inflate session counts.",
-    "sessions": 11,
-    "users": 10,
-    "engaged_pct": "0%",
+    "sessions": 8,
+    "users": 7,
+    "engaged_pct": "12.5%",
     "qualified": 0,
     "qualified_cvr": "0%",
     "intake": 0,
@@ -159,13 +200,34 @@
     "disqualified": 0,
     "disqualified_cvr": "0%",
     "daily": [
-      {"date": "29 May", "sessions": 3},
-      {"date": "30 May", "sessions": 2},
-      {"date": "31 May", "sessions": 1},
-      {"date": "1 Jun", "sessions": 2},
-      {"date": "2 Jun", "sessions": 1},
-      {"date": "3 Jun", "sessions": 1},
-      {"date": "4 Jun", "sessions": 1}
+      {
+        "date": "30 May",
+        "sessions": 2
+      },
+      {
+        "date": "31 May",
+        "sessions": 1
+      },
+      {
+        "date": "1 Jun",
+        "sessions": 2
+      },
+      {
+        "date": "2 Jun",
+        "sessions": 1
+      },
+      {
+        "date": "3 Jun",
+        "sessions": 1
+      },
+      {
+        "date": "4 Jun",
+        "sessions": 1
+      },
+      {
+        "date": "5 Jun",
+        "sessions": 0
+      }
     ]
   }
 }
