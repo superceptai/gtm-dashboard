@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
-  "last_updated": "2026-06-05T23:09:50+10:00",
-  "as_of_label": "5 Jun 2026",
-  "feed_label": "fresh",
+  "last_updated": "2026-06-06T23:08:03+10:00",
+  "as_of_label": "6 Jun 2026",
+  "feed_label": "REPLY_STALE",
   "icp": {
     "combined": {
       "total": 4679,
@@ -190,9 +190,9 @@
   "ga4": {
     "status": "live",
     "setup_note": "GA4 property G-HC97LYRCFE via Windsor.ai. Aaron and Jack IPs not yet filtered, so self-visits inflate session counts.",
-    "sessions": 8,
-    "users": 7,
-    "engaged_pct": "12.5%",
+    "sessions": 6,
+    "users": 6,
+    "engaged_pct": "16.7%",
     "qualified": 0,
     "qualified_cvr": "0%",
     "intake": 0,
@@ -200,10 +200,6 @@
     "disqualified": 0,
     "disqualified_cvr": "0%",
     "daily": [
-      {
-        "date": "30 May",
-        "sessions": 2
-      },
       {
         "date": "31 May",
         "sessions": 1
@@ -226,6 +222,10 @@
       },
       {
         "date": "5 Jun",
+        "sessions": 0
+      },
+      {
+        "date": "6 Jun",
         "sessions": 0
       }
     ]
