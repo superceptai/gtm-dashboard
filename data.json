@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "last_updated": "2026-06-13T23:06:59+10:00",
-  "as_of_label": "13 Jun 2026",
+  "last_updated": "2026-06-14T23:07:24+10:00",
+  "as_of_label": "14 Jun 2026",
   "feed_label": "fresh",
   "icp": {
     "combined": {
@@ -91,7 +91,7 @@
       "connections_sent": 455,
       "connection_requests_accepted": 128,
       "connection_rate": 28.13,
-      "daily_send_rate": 8.1,
+      "daily_send_rate": 0.7,
       "runway_days": 0
     },
     {
@@ -115,8 +115,8 @@
       "status": "active",
       "total": 1398,
       "new": 1195,
-      "pending": 151,
-      "finished": 38,
+      "pending": 95,
+      "finished": 94,
       "connected": 148,
       "connections_sent": 162,
       "connection_requests_accepted": 26,
@@ -142,7 +142,7 @@
   ],
   "linkedin": {
     "followers_current": 15797,
-    "followers_24h_delta": 3,
+    "followers_24h_delta": 0,
     "followers_7d_delta": 62,
     "followers_30d_delta": null,
     "status": "fresh"
@@ -155,7 +155,7 @@
     "invite_sent_pct_of_enrolled": 60.1,
     "connected": 409,
     "connected_pct_of_invited": 22.1,
-    "note": "Non-HubSpot CRO sequence (1695700) status=New (not activated) \u2014 380 contacts queued at step 0. Non-HubSpot CEO sequence (1695697) status=Active."
+    "note": "Non-HubSpot CRO sequence (1695700) status=New (not activated) — 380 contacts queued at step 0. Non-HubSpot CEO sequence (1695697) status=Active."
   },
   "pipeline": {
     "stages": [
@@ -190,8 +190,8 @@
   "ga4": {
     "status": "live",
     "setup_note": "GA4 property G-HC97LYRCFE via Windsor.ai. Aaron and Jack IPs not yet filtered, so self-visits inflate session counts.",
-    "sessions": 2,
-    "users": 2,
+    "sessions": 6,
+    "users": 3,
     "engaged_pct": "0%",
     "qualified": 0,
     "qualified_cvr": "0%",
@@ -200,10 +200,6 @@
     "disqualified": 0,
     "disqualified_cvr": "0%",
     "daily": [
-      {
-        "date": "7 Jun",
-        "sessions": 0
-      },
       {
         "date": "8 Jun",
         "sessions": 1
@@ -227,6 +223,10 @@
       {
         "date": "13 Jun",
         "sessions": 0
+      },
+      {
+        "date": "14 Jun",
+        "sessions": 4
       }
     ]
   }
