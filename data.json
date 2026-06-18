@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
-  "last_updated": "2026-06-15T23:07:30+10:00",
-  "as_of_label": "15 Jun 2026",
-  "feed_label": "fresh",
+  "last_updated": "2026-06-18T12:44:17+10:00",
+  "as_of_label": "18 Jun 2026",
+  "feed_label": "REPLY_STALE",
   "icp": {
     "combined": {
       "total": 4679,
@@ -141,11 +141,11 @@
     }
   ],
   "linkedin": {
-    "followers_current": 15807,
-    "followers_24h_delta": 10,
-    "followers_7d_delta": 57,
+    "followers_current": 15611,
+    "followers_24h_delta": null,
+    "followers_7d_delta": null,
     "followers_30d_delta": null,
-    "status": "fresh"
+    "status": "stale_fallback"
   },
   "funnel": {
     "icp_contacts": 4373,
@@ -155,7 +155,7 @@
     "invite_sent_pct_of_enrolled": 61.0,
     "connected": 414,
     "connected_pct_of_invited": 22.1,
-    "note": "Non-HubSpot CRO sequence (1695700) status=New (not activated) \u2014 380 contacts queued at step 0. Non-HubSpot CEO sequence (1695697) status=Active."
+    "note": "Non-HubSpot CRO sequence (1695700) status=New (not activated) — 380 contacts queued at step 0. Non-HubSpot CEO sequence (1695697) status=Active."
   },
   "pipeline": {
     "stages": [
@@ -201,18 +201,6 @@
     "disqualified_cvr": "0%",
     "daily": [
       {
-        "date": "9 Jun",
-        "sessions": 0
-      },
-      {
-        "date": "10 Jun",
-        "sessions": 1
-      },
-      {
-        "date": "11 Jun",
-        "sessions": 0
-      },
-      {
         "date": "12 Jun",
         "sessions": 0
       },
@@ -226,6 +214,18 @@
       },
       {
         "date": "15 Jun",
+        "sessions": 1
+      },
+      {
+        "date": "16 Jun",
+        "sessions": 0
+      },
+      {
+        "date": "17 Jun",
+        "sessions": 0
+      },
+      {
+        "date": "18 Jun",
         "sessions": 0
       }
     ]
