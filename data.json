@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "last_updated": "2026-06-19T20:19:04+10:00",
-  "as_of_label": "19 Jun 2026",
+  "last_updated": "2026-06-20T02:08:29+10:00",
+  "as_of_label": "20 Jun 2026",
   "feed_label": "fresh",
   "icp": {
     "combined": {
@@ -87,7 +87,7 @@
       "new": 0,
       "pending": 0,
       "finished": 817,
-      "connected": 116,
+      "connected": 89,
       "connections_sent": 463,
       "connection_requests_accepted": 137,
       "connection_rate": 29.59,
@@ -98,8 +98,8 @@
       "id": "1676940",
       "name": "LI Connect Only - ANZ 2nd Degree Connection CROs at 3+ Rep Companies Using HubSpot",
       "status": "active",
-      "total": 445,
-      "new": 0,
+      "total": 446,
+      "new": 1,
       "pending": 0,
       "finished": 432,
       "connected": 27,
@@ -141,20 +141,20 @@
     }
   ],
   "linkedin": {
-    "followers_current": 15848,
-    "followers_24h_delta": 41,
-    "followers_7d_delta": 54,
+    "followers_current": 15850,
+    "followers_24h_delta": 2,
+    "followers_7d_delta": 56,
     "followers_30d_delta": null,
     "status": "fresh"
   },
   "funnel": {
     "icp_contacts": 4373,
-    "enrolled": 3071,
+    "enrolled": 3072,
     "enrolled_pct_of_icp": 70.2,
-    "invite_sent": 2094,
-    "invite_sent_pct_of_enrolled": 68.2,
-    "connected": 452,
-    "connected_pct_of_invited": 21.6,
+    "invite_sent": 2067,
+    "invite_sent_pct_of_enrolled": 67.3,
+    "connected": 425,
+    "connected_pct_of_invited": 20.6,
     "note": "Non-HubSpot CRO sequence (1695700) status=New (not activated) \u2014 380 contacts queued at step 0. Non-HubSpot CEO sequence (1695697) status=Active."
   },
   "pipeline": {
@@ -201,10 +201,6 @@
     "disqualified_cvr": "0%",
     "daily": [
       {
-        "date": "13 Jun",
-        "sessions": 0
-      },
-      {
         "date": "14 Jun",
         "sessions": 4
       },
@@ -226,6 +222,10 @@
       },
       {
         "date": "19 Jun",
+        "sessions": 0
+      },
+      {
+        "date": "20 Jun",
         "sessions": 0
       }
     ]
