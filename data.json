@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "last_updated": "2026-06-19T09:43:01+10:00",
+  "last_updated": "2026-06-19T20:19:04+10:00",
   "as_of_label": "19 Jun 2026",
   "feed_label": "fresh",
   "icp": {
@@ -115,14 +115,14 @@
       "status": "active",
       "total": 1398,
       "new": 980,
-      "pending": 202,
-      "finished": 191,
-      "connected": 318,
+      "pending": 201,
+      "finished": 192,
+      "connected": 309,
       "connections_sent": 362,
-      "connection_requests_accepted": 56,
-      "connection_rate": 15.47,
-      "daily_send_rate": 30.1,
-      "runway_days": 33
+      "connection_requests_accepted": 65,
+      "connection_rate": 17.96,
+      "daily_send_rate": 28.6,
+      "runway_days": 34
     },
     {
       "id": "1695700",
@@ -141,20 +141,20 @@
     }
   ],
   "linkedin": {
-    "followers_current": 15611,
-    "followers_24h_delta": null,
-    "followers_7d_delta": null,
+    "followers_current": 15848,
+    "followers_24h_delta": 41,
+    "followers_7d_delta": 54,
     "followers_30d_delta": null,
-    "status": "stale_fallback"
+    "status": "fresh"
   },
   "funnel": {
     "icp_contacts": 4373,
     "enrolled": 3071,
     "enrolled_pct_of_icp": 70.2,
-    "invite_sent": 2103,
-    "invite_sent_pct_of_enrolled": 68.5,
-    "connected": 461,
-    "connected_pct_of_invited": 21.9,
+    "invite_sent": 2094,
+    "invite_sent_pct_of_enrolled": 68.2,
+    "connected": 452,
+    "connected_pct_of_invited": 21.6,
     "note": "Non-HubSpot CRO sequence (1695700) status=New (not activated) \u2014 380 contacts queued at step 0. Non-HubSpot CEO sequence (1695697) status=Active."
   },
   "pipeline": {
