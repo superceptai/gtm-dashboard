@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "last_updated": "2026-06-22T02:05:48+10:00",
-  "as_of_label": "22 Jun 2026",
+  "last_updated": "2026-06-23T01:07:00+10:00",
+  "as_of_label": "23 Jun 2026",
   "feed_label": "fresh",
   "icp": {
     "combined": {
@@ -141,11 +141,11 @@
     }
   ],
   "linkedin": {
-    "followers_current": 15852,
-    "followers_24h_delta": 1,
-    "followers_7d_delta": 55,
+    "followers_current": 15611,
+    "followers_24h_delta": null,
+    "followers_7d_delta": null,
     "followers_30d_delta": null,
-    "status": "fresh"
+    "status": "stale_fallback"
   },
   "funnel": {
     "icp_contacts": 4373,
@@ -155,7 +155,7 @@
     "invite_sent_pct_of_enrolled": 65.4,
     "connected": 369,
     "connected_pct_of_invited": 18.3,
-    "note": "Non-HubSpot CRO sequence (1695700) status=New (not activated) \u2014 380 contacts queued at step 0. HubSpot CEO (1658117) and CRO (1676940) sequences essentially exhausted (pending=0). Non-HubSpot CEO (1695697) sending healthily at 21.6/day; ~45 day runway."
+    "note": "Non-HubSpot CRO sequence (1695700) status=New (not activated) — 380 contacts queued at step 0. HubSpot CEO (1658117) and CRO (1676940) sequences essentially exhausted (pending=0). Non-HubSpot CEO (1695697) sending healthily at 21.6/day; ~45 day runway."
   },
   "pipeline": {
     "stages": [
@@ -190,7 +190,7 @@
   "ga4": {
     "status": "live",
     "setup_note": "GA4 property G-HC97LYRCFE via Windsor.ai. Aaron and Jack IPs not yet filtered, so self-visits inflate session counts.",
-    "sessions": 2,
+    "sessions": 1,
     "users": 1,
     "engaged_pct": "0%",
     "qualified": 0,
