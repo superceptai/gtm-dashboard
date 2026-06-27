@@ -1,55 +1,55 @@
 {
   "schema_version": 1,
-  "last_updated": "2026-06-23T01:07:00+10:00",
-  "as_of_label": "23 Jun 2026",
-  "feed_label": "fresh",
+  "last_updated": "2026-06-28T08:25:09+10:00",
+  "as_of_label": "28 Jun 2026",
+  "feed_label": "partial-refresh: REPLY_STALE, GA4_UNAVAILABLE, LINKEDIN_STALE",
   "icp": {
     "combined": {
-      "total": 4679,
-      "core_5_19": 2721,
-      "core_pct": 58.2,
-      "borderline_3_4": 1134,
-      "borderline_pct": 24.2,
+      "total": 4704,
+      "core_5_19": 2730,
+      "core_pct": 58.0,
+      "borderline_3_4": 1150,
+      "borderline_pct": 24.4,
       "high_value_20p": 824,
-      "high_value_pct": 17.6,
-      "ceo_contacts": 3120,
-      "ceo_1st": 332,
-      "ceo_1st_pct": 10.6,
-      "cro_contacts": 1253,
+      "high_value_pct": 17.5,
+      "ceo_contacts": 3124,
+      "ceo_1st": 371,
+      "ceo_1st_pct": 11.9,
+      "cro_contacts": 1257,
       "cro_1st": 238,
-      "cro_1st_pct": 19.0
+      "cro_1st_pct": 18.9
     },
     "hubspot": {
-      "total": 1854,
-      "core_5_19": 990,
-      "core_pct": 53.4,
-      "borderline_3_4": 612,
+      "total": 1862,
+      "core_5_19": 993,
+      "core_pct": 53.3,
+      "borderline_3_4": 615,
       "borderline_pct": 33.0,
-      "high_value_20p": 252,
+      "high_value_20p": 254,
       "hv_20_49": 173,
       "hv_50p": 79,
-      "ceo_contacts": 1202,
-      "ceo_1st": 204,
-      "ceo_1st_pct": 17.0,
-      "cro_contacts": 641,
+      "ceo_contacts": 1204,
+      "ceo_1st": 212,
+      "ceo_1st_pct": 17.6,
+      "cro_contacts": 643,
       "cro_1st": 137,
-      "cro_1st_pct": 21.4
+      "cro_1st_pct": 21.3
     },
     "non_hubspot": {
-      "total": 2825,
-      "core_5_19": 1731,
-      "core_pct": 61.3,
-      "borderline_3_4": 522,
-      "borderline_pct": 18.5,
-      "high_value_20p": 572,
+      "total": 2842,
+      "core_5_19": 1737,
+      "core_pct": 61.1,
+      "borderline_3_4": 535,
+      "borderline_pct": 18.8,
+      "high_value_20p": 570,
       "hv_20_49": 365,
       "hv_50p": 207,
-      "ceo_contacts": 1918,
-      "ceo_1st": 128,
-      "ceo_1st_pct": 6.7,
-      "cro_contacts": 612,
+      "ceo_contacts": 1920,
+      "ceo_1st": 159,
+      "ceo_1st_pct": 8.3,
+      "cro_contacts": 614,
       "cro_1st": 101,
-      "cro_1st_pct": 16.5
+      "cro_1st_pct": 16.4
     }
   },
   "bands": {
@@ -148,14 +148,14 @@
     "status": "stale_fallback"
   },
   "funnel": {
-    "icp_contacts": 4373,
+    "icp_contacts": 4381,
     "enrolled": 3077,
-    "enrolled_pct_of_icp": 70.4,
+    "enrolled_pct_of_icp": 70.2,
     "invite_sent": 2011,
     "invite_sent_pct_of_enrolled": 65.4,
     "connected": 369,
     "connected_pct_of_invited": 18.3,
-    "note": "Non-HubSpot CRO sequence (1695700) status=New (not activated) — 380 contacts queued at step 0. HubSpot CEO (1658117) and CRO (1676940) sequences essentially exhausted (pending=0). Non-HubSpot CEO (1695697) sending healthily at 21.6/day; ~45 day runway."
+    "note": "Reply.io feed last updated 2026-06-21 (>36h stale). Sequence values reflect that snapshot. Non-HubSpot CEO (1695697) had been sending healthily; current state may have advanced."
   },
   "pipeline": {
     "stages": [
@@ -185,11 +185,11 @@
         "deals": 0
       }
     ],
-    "note": "Live applications populate once outbound sequences activate. ZTEST records excluded (2 found and excluded)."
+    "note": "Live applications populate once outbound sequences activate. 2 ZTEST records found and excluded."
   },
   "ga4": {
-    "status": "live",
-    "setup_note": "GA4 property G-HC97LYRCFE via Windsor.ai. Aaron and Jack IPs not yet filtered, so self-visits inflate session counts.",
+    "status": "stale_prior",
+    "setup_note": "GA4 property G-HC97LYRCFE via Windsor.ai. Windsor.ai MCP not available in this run \u2014 preserving prior values from 23 Jun 2026 snapshot.",
     "sessions": 1,
     "users": 1,
     "engaged_pct": "0%",
