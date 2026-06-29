@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
-  "last_updated": "2026-06-29T08:29:01+10:00",
-  "as_of_label": "29 Jun 2026",
-  "feed_label": "partial-refresh: GA4_UNAVAILABLE",
+  "last_updated": "2026-06-30T08:31:11+10:00",
+  "as_of_label": "30 Jun 2026",
+  "feed_label": "partial-refresh: GA4_UNAVAILABLE, LINKEDIN_STALE",
   "icp": {
     "combined": {
       "total": 4704,
@@ -141,11 +141,11 @@
     }
   ],
   "linkedin": {
-    "followers_current": 15883,
-    "followers_24h_delta": -1,
-    "followers_7d_delta": 32,
-    "followers_30d_delta": 250,
-    "status": "fresh"
+    "followers_current": 15611,
+    "followers_24h_delta": null,
+    "followers_7d_delta": null,
+    "followers_30d_delta": null,
+    "status": "stale_fallback"
   },
   "funnel": {
     "icp_contacts": 4381,
