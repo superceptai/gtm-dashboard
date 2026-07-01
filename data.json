@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
-  "last_updated": "2026-06-30T08:31:11+10:00",
-  "as_of_label": "30 Jun 2026",
-  "feed_label": "partial-refresh: GA4_UNAVAILABLE, LINKEDIN_STALE",
+  "last_updated": "2026-07-01T20:49:00+10:00",
+  "as_of_label": "1 Jul 2026",
+  "feed_label": "partial-refresh: REPLY_STALE, LINKEDIN_STALE, GA4_UNAVAILABLE",
   "icp": {
     "combined": {
       "total": 4704,
@@ -188,7 +188,7 @@
   },
   "ga4": {
     "status": "stale_prior",
-    "setup_note": "GA4 property G-HC97LYRCFE via Windsor.ai. Windsor.ai MCP not available in this run \u2014 preserving prior values from 23 Jun 2026 snapshot.",
+    "setup_note": "GA4 property G-HC97LYRCFE via Windsor.ai. Windsor.ai MCP not available in this run — preserving prior values from 23 Jun 2026 snapshot.",
     "sessions": 1,
     "users": 1,
     "engaged_pct": "0%",
