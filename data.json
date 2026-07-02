@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "last_updated": "2026-07-02T01:06:52+10:00",
-  "as_of_label": "2 Jul 2026",
+  "last_updated": "2026-07-03T01:07:02+10:00",
+  "as_of_label": "3 Jul 2026",
   "feed_label": "partial-refresh: REPLY_STALE, LINKEDIN_STALE, GA4_UNAVAILABLE",
   "icp": {
     "combined": {
