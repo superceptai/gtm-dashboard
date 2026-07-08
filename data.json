@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
-  "last_updated": "2026-07-08T19:40:00+10:00",
+  "last_updated": "2026-07-08T23:06:55+10:00",
   "as_of_label": "8 Jul 2026",
-  "feed_label": "partial-refresh: REPLY_STALE, LINKEDIN_STALE, GA4_UNAVAILABLE",
+  "feed_label": "partial-refresh: LINKEDIN_STALE, GA4_UNAVAILABLE",
   "icp": {
     "combined": {
       "total": 4704,
@@ -61,22 +61,8 @@
       "20-49 sellers",
       "50+ sellers"
     ],
-    "hubspot": [
-      308,
-      304,
-      630,
-      360,
-      173,
-      79
-    ],
-    "non_hubspot": [
-      92,
-      430,
-      1080,
-      651,
-      365,
-      207
-    ]
+    "hubspot": [308, 304, 630, 360, 173, 79],
+    "non_hubspot": [92, 430, 1080, 651, 365, 207]
   },
   "sequences": [
     {
@@ -87,11 +73,11 @@
       "new": 0,
       "pending": 0,
       "finished": 822,
-      "connected": 4,
+      "connected": 2,
       "connections_sent": 468,
       "connection_requests_accepted": 139,
       "connection_rate": 29.7,
-      "daily_send_rate": 0.4,
+      "daily_send_rate": 0.0,
       "runway_days": null
     },
     {
@@ -102,11 +88,11 @@
       "new": 0,
       "pending": 0,
       "finished": 437,
-      "connected": 4,
+      "connected": 0,
       "connections_sent": 343,
       "connection_requests_accepted": 112,
       "connection_rate": 32.65,
-      "daily_send_rate": 0.1,
+      "daily_send_rate": 0.0,
       "runway_days": null
     },
     {
@@ -114,15 +100,15 @@
       "name": "LI connect only - ANZ 2nd Degree Connection CEOs at 3+ Rep Companies - Non-HubSpot",
       "status": "active",
       "total": 1398,
-      "new": 542,
-      "pending": 166,
-      "finished": 630,
-      "connected": 335,
-      "connections_sent": 752,
-      "connection_requests_accepted": 129,
-      "connection_rate": 17.15,
-      "daily_send_rate": 28.0,
-      "runway_days": 19
+      "new": 450,
+      "pending": 116,
+      "finished": 760,
+      "connected": 338,
+      "connections_sent": 828,
+      "connection_requests_accepted": 145,
+      "connection_rate": 17.51,
+      "daily_send_rate": 28.7,
+      "runway_days": 16
     },
     {
       "id": "1695700",
@@ -151,44 +137,24 @@
     "icp_contacts": 4385,
     "enrolled": 3081,
     "enrolled_pct_of_icp": 70.3,
-    "invite_sent": 2398,
-    "invite_sent_pct_of_enrolled": 77.8,
-    "connected": 343,
-    "connected_pct_of_invited": 14.3
+    "invite_sent": 2475,
+    "invite_sent_pct_of_enrolled": 80.3,
+    "connected": 340,
+    "connected_pct_of_invited": 13.7
   },
   "pipeline": {
     "stages": [
-      {
-        "key": "awaiting_booking",
-        "label": "Awaiting booking",
-        "deals": 0
-      },
-      {
-        "key": "intake_booked",
-        "label": "Intake booked",
-        "deals": 0
-      },
-      {
-        "key": "decision_pending",
-        "label": "Decision pending",
-        "deals": 0
-      },
-      {
-        "key": "accepted",
-        "label": "Accepted",
-        "deals": 0
-      },
-      {
-        "key": "onboarding",
-        "label": "Onboarding",
-        "deals": 0
-      }
+      {"key": "awaiting_booking", "label": "Awaiting booking", "deals": 0},
+      {"key": "intake_booked", "label": "Intake booked", "deals": 0},
+      {"key": "decision_pending", "label": "Decision pending", "deals": 0},
+      {"key": "accepted", "label": "Accepted", "deals": 0},
+      {"key": "onboarding", "label": "Onboarding", "deals": 0}
     ],
     "note": "Live applications populate once outbound sequences activate. 2 ZTEST records found and excluded."
   },
   "ga4": {
     "status": "stale_prior",
-    "setup_note": "GA4 property G-HC97LYRCFE via Windsor.ai. Windsor.ai MCP not available in this run \u2014 preserving prior values from 23 Jun 2026 snapshot.",
+    "setup_note": "GA4 property G-HC97LYRCFE via Windsor.ai. Windsor.ai MCP not available in this run — preserving prior values from 23 Jun 2026 snapshot.",
     "sessions": 1,
     "users": 1,
     "engaged_pct": "0%",
@@ -199,34 +165,13 @@
     "disqualified": 0,
     "disqualified_cvr": "0%",
     "daily": [
-      {
-        "date": "16 Jun",
-        "sessions": 0
-      },
-      {
-        "date": "17 Jun",
-        "sessions": 0
-      },
-      {
-        "date": "18 Jun",
-        "sessions": 0
-      },
-      {
-        "date": "19 Jun",
-        "sessions": 0
-      },
-      {
-        "date": "20 Jun",
-        "sessions": 1
-      },
-      {
-        "date": "21 Jun",
-        "sessions": 0
-      },
-      {
-        "date": "22 Jun",
-        "sessions": 0
-      }
+      {"date": "16 Jun", "sessions": 0},
+      {"date": "17 Jun", "sessions": 0},
+      {"date": "18 Jun", "sessions": 0},
+      {"date": "19 Jun", "sessions": 0},
+      {"date": "20 Jun", "sessions": 1},
+      {"date": "21 Jun", "sessions": 0},
+      {"date": "22 Jun", "sessions": 0}
     ]
   }
 }
