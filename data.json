@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
-  "last_updated": "2026-07-08T23:06:55+10:00",
-  "as_of_label": "8 Jul 2026",
-  "feed_label": "partial-refresh: LINKEDIN_STALE, GA4_UNAVAILABLE",
+  "last_updated": "2026-07-12T06:18:20+10:00",
+  "as_of_label": "12 Jul 2026",
+  "feed_label": "partial-refresh: REPLY_STALE, LINKEDIN_STALE, GA4_UNAVAILABLE, HS_ICP_CACHED",
   "icp": {
     "combined": {
       "total": 4704,
@@ -150,7 +150,7 @@
       {"key": "accepted", "label": "Accepted", "deals": 0},
       {"key": "onboarding", "label": "Onboarding", "deals": 0}
     ],
-    "note": "Live applications populate once outbound sequences activate. 2 ZTEST records found and excluded."
+    "note": "Live applications populate once outbound sequences activate. 2 ZTEST records found and excluded (pipeline 1663910348 live query)."
   },
   "ga4": {
     "status": "stale_prior",
