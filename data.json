@@ -1,24 +1,24 @@
 {
   "schema_version": 1,
-  "last_updated": "2026-07-12T18:01:02+10:00",
+  "last_updated": "2026-07-12T23:09:43+10:00",
   "as_of_label": "12 Jul 2026",
-  "feed_label": "refresh: HS_ICP_LIVE, REPLY_MCP_LIVE, REPLY_FEED_STALE_4D, LINKEDIN_LIVE_CONNECTSAFELY, GA4_LIVE, CONTACT_SPLIT_APPROX",
+  "feed_label": "refresh: HS_ICP_LIVE, REPLY_MCP_LIVE, REPLY_FEED_FRESH, LINKEDIN_LIVE_CONNECTSAFELY, GA4_LIVE, CONTACT_SPLIT_APPROX",
   "source_status": {
     "hubspot_icp": {
       "status": "fresh",
-      "last_success": "2026-07-12T18:01:02+10:00"
+      "last_success": "2026-07-12T23:09:43+10:00"
     },
     "reply_io": {
       "status": "fresh",
-      "last_success": "2026-07-12T18:01:02+10:00"
+      "last_success": "2026-07-12T23:09:43+10:00"
     },
     "ga4": {
       "status": "fresh",
-      "last_success": "2026-07-12T18:01:02+10:00"
+      "last_success": "2026-07-12T23:09:43+10:00"
     },
     "linkedin": {
       "status": "fresh",
-      "last_success": "2026-07-12T18:01:02+10:00"
+      "last_success": "2026-07-12T23:09:43+10:00"
     }
   },
   "icp": {
@@ -132,15 +132,15 @@
       "name": "LI connect only - ANZ 2nd Degree Connection CEOs at 3+ Rep Companies - Non-HubSpot",
       "status": "active",
       "total": 1398,
-      "new": 450,
-      "pending": 116,
-      "finished": 760,
-      "connected": 338,
+      "new": 309,
+      "pending": 160,
+      "finished": 848,
+      "connected": 364,
       "connections_sent": 952,
       "connection_requests_accepted": 160,
       "connection_rate": 16.81,
-      "daily_send_rate": 28.7,
-      "runway_days": 16
+      "daily_send_rate": 31.0,
+      "runway_days": 10
     },
     {
       "id": "1695700",
@@ -169,10 +169,10 @@
     "icp_contacts": 4961,
     "enrolled": 3081,
     "enrolled_pct_of_icp": 62.1,
-    "invite_sent": 2475,
-    "invite_sent_pct_of_enrolled": 80.3,
+    "invite_sent": 2633,
+    "invite_sent_pct_of_enrolled": 85.5,
     "connected": 695,
-    "connected_pct_of_invited": 28.1
+    "connected_pct_of_invited": 26.4
   },
   "pipeline": {
     "stages": [
@@ -202,7 +202,7 @@
         "deals": 0
       }
     ],
-    "note": "Live applications populate once outbound sequences activate. 2 ZTEST records excluded (pipeline 1663910348 live query)."
+    "note": "Live applications populate once outbound sequences activate. ZTEST records excluded (pipeline 1663910348 live query)."
   },
   "ga4": {
     "status": "live",
