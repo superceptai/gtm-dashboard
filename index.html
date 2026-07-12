@@ -67,6 +67,21 @@
   .brand .divider{height:16px;width:1px;background:var(--border-strong);align-self:center}
   .brand .label{text-transform:uppercase;letter-spacing:0.18em;font-size:11px;font-weight:600;color:var(--primary)}
   .masthead-meta{font-size:12px;color:var(--ebony-70);margin-top:4px}
+
+  .source-status{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+  .src-badge{display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border-radius:999px;font-size:11px;font-weight:500;color:var(--ebony);background:var(--surface-light);border:1px solid var(--border);line-height:1.4}
+  .src-badge .dot{width:6px;height:6px;border-radius:50%;background:var(--accent-darker);flex-shrink:0}
+  .src-badge.fresh{color:var(--success-text);background:var(--success-bg);border-color:rgba(25,166,116,0.20)}
+  .src-badge.fresh .dot{background:var(--accent-darker)}
+  .src-badge.cached{color:var(--info-text);background:var(--info-bg);border-color:rgba(11,11,214,0.18)}
+  .src-badge.cached .dot{background:var(--info-text)}
+  .src-badge.stale{color:var(--warn-text);background:var(--warn-bg);border-color:rgba(186,117,23,0.20)}
+  .src-badge.stale .dot{background:var(--warn-text)}
+  .src-badge.failed{color:var(--danger-text);background:var(--danger-bg);border-color:rgba(217,71,71,0.20)}
+  .src-badge.failed .dot{background:var(--danger-text)}
+  .src-badge.fallback{color:var(--ebony-70);background:var(--surface-light);border-color:var(--border)}
+  .src-badge.fallback .dot{background:var(--ebony-50)}
+  .src-badge .st{opacity:0.75;text-transform:uppercase;letter-spacing:0.08em;font-size:10px;margin-left:2px}
   .freshness{text-align:right;color:var(--ebony-70);font-size:13px;line-height:1.45}
   .freshness .dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--accent-darker);margin-right:6px;vertical-align:middle}
   .freshness.stale .dot{background:#F2DC13}
@@ -168,6 +183,7 @@
           <span class="label">GTM Dashboard</span>
         </div>
         <div class="masthead-meta" id="masthead-meta">Loading...</div>
+        <div class="source-status" id="source-status"></div>
       </div>
       <div class="freshness" id="freshness">
         <div><span class="dot"></span><span id="as-of">Loading...</span></div>
@@ -316,6 +332,47 @@ async function loadData() {
   }
 }
 
+
+function getSourceStatus(d) {
+  // Prefer structured source_status; fall back to parsing feed_label
+  const structured = d.source_status;
+  if (structured) {
+    return [
+      { key: 'hubspot_icp', label: 'HubSpot ICP', status: structured.hubspot_icp?.status || 'fresh' },
+      { key: 'reply_io',    label: 'Reply.io',    status: structured.reply_io?.status || 'fresh' },
+      { key: 'ga4',         label: 'GA4',         status: structured.ga4?.status || 'fresh' },
+      { key: 'linkedin',    label: 'LinkedIn',    status: structured.linkedin?.status || 'fresh' }
+    ];
+  }
+  const label = (d.feed_label || '').toUpperCase();
+  function detect(cases, defaultStatus) {
+    for (const [needle, status] of cases) {
+      if (label.includes(needle)) return status;
+    }
+    return defaultStatus;
+  }
+  return [
+    { key: 'hubspot_icp', label: 'HubSpot ICP',
+      status: detect([['HS_ICP_UNAVAILABLE','failed'],['HS_ICP_STALE','stale'],['HS_ICP_CACHED','cached']], 'fresh') },
+    { key: 'reply_io',    label: 'Reply.io',
+      status: detect([['REPLY_UNAVAILABLE','failed'],['REPLY_STALE','stale'],['REPLY_CACHED','cached']], 'fresh') },
+    { key: 'ga4',         label: 'GA4',
+      status: detect([['GA4_UNAVAILABLE','failed'],['GA4_STALE','stale'],['GA4_CACHED','cached']], 'fresh') },
+    { key: 'linkedin',    label: 'LinkedIn',
+      status: (d.linkedin && d.linkedin.status === 'stale_fallback') ? 'fallback'
+              : detect([['LINKEDIN_UNAVAILABLE','failed'],['LINKEDIN_STALE','stale'],['LINKEDIN_CACHED','cached']], 'fresh') }
+  ];
+}
+
+function renderSourceStatus(d) {
+  const el = document.getElementById('source-status');
+  if (!el) return;
+  const sources = getSourceStatus(d);
+  el.innerHTML = sources.map(s =>
+    `<span class="src-badge ${s.status}"><span class="dot"></span><span>${escapeHtml(s.label)}</span><span class="st">${escapeHtml(s.status)}</span></span>`
+  ).join('');
+}
+
 function render(d) {
   const fetched = new Date(d.last_updated);
   const now = new Date();
@@ -323,6 +380,7 @@ function render(d) {
   document.getElementById('as-of').textContent = d.as_of_label || fetched.toDateString();
   document.getElementById('freshness-label').textContent = hours < 24 ? 'Live' : 'Stale';
   document.getElementById('masthead-meta').textContent = d.feed_label || '';
+  renderSourceStatus(d);
   const fEl = document.getElementById('freshness');
   fEl.classList.remove('error');
   if (hours >= 24) fEl.classList.add('stale');
