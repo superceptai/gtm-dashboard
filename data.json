@@ -1,24 +1,24 @@
 {
   "schema_version": 1,
-  "last_updated": "2026-07-12T23:09:43+10:00",
-  "as_of_label": "12 Jul 2026",
+  "last_updated": "2026-07-13T23:15:00+10:00",
+  "as_of_label": "13 Jul 2026",
   "feed_label": "refresh: HS_ICP_LIVE, REPLY_MCP_LIVE, REPLY_FEED_FRESH, LINKEDIN_LIVE_CONNECTSAFELY, GA4_LIVE, CONTACT_SPLIT_APPROX",
   "source_status": {
     "hubspot_icp": {
       "status": "fresh",
-      "last_success": "2026-07-12T23:09:43+10:00"
+      "last_success": "2026-07-13T23:15:00+10:00"
     },
     "reply_io": {
       "status": "fresh",
-      "last_success": "2026-07-12T23:09:43+10:00"
+      "last_success": "2026-07-13T23:15:00+10:00"
     },
     "ga4": {
       "status": "fresh",
-      "last_success": "2026-07-12T23:09:43+10:00"
+      "last_success": "2026-07-13T23:15:00+10:00"
     },
     "linkedin": {
       "status": "fresh",
-      "last_success": "2026-07-12T23:09:43+10:00"
+      "last_success": "2026-07-13T23:15:00+10:00"
     }
   },
   "icp": {
@@ -38,15 +38,15 @@
       "cro_1st_pct": 18.4
     },
     "hubspot": {
-      "total": 1866,
-      "core_5_19": 995,
+      "total": 1867,
+      "core_5_19": 996,
       "core_pct": 53.3,
       "borderline_3_4": 616,
       "borderline_pct": 33.0,
       "high_value_20p": 255,
       "hv_20_49": 175,
       "hv_50p": 80,
-      "ceo_contacts": 1428,
+      "ceo_contacts": 1429,
       "ceo_1st": 196,
       "ceo_1st_pct": 13.7,
       "cro_contacts": 540,
@@ -54,15 +54,15 @@
       "cro_1st_pct": 22.4
     },
     "non_hubspot": {
-      "total": 2838,
-      "core_5_19": 1735,
+      "total": 2837,
+      "core_5_19": 1734,
       "core_pct": 61.1,
       "borderline_3_4": 534,
       "borderline_pct": 18.8,
       "high_value_20p": 569,
       "hv_20_49": 363,
       "hv_50p": 206,
-      "ceo_contacts": 2172,
+      "ceo_contacts": 2171,
       "ceo_1st": 248,
       "ceo_1st_pct": 11.4,
       "cro_contacts": 821,
@@ -82,7 +82,7 @@
     "hubspot": [
       310,
       306,
-      633,
+      634,
       362,
       175,
       80
@@ -90,7 +90,7 @@
     "non_hubspot": [
       99,
       435,
-      1084,
+      1083,
       651,
       363,
       206
@@ -105,7 +105,7 @@
       "new": 0,
       "pending": 0,
       "finished": 822,
-      "connected": 2,
+      "connected": 0,
       "connections_sent": 468,
       "connection_requests_accepted": 139,
       "connection_rate": 29.7,
@@ -132,15 +132,15 @@
       "name": "LI connect only - ANZ 2nd Degree Connection CEOs at 3+ Rep Companies - Non-HubSpot",
       "status": "active",
       "total": 1398,
-      "new": 309,
-      "pending": 160,
-      "finished": 848,
-      "connected": 364,
-      "connections_sent": 952,
-      "connection_requests_accepted": 160,
-      "connection_rate": 16.81,
-      "daily_send_rate": 31.0,
-      "runway_days": 10
+      "new": 258,
+      "pending": 181,
+      "finished": 876,
+      "connected": 375,
+      "connections_sent": 997,
+      "connection_requests_accepted": 171,
+      "connection_rate": 17.15,
+      "daily_send_rate": 29.0,
+      "runway_days": 9
     },
     {
       "id": "1695700",
@@ -159,20 +159,20 @@
     }
   ],
   "linkedin": {
-    "followers_current": 15956,
-    "followers_24h_delta": 345,
-    "followers_7d_delta": 345,
-    "followers_30d_delta": 162,
+    "followers_current": 15967,
+    "followers_24h_delta": 11,
+    "followers_7d_delta": 356,
+    "followers_30d_delta": 170,
     "status": "fresh"
   },
   "funnel": {
     "icp_contacts": 4961,
     "enrolled": 3081,
     "enrolled_pct_of_icp": 62.1,
-    "invite_sent": 2633,
-    "invite_sent_pct_of_enrolled": 85.5,
+    "invite_sent": 2691,
+    "invite_sent_pct_of_enrolled": 87.3,
     "connected": 695,
-    "connected_pct_of_invited": 26.4
+    "connected_pct_of_invited": 25.8
   },
   "pipeline": {
     "stages": [
@@ -207,9 +207,9 @@
   "ga4": {
     "status": "live",
     "setup_note": "GA4 property G-HC97LYRCFE via Windsor.ai MCP (last_7dT window).",
-    "sessions": 8,
+    "sessions": 9,
     "users": 5,
-    "engaged_pct": "12.5%",
+    "engaged_pct": "33.3%",
     "qualified": 0,
     "qualified_cvr": "0%",
     "intake": 0,
@@ -217,10 +217,6 @@
     "disqualified": 0,
     "disqualified_cvr": "0%",
     "daily": [
-      {
-        "date": "6 Jul",
-        "sessions": 0
-      },
       {
         "date": "7 Jul",
         "sessions": 0
@@ -244,6 +240,10 @@
       {
         "date": "12 Jul",
         "sessions": 3
+      },
+      {
+        "date": "13 Jul",
+        "sessions": 1
       }
     ]
   }
