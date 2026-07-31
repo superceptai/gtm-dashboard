@@ -1,19 +1,19 @@
 {
   "schema_version": 1,
-  "last_updated": "2026-07-26T23:08:12+10:00",
-  "as_of_label": "26 Jul 2026",
-  "feed_label": "refresh: HS_ICP_LIVE, REPLY_LIVE, LINKEDIN_STALE, GA4_LIVE, CONTACT_SPLIT_APPROX",
+  "last_updated": "2026-07-31T23:04:52+10:00",
+  "as_of_label": "31 Jul 2026",
+  "feed_label": "refresh: HS_ICP_LIVE, REPLY_LIVE, LINKEDIN_STALE, GA4_STALE, CONTACT_SPLIT_APPROX",
   "source_status": {
     "hubspot_icp": {
       "status": "fresh",
-      "last_success": "2026-07-26T23:08:12+10:00"
+      "last_success": "2026-07-31T23:04:52+10:00"
     },
     "reply_io": {
       "status": "fresh",
-      "last_success": "2026-07-26T23:08:12+10:00"
+      "last_success": "2026-07-31T23:04:52+10:00"
     },
     "ga4": {
-      "status": "fresh",
+      "status": "stale",
       "last_success": "2026-07-26T23:08:12+10:00"
     },
     "linkedin": {
@@ -23,12 +23,12 @@
   },
   "icp": {
     "combined": {
-      "total": 4707,
-      "core_5_19": 2733,
+      "total": 4709,
+      "core_5_19": 2734,
       "core_pct": 58.1,
       "borderline_3_4": 1150,
       "borderline_pct": 24.4,
-      "high_value_20p": 824,
+      "high_value_20p": 825,
       "high_value_pct": 17.5,
       "ceo_contacts": 3600,
       "ceo_1st": 444,
@@ -38,36 +38,36 @@
       "cro_1st_pct": 18.4
     },
     "hubspot": {
-      "total": 1869,
-      "core_5_19": 996,
+      "total": 1872,
+      "core_5_19": 997,
       "core_pct": 53.3,
       "borderline_3_4": 617,
       "borderline_pct": 33.0,
-      "high_value_20p": 256,
-      "hv_20_49": 175,
-      "hv_50p": 81,
-      "ceo_contacts": 1429,
-      "ceo_1st": 364,
-      "ceo_1st_pct": 25.5,
-      "cro_contacts": 540,
-      "cro_1st": 248,
-      "cro_1st_pct": 45.9
+      "high_value_20p": 258,
+      "hv_20_49": 176,
+      "hv_50p": 82,
+      "ceo_contacts": 1431,
+      "ceo_1st": 367,
+      "ceo_1st_pct": 25.6,
+      "cro_contacts": 541,
+      "cro_1st": 251,
+      "cro_1st_pct": 46.4
     },
     "non_hubspot": {
-      "total": 2838,
+      "total": 2837,
       "core_5_19": 1737,
       "core_pct": 61.2,
       "borderline_3_4": 533,
       "borderline_pct": 18.8,
-      "high_value_20p": 568,
+      "high_value_20p": 567,
       "hv_20_49": 363,
-      "hv_50p": 205,
-      "ceo_contacts": 2171,
-      "ceo_1st": 80,
-      "ceo_1st_pct": 3.7,
-      "cro_contacts": 821,
-      "cro_1st": 3,
-      "cro_1st_pct": 0.4
+      "hv_50p": 204,
+      "ceo_contacts": 2169,
+      "ceo_1st": 77,
+      "ceo_1st_pct": 3.6,
+      "cro_contacts": 820,
+      "cro_1st": 0,
+      "cro_1st_pct": 0.0
     }
   },
   "bands": {
@@ -82,10 +82,10 @@
     "hubspot": [
       310,
       307,
-      634,
+      635,
       362,
-      175,
-      81
+      176,
+      82
     ],
     "non_hubspot": [
       99,
@@ -93,7 +93,7 @@
       1084,
       653,
       363,
-      205
+      204
     ]
   },
   "sequences": [
@@ -137,8 +137,8 @@
       "finished": 1278,
       "connected": 236,
       "connections_sent": 1230,
-      "connection_requests_accepted": 214,
-      "connection_rate": 17.4,
+      "connection_requests_accepted": 215,
+      "connection_rate": 17.48,
       "daily_send_rate": 11.1,
       "runway_days": null
     },
@@ -151,9 +151,9 @@
       "pending": 105,
       "finished": 0,
       "connected": 91,
-      "connections_sent": 99,
-      "connection_requests_accepted": 8,
-      "connection_rate": 8.08,
+      "connections_sent": 299,
+      "connection_requests_accepted": 50,
+      "connection_rate": 16.72,
       "daily_send_rate": 14.1,
       "runway_days": 18
     }
@@ -179,7 +179,7 @@
     "note": "Beta pipeline id 1663910348. No deals in pipeline. ZTEST-prefixed deals excluded per query filter."
   },
   "ga4": {
-    "status": "live",
+    "status": "stale_prior",
     "setup_note": "GA4 property 536587504 via Windsor.ai (last 7 days incl. today)",
     "sessions": 6,
     "users": 5,
