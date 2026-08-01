@@ -1,20 +1,20 @@
 {
   "schema_version": 1,
-  "last_updated": "2026-08-01T23:06:22+10:00",
-  "as_of_label": "1 Aug 2026",
-  "feed_label": "refresh: HS_ICP_LIVE, REPLY_LIVE, LINKEDIN_STALE, GA4_LIVE, CONTACT_SPLIT_APPROX",
+  "last_updated": "2026-08-02T09:05:39+10:00",
+  "as_of_label": "2 Aug 2026",
+  "feed_label": "refresh: HS_ICP_LIVE, REPLY_LIVE, LINKEDIN_STALE_FALLBACK, GA4_LIVE, CONTACT_SPLIT_APPROX, REPLY_FEED_STALE_6D",
   "source_status": {
     "hubspot_icp": {
       "status": "fresh",
-      "last_success": "2026-08-01T23:06:22+10:00"
+      "last_success": "2026-08-02T09:05:39+10:00"
     },
     "reply_io": {
       "status": "fresh",
-      "last_success": "2026-08-01T23:06:22+10:00"
+      "last_success": "2026-08-02T09:05:39+10:00"
     },
     "ga4": {
       "status": "fresh",
-      "last_success": "2026-08-01T23:06:22+10:00"
+      "last_success": "2026-08-02T09:05:39+10:00"
     },
     "linkedin": {
       "status": "stale",
@@ -152,8 +152,8 @@
       "finished": 0,
       "connected": 91,
       "connections_sent": 299,
-      "connection_requests_accepted": 51,
-      "connection_rate": 17.06,
+      "connection_requests_accepted": 52,
+      "connection_rate": 17.39,
       "daily_send_rate": 14.1,
       "runway_days": 18
     }
