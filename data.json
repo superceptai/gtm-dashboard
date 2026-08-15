@@ -1,20 +1,20 @@
 {
   "schema_version": 1,
-  "last_updated": "2026-08-12T02:07:56+10:00",
-  "as_of_label": "12 Aug 2026",
-  "feed_label": "refresh: HS_ICP_LIVE, REPLY_STALE_MCP+FEED_STALE_16D, LINKEDIN_STALE_FALLBACK_MCP_DENIED, GA4_LIVE, CONTACT_SPLIT_APPROX",
+  "last_updated": "2026-08-15T23:12:37+10:00",
+  "as_of_label": "15 Aug 2026",
+  "feed_label": "refresh: HS_ICP_LIVE, REPLY_MCP_LIVE+FEED_STALE_50H, LINKEDIN_STALE_FALLBACK_CONNECTSAFELY_DISABLED_IN_CHAT, GA4_LIVE, CONTACT_SPLIT_APPROX",
   "source_status": {
     "hubspot_icp": {
       "status": "fresh",
-      "last_success": "2026-08-12T02:07:56+10:00"
+      "last_success": "2026-08-15T23:12:37+10:00"
     },
     "reply_io": {
-      "status": "stale",
-      "last_success": "2026-07-26T21:16:00+10:00"
+      "status": "fresh",
+      "last_success": "2026-08-15T23:12:37+10:00"
     },
     "ga4": {
       "status": "fresh",
-      "last_success": "2026-08-12T02:07:56+10:00"
+      "last_success": "2026-08-15T23:12:37+10:00"
     },
     "linkedin": {
       "status": "stale",
@@ -38,10 +38,10 @@
       "cro_1st_pct": 18.4
     },
     "hubspot": {
-      "total": 1876,
+      "total": 1877,
       "core_5_19": 999,
-      "core_pct": 53.3,
-      "borderline_3_4": 617,
+      "core_pct": 53.2,
+      "borderline_3_4": 618,
       "borderline_pct": 32.9,
       "high_value_20p": 260,
       "hv_20_49": 176,
@@ -54,10 +54,10 @@
       "cro_1st_pct": 46.7
     },
     "non_hubspot": {
-      "total": 2835,
+      "total": 2834,
       "core_5_19": 1737,
       "core_pct": 61.3,
-      "borderline_3_4": 533,
+      "borderline_3_4": 532,
       "borderline_pct": 18.8,
       "high_value_20p": 565,
       "hv_20_49": 363,
@@ -80,7 +80,7 @@
       "50+ sellers"
     ],
     "hubspot": [
-      310,
+      311,
       307,
       637,
       362,
@@ -88,7 +88,7 @@
       84
     ],
     "non_hubspot": [
-      99,
+      98,
       434,
       1082,
       655,
@@ -134,12 +134,12 @@
       "total": 1398,
       "new": 0,
       "pending": 0,
-      "finished": 1278,
-      "connected": 236,
+      "finished": 1304,
+      "connected": 0,
       "connections_sent": 1230,
-      "connection_requests_accepted": 214,
-      "connection_rate": 17.4,
-      "daily_send_rate": 11.1,
+      "connection_requests_accepted": 215,
+      "connection_rate": 17.48,
+      "daily_send_rate": 0.0,
       "runway_days": null
     },
     {
@@ -147,15 +147,15 @@
       "name": "LI Connect Only - ANZ 2nd Degree Connection CROs at 3+ Rep Companies - Non-HubSpot",
       "status": "active",
       "total": 380,
-      "new": 259,
-      "pending": 105,
-      "finished": 0,
-      "connected": 91,
-      "connections_sent": 99,
-      "connection_requests_accepted": 8,
-      "connection_rate": 8.08,
-      "daily_send_rate": 14.1,
-      "runway_days": 18
+      "new": 0,
+      "pending": 0,
+      "finished": 357,
+      "connected": 87,
+      "connections_sent": 341,
+      "connection_requests_accepted": 77,
+      "connection_rate": 22.58,
+      "daily_send_rate": 0.0,
+      "runway_days": null
     }
   ],
   "linkedin": {
@@ -169,10 +169,10 @@
     "icp_contacts": 4961,
     "enrolled": 3081,
     "enrolled_pct_of_icp": 62.1,
-    "invite_sent": 2969,
-    "invite_sent_pct_of_enrolled": 96.4,
+    "invite_sent": 3007,
+    "invite_sent_pct_of_enrolled": 97.6,
     "connected": 695,
-    "connected_pct_of_invited": 23.4
+    "connected_pct_of_invited": 23.1
   },
   "pipeline": {
     "stages": [],
@@ -192,7 +192,7 @@
     "disqualified_cvr": 0.0,
     "daily": [
       {
-        "date": "2026-08-06",
+        "date": "2026-08-15",
         "sessions": 1
       }
     ]
