@@ -172,8 +172,35 @@ def build_icp_and_bands():
     # Track A funnel pieces (coverage), all HubSpot.
     icp_contacts = icp["combined"]["ceo_contacts"] + icp["combined"]["cro_contacts"]
     connected = icp["combined"]["ceo_1st"] + icp["combined"]["cro_1st"]
-    funnel_hubspot = {"icp_contacts": icp_contacts, "connected": connected}
+    # Track B `enrolled`: HubSpot is the canonical enrolment ledger. Reply.io's
+    # API exposes no per-sequence contact totals, so `enrolled` is sourced here
+    # as the ICP CEO/CRO contacts (same set as icp_contacts) that carry a
+    # Reply sequence name.
+    enrolled = enrolled_in_reply()
+    funnel_hubspot = {
+        "icp_contacts": icp_contacts,
+        "connected": connected,
+        "enrolled": enrolled,
+    }
     return icp, bands, funnel_hubspot
+
+
+def enrolled_in_reply():
+    """Count ICP CEO/CRO contacts that have been enrolled in a Reply.io sequence.
+
+    Same ICP universe as icp_contacts (hs_persona in {CEO, CRO}, ANZ company,
+    seller bands) with the added requirement that `reply_sequence_name` is set.
+    HAS_PROPERTY matches any contact where the property has a value."""
+    total = 0
+    for persona in (PERSONA_CEO, PERSONA_CRO):
+        filters = [
+            {"propertyName": "hs_persona", "operator": "EQ", "value": persona},
+            {"propertyName": "company_country", "operator": "IN", "values": ANZ},
+            {"propertyName": "company_no__sellers", "operator": "IN", "values": BAND_VALUES},
+            {"propertyName": "reply_sequence_name", "operator": "HAS_PROPERTY"},
+        ]
+        total += hs_count("contacts", filters)
+    return total
 
 
 def build_pipeline():
