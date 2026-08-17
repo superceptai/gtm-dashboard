@@ -47,17 +47,27 @@ jobs:
 
       # --- Four pullers. Each prints its own [leg] status=ok|error line. In a
       #     normal run a puller never fails the job (it carries forward on error).
-      #     A manual "check" run passes --check so an empty source fails loudly. ---
+      #     A manual "check" run passes --check so an empty source fails loudly.
+      #
+      #     In a check run the pullers use continue-on-error so ONE failing leg
+      #     no longer halts the job: all four run, each writes its leg file, and
+      #     the "Verify sources" gate below turns the whole run red if any failed.
+      #     continue-on-error is `${{ inputs.check }}` (true only in check runs);
+      #     normal runs are unaffected since the pullers exit 0 there anyway. ---
       - name: Pull HubSpot (ICP, bands, pipeline)
+        continue-on-error: ${{ inputs.check }}
         run: python3 scripts/pull_hubspot.py ${{ inputs.check && '--check' || '' }}
 
       - name: Pull Reply.io (sequences)
+        continue-on-error: ${{ inputs.check }}
         run: python3 scripts/pull_replyio.py ${{ inputs.check && '--check' || '' }}
 
       - name: Pull GA4 via Windsor.ai
+        continue-on-error: ${{ inputs.check }}
         run: python3 scripts/pull_ga4.py ${{ inputs.check && '--check' || '' }}
 
       - name: Pull ConnectSafely (LinkedIn followers)
+        continue-on-error: ${{ inputs.check }}
         run: python3 scripts/pull_connectsafely.py ${{ inputs.check && '--check' || '' }}
 
       - name: Assemble data.json + append history.jsonl
@@ -66,17 +76,26 @@ jobs:
 
       # One-line green/red status per leg, printed to the log AND to the run
       # summary page so a non-developer can eyeball health without reading code.
-      - name: Per-leg status summary
+      # This step is also the VERIFY GATE: because it runs after all four pullers
+      # (which are continue-on-error in a check run), it sees every leg's status,
+      # prints the full table, and only THEN exits non-zero if any leg failed --
+      # so one verify run shows the true status of every leg instead of stopping
+      # at the first failure. In a normal (non-check) run it never fails the job.
+      - name: Verify sources (per-leg status + gate)
         if: ${{ always() }}
+        env:
+          CHECK: ${{ inputs.check }}
         run: |
           python3 - <<'PY' | tee -a "$GITHUB_STEP_SUMMARY"
-          import json, os, glob
+          import json, os, sys
           tmp = os.environ["REFRESH_TMP"]
+          check_mode = os.environ.get("CHECK") == "true"
           legs = {"hubspot_icp": "HubSpot ICP", "reply_io": "Reply.io",
                   "ga4": "GA4", "linkedin": "LinkedIn"}
           print("### Data refresh — source status\n")
           print("| Source | Status | Last success |")
           print("|---|---|---|")
+          failed = []
           for key, label in legs.items():
               path = os.path.join(tmp, f"leg_{key}.json")
               status, last = "missing", "-"
@@ -89,6 +108,14 @@ jobs:
                   pass
               icon = "✅" if status == "ok" else "❌"
               print(f"| {label} | {icon} {status} | {last} |")
+              if status != "ok":
+                  failed.append(label)
+          # Verify gate: fail the run only after every leg has been reported, and
+          # only in a check run (a normal run must never fail on a carried-forward
+          # leg -- it commits what it has and relies on carry-forward instead).
+          if check_mode and failed:
+              print(f"\n**CHECK FAILED** — {len(failed)} leg(s) not ok: {', '.join(failed)}")
+              sys.exit(1)
           PY
 
       - name: Commit and push if changed
