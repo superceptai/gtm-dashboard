@@ -8,17 +8,29 @@ Endpoint:  https://api.connectsafely.ai   (ConnectSafely REST API), stdlib urlli
 
 OPEN ITEM RESOLUTION (per brief):
   ConnectSafely DOES cleanly return the personal follower count for Aaron's
-  account -- verified live: followerGrowth.totalFollowers = 16091, which matches
-  data.json exactly. So the REST call is the PRIMARY path.
+  account -- verified live against the connector: resultType=GROWTH returns
+  data.followerGrowth.totalFollowers = 16091, which matches data.json exactly.
+  So the REST call is the PRIMARY path.
 
-  Because ConnectSafely's public REST docs are not reachable from CI, the exact
-  URL path could not be re-confirmed against live docs at build time. The puller
-  therefore tries a small set of candidate follower-analytics paths and deep-
-  searches the JSON for the follower total. If NONE returns a usable number, it
-  falls back to the committed config/manual_overrides.json `linkedin_followers`
-  value so a human can update the number weekly from the LinkedIn UI. The chosen
-  path is reported in `source` ("connectsafely" or "manual_override") and printed
-  in the run log so a non-developer can see which path was used.
+  Endpoint shape re-verified at build time:
+    * API base            https://api.connectsafely.ai
+    * the LinkedIn API surface is served under a /linkedin prefix (its OpenAPI
+      spec is published at https://api.connectsafely.ai/linkedin/openapi.json),
+      so follower analytics lives at /linkedin/followers/analytics.
+    * query params        accountId, resultType=GROWTH, timeRange=past_30_days
+    * response            { success, accountId, data: { followerGrowth:
+                            { totalFollowers, changePercent }, demographics {..} } }
+
+  The docs host (connectsafely.ai) and API host (api.connectsafely.ai) are both
+  blocked by the CI network egress policy (HTTP 403 from the proxy), so the exact
+  path could not be fetched from the live spec here. The puller therefore tries
+  the /linkedin-prefixed path first (matching the published spec mount point),
+  then a small set of fallbacks, and deep-searches the JSON for the follower
+  total. If NONE returns a usable number, it falls back to the committed
+  config/manual_overrides.json `linkedin_followers` value so a human can update
+  the number weekly from the LinkedIn UI. The chosen path is reported in `source`
+  ("connectsafely" or "manual_override") and printed in the run log so a
+  non-developer can see which path was used.
 
 Week-over-week follower deltas are computed by the assembler from history.jsonl,
 not here (ConnectSafely's changePercent is not a fixed 24h/7d/30d delta).
@@ -35,11 +47,14 @@ CS_BASE = "https://api.connectsafely.ai"
 ACCOUNT_ID = os.environ.get("CONNECTSAFELY_ACCOUNT_ID", "6a5dcba69b82053edcdfd39a")
 
 # Candidate follower-analytics paths, tried in order. {acct} is substituted.
+# The /linkedin-prefixed path matches the published OpenAPI mount point
+# (api.connectsafely.ai/linkedin/openapi.json) and is tried first; the rest are
+# fallbacks kept in case the service base path differs.
 FOLLOWER_PATHS = [
+    "/linkedin/followers/analytics?accountId={acct}&resultType=GROWTH&timeRange=past_30_days",
+    "/linkedin/accounts/{acct}/followers/analytics?resultType=GROWTH&timeRange=past_30_days",
     "/followers/analytics?accountId={acct}&resultType=GROWTH&timeRange=past_30_days",
-    "/linkedin/followers/analytics?accountId={acct}&resultType=GROWTH",
     "/accounts/{acct}/followers/analytics?resultType=GROWTH",
-    "/followers-analytics?accountId={acct}",
 ]
 
 OVERRIDE_FILE = os.path.join(
