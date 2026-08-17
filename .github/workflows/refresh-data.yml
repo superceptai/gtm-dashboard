@@ -1,0 +1,106 @@
+name: Refresh dashboard data
+
+# Runs every day at 08:00 UTC (18:00 AEST) and can also be started by hand from
+# the Actions tab (the "Run workflow" button). See README-refresh.md.
+on:
+  schedule:
+    - cron: "0 8 * * *"      # 08:00 UTC == 18:00 AEST
+  workflow_dispatch:
+    inputs:
+      check:
+        description: "Verify sources only (fail loudly if any source is empty; does NOT commit)"
+        type: boolean
+        default: false
+
+# The only permission this workflow needs is to commit the refreshed data files.
+permissions:
+  contents: write
+
+concurrency:
+  group: refresh-data
+  cancel-in-progress: false
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    env:
+      # Temp dir the pullers write their per-leg files into.
+      REFRESH_TMP: ${{ runner.temp }}/refresh
+      # Secrets are injected as environment variables ONLY. Never hardcoded,
+      # never echoed. Each maps to a GitHub repository secret of the same name.
+      HUBSPOT_TOKEN: ${{ secrets.HUBSPOT_TOKEN }}
+      REPLYIO_API_KEY: ${{ secrets.REPLYIO_API_KEY }}
+      WINDSOR_API_KEY: ${{ secrets.WINDSOR_API_KEY }}
+      CONNECTSAFELY_API_KEY: ${{ secrets.CONNECTSAFELY_API_KEY }}
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Prepare temp dir
+        run: mkdir -p "$REFRESH_TMP"
+
+      # Uses the system Python 3 already on ubuntu-latest. Standard library only,
+      # so there is nothing to pip install and nothing to break.
+      - name: Show Python version
+        run: python3 --version
+
+      # --- Four pullers. Each prints its own [leg] status=ok|error line. In a
+      #     normal run a puller never fails the job (it carries forward on error).
+      #     A manual "check" run passes --check so an empty source fails loudly. ---
+      - name: Pull HubSpot (ICP, bands, pipeline)
+        run: python3 scripts/pull_hubspot.py ${{ inputs.check && '--check' || '' }}
+
+      - name: Pull Reply.io (sequences)
+        run: python3 scripts/pull_replyio.py ${{ inputs.check && '--check' || '' }}
+
+      - name: Pull GA4 via Windsor.ai
+        run: python3 scripts/pull_ga4.py ${{ inputs.check && '--check' || '' }}
+
+      - name: Pull ConnectSafely (LinkedIn followers)
+        run: python3 scripts/pull_connectsafely.py ${{ inputs.check && '--check' || '' }}
+
+      - name: Assemble data.json + append history.jsonl
+        if: ${{ !inputs.check }}
+        run: python3 scripts/assemble_data_json.py
+
+      # One-line green/red status per leg, printed to the log AND to the run
+      # summary page so a non-developer can eyeball health without reading code.
+      - name: Per-leg status summary
+        if: ${{ always() }}
+        run: |
+          python3 - <<'PY' | tee -a "$GITHUB_STEP_SUMMARY"
+          import json, os, glob
+          tmp = os.environ["REFRESH_TMP"]
+          legs = {"hubspot_icp": "HubSpot ICP", "reply_io": "Reply.io",
+                  "ga4": "GA4", "linkedin": "LinkedIn"}
+          print("### Data refresh — source status\n")
+          print("| Source | Status | Last success |")
+          print("|---|---|---|")
+          for key, label in legs.items():
+              path = os.path.join(tmp, f"leg_{key}.json")
+              status, last = "missing", "-"
+              try:
+                  with open(path) as f:
+                      p = json.load(f)
+                  status = p.get("status", "missing")
+                  last = p.get("last_success") or "-"
+              except Exception:
+                  pass
+              icon = "✅" if status == "ok" else "❌"
+              print(f"| {label} | {icon} {status} | {last} |")
+          PY
+
+      - name: Commit and push if changed
+        if: ${{ !inputs.check }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data.json history.jsonl
+          if git diff --cached --quiet; then
+            echo "No data changes to commit."
+          else
+            git commit -m "chore(data): daily dashboard refresh [skip ci]"
+            git push
+            echo "Committed and pushed refreshed data."
+          fi

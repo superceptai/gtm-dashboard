@@ -168,6 +168,35 @@
   .error-banner{padding:16px 20px;background:var(--danger-bg);border:1px solid rgba(163,45,45,0.30);border-radius:var(--r-md);color:var(--danger-text);font-size:13px;margin:20px 0;line-height:1.5}
   .error-banner strong{display:block;margin-bottom:4px;font-weight:600}
   .error-banner code{font-family:"IBM Plex Sans",sans-serif;background:rgba(255,255,255,0.5);padding:1px 6px;border-radius:4px;font-size:12px}
+
+  /* --- refresh pipeline additions: source health, NO DATA, tracks, trends --- */
+  .src-badge.error,.src-badge.failed{color:var(--danger-text);background:var(--danger-bg);border-color:rgba(217,71,71,0.20)}
+  .src-badge.error .dot,.src-badge.failed .dot{background:var(--danger-text)}
+  .src-badge .ls{opacity:0.7;font-size:10px;margin-left:4px;letter-spacing:0;text-transform:none}
+  .nodata{display:flex;align-items:center;gap:8px;padding:14px 16px;background:var(--danger-bg);border:1px dashed rgba(163,45,45,0.40);border-radius:var(--r-md);color:var(--danger-text);font-size:12.5px;font-weight:500;margin-bottom:14px}
+  .nodata b{font-weight:600}
+  .nodata .tag{font-size:10px;text-transform:uppercase;letter-spacing:0.12em;background:var(--danger-text);color:var(--white);padding:2px 8px;border-radius:999px}
+  .track-wrap{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  @media (max-width:760px){.track-wrap{grid-template-columns:1fr}}
+  .track{background:var(--white);border:1px solid var(--border);border-radius:var(--r-lg);padding:16px 18px;box-shadow:var(--shadow-resting)}
+  .track h4{margin:0 0 2px;font-size:12.5px;font-weight:600;color:var(--ebony)}
+  .track .track-sub{margin:0 0 12px;font-size:11px;color:var(--ebony-70);line-height:1.45}
+  .tstep{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--border)}
+  .tstep:last-of-type{border-bottom:none}
+  .tstep .tl{font-size:12px;color:var(--ebony)}
+  .tstep .tl small{display:block;font-size:10.5px;color:var(--ebony-70)}
+  .tstep .tv{font-size:16px;font-weight:500;font-variant-numeric:tabular-nums;color:var(--ebony);text-align:right;white-space:nowrap}
+  .tstep .tv small{font-size:11px;color:var(--ebony-70);font-weight:400;margin-left:6px}
+  .tstep .tv.muted{color:var(--ebony-50)}
+  .track-target{margin-top:12px;padding:8px 10px;background:var(--info-bg);border-left:3px solid var(--primary);border-radius:0 var(--r-sm) var(--r-sm) 0;font-size:11px;color:var(--info-text);line-height:1.5}
+  .track-target b{font-weight:600}
+  .wow{font-size:11.5px;font-variant-numeric:tabular-nums;font-weight:500}
+  .wow.up{color:var(--accent-darker)}
+  .wow.down{color:var(--danger-text)}
+  .wow.flat{color:var(--ebony-70)}
+  .conv-row{display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap;margin:10px 0 0;font-size:11.5px;color:var(--ebony-70)}
+  .conv-row .cv{background:var(--surface-light);border-radius:999px;padding:3px 10px;font-variant-numeric:tabular-nums}
+  .conv-row .cv b{color:var(--ebony);font-weight:600}
 </style>
 </head>
 <body>
@@ -324,12 +353,77 @@ async function loadData() {
     );
   }
 
+  // history.jsonl powers the week-over-week trend views. It is optional: if it
+  // cannot be loaded the dashboard still renders, just without the trend lines.
+  const history = await loadHistory();
+
   try {
-    render(data);
+    render(data, history);
   } catch (e) {
     console.error('Render failed:', e);
     showError('Dashboard render failed', `${e.message}. The data file loaded successfully but the renderer hit an error.`);
   }
+}
+
+// Parse history.jsonl (one JSON object per line) into an array of snapshots,
+// oldest first. Each row is { snapshot_timestamp, schema_version, data }.
+async function loadHistory() {
+  try {
+    const res = await fetch('history.jsonl?t=' + Date.now(), { cache: 'no-store' });
+    if (!res.ok) return [];
+    const text = await res.text();
+    const rows = [];
+    for (const line of text.split('\n')) {
+      const t = line.trim();
+      if (!t) continue;
+      try { rows.push(JSON.parse(t)); } catch (e) { /* skip a bad line */ }
+    }
+    rows.sort((a, b) => String(a.snapshot_timestamp).localeCompare(String(b.snapshot_timestamp)));
+    return rows;
+  } catch (e) {
+    console.warn('history.jsonl not loaded:', e.message);
+    return [];
+  }
+}
+
+// Pull a numeric series out of history via an accessor, returning the most
+// recent `limit` points as { label, value }. `label` is the short as_of label.
+function histSeries(history, accessor, limit) {
+  const pts = [];
+  for (const row of (history || [])) {
+    const d = row && row.data;
+    if (!d) continue;
+    let v;
+    try { v = accessor(d); } catch (e) { v = undefined; }
+    if (typeof v !== 'number' || isNaN(v)) continue;
+    const label = d.as_of_label || String(row.snapshot_timestamp || '').slice(0, 10);
+    pts.push({ label, value: v });
+  }
+  return limit ? pts.slice(-limit) : pts;
+}
+
+// Week-over-week delta: compares the latest value to the value ~7 days earlier
+// in history. Returns { html } for a coloured up/down/flat chip, or '' if we
+// lack a comparison point.
+function wowChip(history, accessor, opts) {
+  opts = opts || {};
+  const series = histSeries(history, accessor);
+  if (series.length < 2) return '';
+  const latest = series[series.length - 1].value;
+  // find a point roughly a week back (at least 1 step back)
+  let prevIdx = series.length - 2;
+  const targetTs = Date.now() - 7 * 864e5;
+  for (let i = series.length - 2; i >= 0; i--) {
+    const ts = Date.parse((history[i] && history[i].snapshot_timestamp) || '');
+    if (!isNaN(ts) && ts <= targetTs) { prevIdx = i; break; }
+  }
+  const prev = series[prevIdx].value;
+  const diff = latest - prev;
+  const cls = diff > 0 ? 'up' : (diff < 0 ? 'down' : 'flat');
+  const arrow = diff > 0 ? '▲' : (diff < 0 ? '▼' : '–');
+  const sign = diff > 0 ? '+' : '';
+  const val = opts.pct ? (sign + diff.toFixed(1) + ' pts') : (sign + fmt(diff));
+  return `<span class="wow ${cls}">${arrow} ${val} <span style="opacity:.7">WoW</span></span>`;
 }
 
 
@@ -337,11 +431,16 @@ function getSourceStatus(d) {
   // Prefer structured source_status; fall back to parsing feed_label
   const structured = d.source_status;
   if (structured) {
+    const mk = (key, label) => ({
+      key, label,
+      status: structured[key]?.status || 'fresh',
+      last_success: structured[key]?.last_success || null
+    });
     return [
-      { key: 'hubspot_icp', label: 'HubSpot ICP', status: structured.hubspot_icp?.status || 'fresh' },
-      { key: 'reply_io',    label: 'Reply.io',    status: structured.reply_io?.status || 'fresh' },
-      { key: 'ga4',         label: 'GA4',         status: structured.ga4?.status || 'fresh' },
-      { key: 'linkedin',    label: 'LinkedIn',    status: structured.linkedin?.status || 'fresh' }
+      mk('hubspot_icp', 'HubSpot ICP'),
+      mk('reply_io', 'Reply.io'),
+      mk('ga4', 'GA4'),
+      mk('linkedin', 'LinkedIn')
     ];
   }
   const label = (d.feed_label || '').toUpperCase();
@@ -364,16 +463,48 @@ function getSourceStatus(d) {
   ];
 }
 
+// Short "last success" label, e.g. "2h ago" / "3d ago", from an ISO timestamp.
+function fmtAgo(iso) {
+  if (!iso) return '';
+  const t = Date.parse(iso);
+  if (isNaN(t)) return '';
+  const mins = Math.max(0, Math.round((Date.now() - t) / 6e4));
+  if (mins < 60) return mins + 'm ago';
+  const hrs = Math.round(mins / 60);
+  if (hrs < 24) return hrs + 'h ago';
+  return Math.round(hrs / 24) + 'd ago';
+}
+
+// A leg is "down" when its source_status is error or failed. Its section must
+// render NO DATA instead of showing carried-forward numbers as if current.
+function legDown(d, key) {
+  const s = d.source_status && d.source_status[key] && d.source_status[key].status;
+  return s === 'error' || s === 'failed';
+}
+
 function renderSourceStatus(d) {
   const el = document.getElementById('source-status');
   if (!el) return;
   const sources = getSourceStatus(d);
-  el.innerHTML = sources.map(s =>
-    `<span class="src-badge ${s.status}"><span class="dot"></span><span>${escapeHtml(s.label)}</span><span class="st">${escapeHtml(s.status)}</span></span>`
-  ).join('');
+  el.innerHTML = sources.map(s => {
+    const down = s.status === 'error' || s.status === 'failed';
+    const stText = down ? 'NO DATA' : s.status;
+    const ago = s.last_success ? `<span class="ls">${escapeHtml(fmtAgo(s.last_success))}</span>` : '';
+    return `<span class="src-badge ${s.status}" title="${escapeHtml(s.last_success ? 'Last success: ' + s.last_success : 'No successful pull recorded')}">` +
+      `<span class="dot"></span><span>${escapeHtml(s.label)}</span>` +
+      `<span class="st">${escapeHtml(stText)}</span>${ago}</span>`;
+  }).join('');
 }
 
-function render(d) {
+// Reusable NO DATA panel for a section whose source leg is down.
+function noDataPanel(label) {
+  return `<div class="nodata"><span class="tag">No data</span>` +
+    `<span><b>${escapeHtml(label)}</b> source is currently unavailable. ` +
+    `Showing nothing rather than stale numbers — check the source health strip above.</span></div>`;
+}
+
+function render(d, history) {
+  history = history || [];
   const fetched = new Date(d.last_updated);
   const now = new Date();
   const hours = (now - fetched) / 36e5;
@@ -386,8 +517,19 @@ function render(d) {
   if (hours >= 24) fEl.classList.add('stale');
   else fEl.classList.remove('stale');
 
+  // When a leg is down we render NO DATA rather than carried-forward numbers.
+  // These guarded lists/panels also keep chart canvases out of the DOM so the
+  // chart code below safely no-ops for a down leg.
+  const seqList = legDown(d, 'reply_io') ? [] : (d.sequences || []);
+  const pipeStages = legDown(d, 'hubspot_icp') ? [] : (d.pipeline.stages || []);
+  const pipeDealsTotal = pipeStages.reduce((a, s) => a + (typeof s.deals === 'number' ? s.deals : 0), 0);
+  const ga4DailyPanel = (!legDown(d, 'ga4') && Array.isArray(d.ga4.daily) && d.ga4.daily.length > 0)
+    ? `<div class="panel" style="margin-top:14px"><p class="panel-title">Daily sessions — last 7 days</p><div style="position:relative;width:100%;height:180px"><canvas id="ga4DailyChart"></canvas></div></div>`
+    : '';
+
   document.getElementById('app').innerHTML = `
 
+    ${legDown(d, 'hubspot_icp') ? noDataPanel('ICP database & seller bands (HubSpot)') : `
     <p class="sl">ICP database \u2014 combined ANZ</p>
     <p class="sr">All ANZ companies \u00B7 No. Sellers = 3, 4, 5-9, 10-19, 20-49, 50+ \u00B7 Company Country = Australia or New Zealand</p>
     <div class="mc-grid-4">
@@ -440,20 +582,39 @@ function render(d) {
       <div style="position:relative;width:100%;height:220px"><canvas id="bandChart"></canvas></div>
     </div>
 
+    <div class="panel">
+      <p class="panel-title">ICP coverage \u2014 week over week ${wowChip(history, x => x.icp.combined.ceo_1st + x.icp.combined.cro_1st)}</p>
+      <div class="panel-legend">
+        <span><i style="background:var(--primary)"></i>CEO 1st-degree</span>
+        <span><i style="background:var(--secondary)"></i>CRO 1st-degree</span>
+        <span><i style="background:var(--accent-darker)"></i>Total ICP contacts</span>
+      </div>
+      <div style="position:relative;width:100%;height:200px"><canvas id="coverageChart"></canvas></div>
+      <div class="conv-row">
+        <span class="cv">CEO coverage <b>${fmtPct(d.icp.combined.ceo_1st_pct)}</b></span>
+        <span class="cv">CRO coverage <b>${fmtPct(d.icp.combined.cro_1st_pct)}</b></span>
+        <span class="cv">HubSpot CRM <b>${fmt(d.icp.hubspot.total)}</b></span>
+        <span class="cv">Non-HubSpot CRM <b>${fmt(d.icp.non_hubspot.total)}</b></span>
+      </div>
+      <p style="margin:10px 0 0;font-size:11px;color:var(--ebony-70)">Coverage by industry is not yet in the data feed \u2014 scaffolded here for a future HubSpot industry rollup.</p>
+    </div>
+    `}
+
     <div class="div"></div>
 
-    <p class="sl">ICP funnel</p>
-    <p class="sr">ICP contacts (CEO + CRO, combined ANZ) \u2192 connected (1st-degree LinkedIn connections in ICP)${d.funnel.note ? ' \u00B7 ' + escapeHtml(d.funnel.note) : ''}</p>
-    <div class="panel">
-      <div id="funnel"></div>
-    </div>
+    <p class="sl">ICP funnel \u2014 two tracks</p>
+    <p class="sr">Track A = coverage of the whole ICP (includes pre-existing first-degree connections). Track B = conversion of contacts actually sent outreach (Reply.io sequences).${d.funnel.note ? ' \u00B7 ' + escapeHtml(d.funnel.note) : ''}</p>
+    ${(legDown(d, 'hubspot_icp') || legDown(d, 'reply_io')) ? noDataPanel('ICP funnel') : `
+    <div class="track-wrap" id="funnel-tracks"></div>
+    `}
 
     <div class="div"></div>
 
     <p class="sl">Outbound engine \u2014 Reply.io</p>
     <p class="sr">Reply.io sequence inspection \u00B7 Bucket labels match Reply.io UI sidebar (Throttled / Active / Finished) \u00B7 Connection rate read direct from Reply.io UI (Stats > LinkedIn > All time) \u00B7 Send rate uses 35/d Reply.io safety setting per sequence</p>
+    ${legDown(d, 'reply_io') ? noDataPanel('Outbound engine \u2014 Reply.io') : ''}
     <div class="seq-grid">
-      ${d.sequences.map(s => {
+      ${seqList.map(s => {
         const arDays = assumedRunway(s);
         const runway = runwayPill(arDays, s.status);
         const runwayLabel = s.status === 'paused' ? 'If active' : 'Runway';
@@ -513,48 +674,49 @@ function render(d) {
 
     <div class="div"></div>
 
-    <p class="sl">Beta pipeline</p>
+    <p class="sl">Beta pipeline ${legDown(d, 'hubspot_icp') ? '' : wowChip(history, x => (x.pipeline && Array.isArray(x.pipeline.stages) ? x.pipeline.stages.reduce((a, s) => a + (s.deals || 0), 0) : 0))}</p>
     <p class="sr">HubSpot pipeline 1663910348 \u00B7 test records excluded \u00B7 stages match private beta lifecycle</p>
+    ${legDown(d, 'hubspot_icp') ? noDataPanel('Beta pipeline') : `
     <div class="panel">
-      <div class="pipeline-flow">
-        ${d.pipeline.stages.map(st => `
-          <div class="pstage">
-            <p class="lbl">${escapeHtml(st.label)}</p>
-            <p class="val ${st.deals === null || st.deals === undefined ? 'muted' : ''}">${st.deals === null || st.deals === undefined ? '\u2014' : fmt(st.deals)}</p>
-          </div>
-        `).join('')}
-      </div>
-      ${d.pipeline.note ? `<p style="margin:0;font-size:11.5px;color:var(--ebony-70)">${escapeHtml(d.pipeline.note)}</p>` : ''}
+      ${pipeDealsTotal === 0
+        ? `<div class="note setup"><span class="icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"></circle><path d="M12 8v4M12 16h.01"></path></svg></span><span>No deals in the beta pipeline yet \u2014 this view fills in automatically once applications enter the pipeline. ${d.pipeline.note ? escapeHtml(d.pipeline.note) : ''}</span></div>`
+        : `<div class="pipeline-flow">
+             ${pipeStages.map(st => `
+               <div class="pstage"><p class="lbl">${escapeHtml(st.label)}</p><p class="val ${st.deals ? '' : 'muted'}">${st.deals === null || st.deals === undefined ? '\u2014' : fmt(st.deals)}</p></div>
+             `).join('')}
+           </div>
+           <div class="conv-row"><span>Live deals by stage:</span>${pipeStages.filter(s => s.deals > 0).map(s => `<span class="cv">${escapeHtml(s.label)} <b>${fmt(s.deals)}</b></span>`).join('')}</div>
+           ${d.pipeline.note ? `<p style="margin:10px 0 0;font-size:11.5px;color:var(--ebony-70)">${escapeHtml(d.pipeline.note)}</p>` : ''}`}
     </div>
+    `}
 
     <div class="div"></div>
 
-    <p class="sl">Website \u2014 GA4</p>
-    <p class="sr">Last 7 days \u00B7 GA4 property G-HC97LYRCFE${d.ga4 && d.ga4.setup_note ? ' \u00B7 ' + escapeHtml(d.ga4.setup_note) : ''}</p>
+    <p class="sl">Website \u2014 GA4 ${legDown(d, 'ga4') ? '' : wowChip(history, x => x.ga4.sessions)}</p>
+    <p class="sr">Last 7 days \u00B7 GA4 account 536587504${d.ga4 && d.ga4.setup_note ? ' \u00B7 ' + escapeHtml(d.ga4.setup_note) : ''}</p>
+    ${legDown(d, 'ga4') ? noDataPanel('Website \u2014 GA4') : `
     <div class="mc-grid-4">
-      <div class="${d.ga4.sessions === null || d.ga4.sessions === undefined ? 'mc-ph' : 'mc'}"><p class="lbl">Sessions</p><p class="val">${fmt(d.ga4.sessions)}</p><p class="sub">last 7 days</p></div>
-      <div class="${d.ga4.qualified === null || d.ga4.qualified === undefined ? 'mc-ph' : 'mc'}"><p class="lbl">Qualified applications</p><p class="val">${fmt(d.ga4.qualified)}</p><p class="sub">beta_application_qualified</p></div>
-      <div class="${d.ga4.disqualified === null || d.ga4.disqualified === undefined ? 'mc-ph' : 'mc'}"><p class="lbl">Disqualified</p><p class="val">${fmt(d.ga4.disqualified)}</p><p class="sub">beta_application_disqualified</p></div>
-      <div class="${d.ga4.intake === null || d.ga4.intake === undefined ? 'mc-ph' : 'mc'}"><p class="lbl">Intake calls booked</p><p class="val">${fmt(d.ga4.intake)}</p><p class="sub">intake_call_booked</p></div>
-      <div class="${d.ga4.qualified_cvr === null || d.ga4.qualified_cvr === undefined ? 'mc-ph' : 'mc'}"><p class="lbl">Qualified CVR</p><p class="val">${fmtPct(d.ga4.qualified_cvr)}</p><p class="sub">qualified / sessions</p></div>
+      <div class="mc"><p class="lbl">Sessions</p><p class="val">${fmt(d.ga4.sessions)}</p><p class="sub">last 7 days \u00B7 ${fmt(d.ga4.users)} users</p></div>
+      <div class="mc"><p class="lbl">Qualified applications</p><p class="val">${fmt(d.ga4.qualified)}</p><p class="sub">application_qualified \u00B7 CVR ${fmtPct(d.ga4.qualified_cvr)}</p></div>
+      <div class="mc"><p class="lbl">Disqualified</p><p class="val">${fmt(d.ga4.disqualified)}</p><p class="sub">application_disqualified</p></div>
+      <div class="mc"><p class="lbl">Intake calls booked</p><p class="val">${fmt(d.ga4.intake)}</p><p class="sub">intake_call_booked \u00B7 CVR ${fmtPct(d.ga4.intake_cvr)}</p></div>
+      <div class="mc"><p class="lbl">Purchases</p><p class="val">${fmt(d.ga4.purchase)}</p><p class="sub">purchase \u00B7 CVR ${fmtPct(d.ga4.purchase_cvr)}</p></div>
     </div>
-    ${Array.isArray(d.ga4.daily) && d.ga4.daily.length > 0 ? `
-      <div class="panel" style="margin-top:14px">
-        <p class="panel-title">Daily sessions \u2014 last 7 days</p>
-        <div style="position:relative;width:100%;height:180px"><canvas id="ga4DailyChart"></canvas></div>
-      </div>
-    ` : ''}
+    ${ga4DailyPanel}
+    `}
 
     <div class="div"></div>
 
-    <p class="sl">LinkedIn \u2014 Aaron's profile</p>
-    <p class="sr">Personal profile analytics${d.linkedin && d.linkedin.setup_note ? ' \u00B7 ' + escapeHtml(d.linkedin.setup_note) : ''}</p>
+    <p class="sl">LinkedIn \u2014 Aaron's profile ${legDown(d, 'linkedin') ? '' : wowChip(history, x => x.linkedin.followers_current)}</p>
+    <p class="sr">Personal profile analytics${d.linkedin && d.linkedin.source ? ' \u00B7 source: ' + escapeHtml(d.linkedin.source === 'manual_override' ? 'manual override' : d.linkedin.source) : ''}</p>
+    ${legDown(d, 'linkedin') ? noDataPanel('LinkedIn \u2014 Aaron\'s profile') : `
     <div class="mc-grid-4">
       <div class="mc"><p class="lbl">Followers</p><p class="val">${fmt(d.linkedin.followers_current)}</p><p class="sub">${fmtFollowerDelta(d.linkedin)}</p></div>
       <div class="${d.linkedin.impressions === null || d.linkedin.impressions === undefined ? 'mc-ph' : 'mc'}"><p class="lbl">Impressions</p><p class="val">${fmt(d.linkedin.impressions)}</p><p class="sub">this week</p></div>
       <div class="${d.linkedin.engagement === null || d.linkedin.engagement === undefined ? 'mc-ph' : 'mc'}"><p class="lbl">Engagement rate</p><p class="val">${fmtPct(d.linkedin.engagement)}</p><p class="sub">interactions / impressions</p></div>
       <div class="${d.linkedin.profile_views === null || d.linkedin.profile_views === undefined ? 'mc-ph' : 'mc'}"><p class="lbl">Profile views</p><p class="val">${fmt(d.linkedin.profile_views)}</p><p class="sub">this week</p></div>
     </div>
+    `}
 
   `;
 
@@ -613,55 +775,102 @@ function render(d) {
         }
       });
     }
+
+    // ICP coverage week-over-week (from history.jsonl). Two y-axes because the
+    // total-ICP series is an order of magnitude larger than the 1st-degree ones.
+    const covCtx = document.getElementById('coverageChart');
+    if (covCtx && window.Chart) {
+      const ceoS = histSeries(history, x => x.icp.combined.ceo_1st, 12);
+      const croS = histSeries(history, x => x.icp.combined.cro_1st, 12);
+      const totS = histSeries(history, x => x.icp.combined.ceo_contacts + x.icp.combined.cro_contacts, 12);
+      new Chart(covCtx.getContext('2d'), {
+        type: 'line',
+        data: {
+          labels: ceoS.map(p => p.label),
+          datasets: [
+            { label: 'CEO 1st', data: ceoS.map(p => p.value), borderColor: '#0B0BD6', backgroundColor: 'rgba(11,11,214,0.08)', tension: 0.3, pointRadius: 2, fill: false, yAxisID: 'y' },
+            { label: 'CRO 1st', data: croS.map(p => p.value), borderColor: '#914BF9', backgroundColor: 'rgba(145,75,249,0.08)', tension: 0.3, pointRadius: 2, fill: false, yAxisID: 'y' },
+            { label: 'Total ICP', data: totS.map(p => p.value), borderColor: '#19A674', backgroundColor: 'rgba(25,166,116,0.06)', tension: 0.3, pointRadius: 2, fill: false, yAxisID: 'y1' }
+          ]
+        },
+        options: {
+          responsive: true, maintainAspectRatio: false,
+          plugins: { legend: { display: false }, tooltip: { callbacks: { label: (c) => c.dataset.label + ': ' + c.raw.toLocaleString() } } },
+          scales: {
+            x: { grid: { display: false }, ticks: { color: '#6A6E74', font: { size: 10 }, maxRotation: 0, autoSkip: true, maxTicksLimit: 6 } },
+            y: { position: 'left', beginAtZero: true, grid: { color: 'rgba(30,35,44,0.06)' }, ticks: { color: '#6A6E74', font: { size: 10 } } },
+            y1: { position: 'right', beginAtZero: true, grid: { display: false }, ticks: { color: '#19A674', font: { size: 10 } } }
+          }
+        }
+      });
+    }
   }, 0);
 
-  const container = document.getElementById('funnel');
-  if (container) {
-    // Funnel "Connected" stage swapped 31 May 2026 from Reply.io accepted count to total 1st-degree
-    // LinkedIn connections in ICP (CEO 1st + CRO 1st, combined ANZ). Reads from d.icp.combined
-    // directly rather than d.funnel.connected, since the funnel is now a coverage-state story not
-    // an outreach-conversion story. The per-sequence Connection rate metric (above) carries the
-    // outreach-conversion measure.
-    const ceo1st = (d.icp && d.icp.combined && typeof d.icp.combined.ceo_1st === 'number') ? d.icp.combined.ceo_1st : 0;
-    const cro1st = (d.icp && d.icp.combined && typeof d.icp.combined.cro_1st === 'number') ? d.icp.combined.cro_1st : 0;
-    const totalConnected = ceo1st + cro1st;
-    const connectedPctOfIcp = (typeof d.funnel.icp_contacts === 'number' && d.funnel.icp_contacts > 0)
-      ? (totalConnected / d.funnel.icp_contacts) * 100
-      : null;
+  // Funnel \u2014 two tracks (see brief). Track A is whole-ICP coverage and includes
+  // pre-existing first-degree connections; Track B is outreach conversion and
+  // counts only contacts actually sent outreach (Reply.io sequences). The split
+  // between pre-existing and outreach-driven connections is computed as:
+  //   outreach-driven = Reply.io invites accepted (funnel.track_a.outreach_connected)
+  //   pre-existing     = total first-degree connected \u2212 outreach-driven
+  // This is FLAGGED for reconciliation against the funnel spec.
+  const tracks = document.getElementById('funnel-tracks');
+  if (tracks) {
+    const f = d.funnel || {};
+    // Prefer the pipeline-produced track objects; if an older data.json is being
+    // served (before the refresh pipeline first runs) derive them from the
+    // existing ICP + sequence fields so the view still renders correctly.
+    const sumSeq = (k) => (d.sequences || []).reduce((a, s) => a + (typeof s[k] === 'number' ? s[k] : 0), 0);
+    const icpC = (d.icp && d.icp.combined) || {};
+    const connectedFallback = (icpC.ceo_1st || 0) + (icpC.cro_1st || 0);
+    const outreachFallback = sumSeq('connection_requests_accepted');
+    const A = f.track_a || {
+      icp_contacts: f.icp_contacts,
+      connected: connectedFallback,
+      connected_pct_of_icp: f.icp_contacts ? (connectedFallback / f.icp_contacts) * 100 : null,
+      pre_existing_connected: Math.max(0, connectedFallback - outreachFallback),
+      outreach_connected: outreachFallback
+    };
+    const B = f.track_b || {
+      enrolled: sumSeq('total'),
+      invited: sumSeq('connections_sent'),
+      invited_pct_of_enrolled: sumSeq('total') ? (sumSeq('connections_sent') / sumSeq('total')) * 100 : null,
+      connected_via_outreach: outreachFallback,
+      connected_pct_of_invited: sumSeq('connections_sent') ? (outreachFallback / sumSeq('connections_sent')) * 100 : null,
+      intake: 0,
+      deal: 0
+    };
+    const tgt = f.targets || {};
+    const stepRow = (label, sub, val, extra) =>
+      `<div class="tstep"><div class="tl">${escapeHtml(label)}${sub ? `<small>${escapeHtml(sub)}</small>` : ''}</div>` +
+      `<div class="tv">${val}${extra ? `<small>${escapeHtml(extra)}</small>` : ''}</div></div>`;
 
-    const stages = [
-      { label: 'ICP contacts', sub: 'CEO + CRO, all ANZ ICP companies', n: d.funnel.icp_contacts, pct: null },
-      { label: 'Connected', sub: '1st-degree LinkedIn connections (CEO + CRO)', n: totalConnected, pct: fmtPct(connectedPctOfIcp) + ' of ICP', inlinePct: fmtPct(connectedPctOfIcp) }
-    ];
-    const colorsAlt = ['#0B0BD6', '#0F6E56'];
-    const maxN = stages[0].n || 1;
-    const minW = 22, maxW = 100;
-    const w = (n) => Math.round(minW + (maxW - minW) * Math.sqrt((n || 0) / maxN));
+    const goalLine = (label, actual, target) =>
+      (typeof target === 'number' && target > 0)
+        ? `<div class="track-target">Goal: <b>${fmt(target)}</b> ${escapeHtml(label)} \u00B7 ${fmtPct((actual / target) * 100)} of target</div>`
+        : '';
 
-    container.innerHTML = '';
-    stages.forEach((s, i) => {
-      const row = document.createElement('div');
-      row.className = 'funnel-row';
-      if (i > 0) {
-        const drop = document.createElement('div');
-        drop.className = 'funnel-drop';
-        drop.innerHTML = '\u25BE <b>' + escapeHtml(s.pct) + '</b>';
-        row.appendChild(drop);
-      }
-      const bar = document.createElement('div');
-      bar.className = 'funnel-bar';
-      bar.style.width = w(s.n) + '%';
-      bar.style.background = colorsAlt[i];
-      bar.innerHTML = `
-        <div class="left">
-          <p>${escapeHtml(s.label)}</p>
-          <p>${escapeHtml(s.sub)}</p>
-        </div>
-        <div class="right">${fmt(s.n)}${s.inlinePct ? ' \u00B7 ' + escapeHtml(s.inlinePct) : ''}</div>
-      `;
-      row.appendChild(bar);
-      container.appendChild(row);
-    });
+    const trackA = `<div class="track">
+      <h4>Track A \u2014 ICP coverage</h4>
+      <p class="track-sub">Whole ICP \u2192 first-degree connected. Includes pre-existing first-degree connections.</p>
+      ${stepRow('ICP contacts', 'CEO + CRO, all ANZ ICP', fmt(A.icp_contacts))}
+      ${stepRow('Connected (1st-degree)', 'incl. pre-existing', fmt(A.connected), fmtPct(A.connected_pct_of_icp) + ' of ICP')}
+      ${stepRow('\u2014 of which pre-existing', 'connected before outreach', fmt(A.pre_existing_connected))}
+      ${stepRow('\u2014 of which via outreach', 'accepted an outreach invite', fmt(A.outreach_connected))}
+      ${goalLine('connected', A.connected, tgt.connected)}
+    </div>`;
+
+    const trackB = `<div class="track">
+      <h4>Track B \u2014 outreach conversion</h4>
+      <p class="track-sub">Only contacts actually sent outreach (contacts enrolled in a Reply.io sequence).</p>
+      ${stepRow('Enrolled', 'in active sequences', fmt(B.enrolled))}
+      ${stepRow('Invited', 'LinkedIn invites sent', fmt(B.invited), fmtPct(B.invited_pct_of_enrolled) + ' of enrolled')}
+      ${stepRow('Connected via outreach', 'invites accepted', fmt(B.connected_via_outreach), fmtPct(B.connected_pct_of_invited) + ' of invited')}
+      ${stepRow('Intake calls', 'booked (beta pipeline)', fmt(B.intake))}
+      ${stepRow('Deals', 'accepted to beta', fmt(B.deal))}
+      ${goalLine('intake calls', B.intake, tgt.intake)}
+    </div>`;
+
+    tracks.innerHTML = trackA + trackB;
   }
 }
 
