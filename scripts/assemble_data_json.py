@@ -135,6 +135,7 @@ def main():
         fh = {
             "icp_contacts": old_funnel.get("icp_contacts", 0),
             "connected": old_funnel.get("connected", 0),
+            "enrolled": old_funnel.get("enrolled", 0),
             "intake": tb.get("intake", 0),
             "deal": tb.get("deal", 0),
         }
@@ -173,9 +174,12 @@ def main():
     }
 
     # ---- funnel (merge Track A HubSpot + Track B Reply/deals) -------------
+    # `enrolled` is sourced from the HubSpot leg (reply_sequence_name is the
+    # canonical enrolment ledger); `invited` and `connected_via_outreach` stay
+    # on the Reply.io leg.
     icp_contacts = fh.get("icp_contacts", 0)
     connected = fh.get("connected", 0)
-    enrolled = fr.get("enrolled", 0)
+    enrolled = fh.get("enrolled", 0)
     invite_sent = fr.get("invited", 0)
     outreach_connected = fr.get("connected_via_outreach", 0)
     intake = fh.get("intake", 0)
