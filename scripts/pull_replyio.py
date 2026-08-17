@@ -6,45 +6,45 @@ Secret:    REPLYIO_API_KEY   (GitHub repo secret; Reply.io Settings > API key)
 Produces:  sequences[]  and the outreach half of the funnel (Track B pieces)
 Endpoint:  https://api.reply.io/v3   (Reply.io v3 REST API), stdlib urllib
 Auth:      Authorization: Bearer <REPLYIO_API_KEY>
+Scope:     sequences:read (the API key already carries it)
 
 ------------------------------------------------------------------------------
 ENDPOINT / FIELD CONFIG  --  read this if the numbers ever look wrong
 ------------------------------------------------------------------------------
-Confirmed against the live Reply.io connector (the numbers below match data.json
-exactly) at build time:
+Confirmed from Reply.io's official OpenAPI spec (the numbers below match
+data.json exactly):
 
   * base URL         https://api.reply.io/v3
   * auth             static Bearer token (Authorization: Bearer <key>)
-  * list sequences   GET /v3/sequences        (returns id / name / status)
-  * per-sequence stats response SHAPE (PascalCase, wrapped in Success/Data):
+  * list sequences   GET  /v3/sequences               (returns id / name / status)
+  * per-sequence stats:
+        POST /v3/sequences/{id}/stats
+        headers: Authorization: Bearer <key>, Content-Type: application/json
+        body (REQUIRED -- the endpoint defaults to "lastWeek" if omitted, so we
+        send "allTime" explicitly to match the dashboard's cumulative figures):
+            {"filters": {"dateRangePreset": "allTime"}}
+
+    NOTE: it is POST (not GET) and the path segment is `stats` (not
+    `statistics`). Every previous GET probe against `.../statistics` returned
+    HTTP 404 for exactly those two reasons.
+
+  * per-sequence stats response SHAPE (top-level, camelCase, NO Success/Data
+    wrapper):
         {
-          "Success": true,
-          "Data": {
-            "SequenceId": 1658117,
-            "Email":    { "Contacted", "Delivered", "Opened", "Replied",
-                          "Bounced", "MeetingsBooked", ...+"...Percentage" },
-            "LinkedIn": { "ConnectionsSent", "ConnectionsAccepted",
-                          "ConnectionsAcceptedPercentage", "MessagesSent",
-                          "Replied", ...+"...Percentage" }
+          "emailOverview": {
+            "contacted", "delivered", "opened", "replied", "meetingsBooked", ...
+          },
+          "linkedInOverview": {
+            "connectionsSent", "connectionsAccepted",
+            "connectionsAcceptedPercentage", "messagesSent", "replied", ...
           }
         }
-    e.g. sequence 1658117 -> LinkedIn.ConnectionsSent 468,
-         ConnectionsAccepted 139, ConnectionsAcceptedPercentage 29.7.
+    e.g. sequence 1658117 -> linkedInOverview.connectionsSent 468,
+         connectionsAccepted 139, connectionsAcceptedPercentage 29.7.
 
-The exact REST *path* of the statistics endpoint could NOT be re-confirmed from
-the live docs at build time: docs.reply.io / apidocs.reply.io / api.reply.io are
-all blocked by the CI network egress policy (HTTP 403 from the proxy), so the
-docs page for the "Statistics" section is unreadable here. Rather than hardcode a
-single unverified path, the puller probes the candidate paths in SEQ_STATS_PATHS
-below (each tried in order) and ONLY accepts a response that matches the
-confirmed shape above (a `Data` object carrying an `Email`/`LinkedIn` block). A
-path that 404s, or that 200s with a different body, is rejected and the next
-candidate is tried -- so a wrong path can never be silently mis-parsed. When the
-real path is confirmed, move it to the top of SEQ_STATS_PATHS (or drop the rest).
-
-Everything the pipeline depends on is in SEQ_STATS_PATHS / the *_KEYS maps below,
-so a non-developer's engineer can correct a path or a field name in ONE place.
-Run `python3 scripts/pull_replyio.py --check` after adding the secret to confirm.
+Everything the pipeline depends on is in the *_KEYS maps below, so a
+non-developer's engineer can correct a field name in ONE place. Run
+`python3 scripts/pull_replyio.py --check` after adding the secret to confirm.
 ------------------------------------------------------------------------------
 """
 
@@ -55,45 +55,35 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import _common as C  # noqa: E402
 
 REPLY_BASE = "https://api.reply.io/v3"
-REPLY_ROOT = REPLY_BASE.rsplit("/v3", 1)[0]  # https://api.reply.io
 
 # The four sequences shown on the dashboard (same IDs as data.json). Override
 # with a comma-separated REPLY_SEQUENCE_IDS env var if the set ever changes.
 DEFAULT_SEQUENCE_IDS = ["1658117", "1676940", "1695697", "1695700"]
 
-# Candidate per-sequence statistics paths, tried in order until one returns the
-# confirmed Email/LinkedIn shape. The two paths the previous build guessed
-# (/v3/sequences/{id}/statistics and /v3/statistics/sequences/{id}) both returned
-# HTTP 404, so they are intentionally NOT retried here. These candidates target
-# the dedicated "Statistics" API section (singular/plural, path- and
-# query-parameter forms). {id} is substituted with the numeric sequence id.
-SEQ_STATS_PATHS = [
-    "/v3/statistics/sequence/{id}",
-    "/v3/statistics/sequence?sequenceId={id}",
-    "/v3/statistics/sequences?sequenceId={id}",
-    "/v3/statistics/sequence?sequenceIds={id}",
-    "/v3/reports/sequence/{id}",
-    "/v3/reports/sequences/{id}",
-]
+# Required request body for POST /v3/sequences/{id}/stats. The endpoint defaults
+# to "lastWeek" when the body is omitted; "allTime" matches the dashboard's
+# cumulative figures (and data.json).
+STATS_BODY = {"filters": {"dateRangePreset": "allTime"}}
 
-# LinkedIn stat object (PascalCase) -> normalised sequence field.
+# linkedInOverview stat object (camelCase) -> normalised sequence field.
 LINKEDIN_KEYS = {
-    "connections_sent":             ["ConnectionsSent"],
-    "connection_requests_accepted": ["ConnectionsAccepted"],
-    "connection_rate":              ["ConnectionsAcceptedPercentage"],
-    "messages_sent":                ["MessagesSent"],
-    "li_replied":                   ["Replied"],
+    "connections_sent":             ["connectionsSent"],
+    "connection_requests_accepted": ["connectionsAccepted"],
+    "connection_rate":              ["connectionsAcceptedPercentage"],
+    "messages_sent":                ["messagesSent"],
+    "li_replied":                   ["replied"],
 }
 
-# Email stat object (PascalCase) -> normalised field (kept for completeness /
-# future email sequences; the current LinkedIn-only sequences report zeros here).
+# emailOverview stat object (camelCase) -> normalised field (kept for
+# completeness / future email sequences; the current LinkedIn-only sequences
+# report zeros here).
 EMAIL_KEYS = {
-    "email_contacted":       ["Contacted"],
-    "email_delivered":       ["Delivered"],
-    "email_opened":          ["Opened"],
-    "email_replied":         ["Replied"],
-    "email_bounced":         ["Bounced"],
-    "email_meetings_booked": ["MeetingsBooked"],
+    "email_contacted":       ["contacted"],
+    "email_delivered":       ["delivered"],
+    "email_opened":          ["opened"],
+    "email_replied":         ["replied"],
+    "email_bounced":         ["bounced"],
+    "email_meetings_booked": ["meetingsBooked"],
 }
 
 # Contact-state counts, read defensively from the GET /v3/sequences list items
@@ -110,7 +100,10 @@ COUNT_KEYS = {
 def _headers():
     key = C.require_env("REPLYIO_API_KEY")
     # Bearer is the documented v3 scheme. The value is never logged.
-    return {"Authorization": "Bearer {}".format(key)}
+    return {
+        "Authorization": "Bearer {}".format(key),
+        "Content-Type": "application/json",
+    }
 
 
 def _ci_get(d, keys):
@@ -163,37 +156,31 @@ def list_sequences():
 
 
 def sequence_stats(sid):
-    """Return a normalised stats dict for one sequence, trying candidate paths.
+    """Return a normalised stats dict for one sequence.
 
-    Only a response matching the confirmed shape (a Data object carrying an
-    Email or LinkedIn block) is accepted; anything else is skipped.
+    POST /v3/sequences/{id}/stats with the required allTime filter body. The
+    response is top-level camelCase with `linkedInOverview` / `emailOverview`
+    blocks (no Success/Data wrapper).
     """
-    last_err = None
-    for tmpl in SEQ_STATS_PATHS:
-        url = REPLY_ROOT + tmpl.format(id=sid)
-        try:
-            res = C.request_json(url, headers=_headers())
-        except Exception as e:  # noqa: BLE001
-            last_err = e
-            continue
-        data = res.get("Data") if isinstance(res, dict) and "Data" in res else res
-        li = _find_block(data, "LinkedIn")
-        em = _find_block(data, "Email")
-        if li is None and em is None:
-            # Wrong shape for this path (e.g. a 200 that is not the stats object).
-            continue
-        norm = {}
-        for field, keys in LINKEDIN_KEYS.items():
-            norm[field] = _ci_get(li, keys)
-        for field, keys in EMAIL_KEYS.items():
-            norm[field] = _ci_get(em, keys)
-        norm["_stats_path"] = tmpl
-        return norm
-    if last_err:
-        C.log("  stats fetch failed for {}: {}".format(sid, last_err))
-    else:
-        C.log("  no candidate statistics path returned the expected shape for {}".format(sid))
-    return {}
+    url = "{}/sequences/{}/stats".format(REPLY_BASE, sid)
+    try:
+        res = C.request_json(
+            url, method="POST", headers=_headers(), body=STATS_BODY
+        )
+    except Exception as e:  # noqa: BLE001
+        C.log("  stats fetch failed for {}: {}".format(sid, e))
+        return {}
+    li = _find_block(res, "linkedInOverview")
+    em = _find_block(res, "emailOverview")
+    if li is None and em is None:
+        C.log("  stats response for {} had no linkedInOverview/emailOverview block".format(sid))
+        return {}
+    norm = {}
+    for field, keys in LINKEDIN_KEYS.items():
+        norm[field] = _ci_get(li, keys)
+    for field, keys in EMAIL_KEYS.items():
+        norm[field] = _ci_get(em, keys)
+    return norm
 
 
 def _num(v, default=0):
@@ -219,11 +206,9 @@ def fetch():
 
     sequences = []
     enrolled = invited = accepted = 0
-    used_path = None
     for sid in ids:
         meta = catalog.get(sid, {})
         st = sequence_stats(sid)
-        used_path = used_path or st.get("_stats_path")
         total = _num(meta.get("total"))
         new = _num(meta.get("new"))
         pending = _num(meta.get("pending"))
@@ -252,9 +237,6 @@ def fetch():
         enrolled += total
         invited += c_sent
         accepted += c_acc
-
-    if used_path:
-        C.log("  statistics endpoint in use: {}".format(used_path))
 
     funnel_reply = {
         # Track B (outreach conversion) pieces, counting only contacts in the
