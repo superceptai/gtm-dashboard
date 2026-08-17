@@ -1,0 +1,12 @@
+{
+  "_comment": "Human-editable values for the dashboard refresh pipeline. Edit this file in the GitHub web UI (pencil icon) and commit. No code or terminal needed.",
+
+  "linkedin_followers": 16091,
+  "_linkedin_followers_note": "Fallback used ONLY if the ConnectSafely API cannot return the personal follower count. To update: open Aaron's LinkedIn profile, read the follower number, type it here (digits only, no commas), and commit. When ConnectSafely is working this value is ignored.",
+
+  "funnel_targets": {
+    "connected": 1000,
+    "intake": 25
+  },
+  "_funnel_targets_note": "Goal/target line drawn on the funnel view. 'connected' = target number of first-degree ICP connections (Track A). 'intake' = target intake calls booked (Track B). Edit the numbers to match the current quarter's goal."
+}
