@@ -25,7 +25,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       # Temp dir the pullers write their per-leg files into.
-      REFRESH_TMP: ${{ runner.temp }}/refresh
+      REFRESH_TMP: ${{ github.workspace }}/refresh
       # Secrets are injected as environment variables ONLY. Never hardcoded,
       # never echoed. Each maps to a GitHub repository secret of the same name.
       HUBSPOT_TOKEN: ${{ secrets.HUBSPOT_TOKEN }}
