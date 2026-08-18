@@ -128,7 +128,7 @@
 
 <header class="top">
   <div class="top-in">
-    <div class="brand"><span class="mark">GTM <b>Command</b></span><span class="brand sub">Supercept</span></div>
+    <div class="brand"><span class="mark">GTM <b>Command</b></span></div>
     <div class="top-right">
       <div class="freshness" id="freshness"></div>
       <span class="asof">as of <b id="asof">&#8212;</b></span>
@@ -399,7 +399,7 @@ function renderFunnel(d){
    {v:icp,k:'ICP',lab:'ICP contacts',sub:'CEO/SL &middot; 3+ ANZ',cvr:null},
    {v:inv,k:'Invites',lab:'Connection invites sent',sub:'4 launch connect sequences',cvr:pctOf(inv,icp)},
    {v:acc,k:'Accepted',lab:'Connections accepted',sub:'via the 4 launch connect sequences',cvr:pctOf(acc,inv)},
-   {v:first,k:'1st Conn',lab:'Total 1st connections',sub:(typeof already==='number'?'incl. '+fmt(already)+' pre-existing':''),cvr:null},
+   {v:first,k:'1st Conn',lab:'Total 1st connections',sub:((pctOf(first,icp)?pctOf(first,icp)+' of ICP':'')+(typeof already==='number'?' &middot; incl. '+fmt(already)+' pre-existing':'')).replace(/^ &middot; /,''),cvr:null},
    {v:added,k:'Sequence',lab:'Added to sequence',cvr:pctOf(added,icp)},
    {v:null,k:'Sent',lab:'Sent email or LI',cvr:null,dim:1},
    {v:null,k:'Replied',lab:'Replied',cvr:null,dim:1},
@@ -447,34 +447,54 @@ function renderSampleOverTime(){
   barsWeekly('engageChart',[{name:'Active in sequence',vals:[300,800,1400,2000,2500,2850,3000,3060,3090,3100],c:'#0C6B7A'},{name:'Replied',vals:[1,4,8,13,18,23,26,28,30,31],c:'#C08717'}],WKL,false,true);
 }
 
-// ---- ICP 1st connections over time (REAL from history) ---------------------
-// Metric = funnel_ext.first_connections_total (ICP CEO/SL contacts with
-// linkedin_connected=true) -- the SAME count as the funnel's "Total 1st
-// connections" box, so the two never disagree. The pre-2.0 history rows only
-// carry the persona-split ceo_1st/cro_1st, which the brief flags as approximate
-// (CONTACT_SPLIT_APPROX) and which undercounts this metric ~2x, so we do NOT
-// blend it in. The series therefore shows the current true total now and grows
-// into a real week-over-week line as the daily refresh appends funnel_ext.
+// ---- ICP 1st connections over time (REAL) ----------------------------------
+// Metric = cumulative count of ICP CEO/SL contacts with linkedin_connected=true
+// as of each week end, reconstructed in the puller from the per-contact
+// linkedin_connected_date (verified to hold real connection dates, not the
+// backfill tag date). The series ends at funnel_ext.first_connections_total
+// (1,285) so it reconciles exactly with the "Total 1st connections" box. The
+// x-axis defaults to ~the last 6 months so campaign-era growth is visible
+// (many connections predate Supercept and would otherwise flatten the slope).
+// Falls back to a flat current-total line only if the series is unavailable.
 function renderFirstConn(d, history){
-  var acc=function(data){
-    var fe=data.funnel_ext;
-    return (fe&&typeof fe.first_connections_total==='number')?fe.first_connections_total:undefined;
-  };
-  var s=histSeries(history,acc,14);
+  var fe=d.funnel_ext||{};
+  var series=Array.isArray(fe.first_connections_weekly)?fe.first_connections_weekly:[];
   var hint=document.getElementById('firstConnHint');
-  if(s.length<2){
-    // Only today's value is known so far; show it and note the series is building.
-    var v=(d.funnel_ext||{}).first_connections_total;
-    if(typeof v!=='number')return;
-    s=[{label:'',value:v},{label:(d.as_of_label||''),value:v}];
-    if(hint)hint.textContent='current total · real · weekly series builds from next refresh';
+  if(series.length>=2){
+    var vals=series.map(function(p){return p.v;});
+    var labs=series.map(function(p){return shortDate(p.w);});
+    if(hint)hint.textContent='cumulative · real · last 6 months';
+    lineAxes('firstConnChart',vals,labs,'#0C6B7A');
+    return;
   }
-  lineAxes('firstConnChart',s.map(function(p){return p.value;}),s.map(function(p){return p.label;}),'#0C6B7A');
+  // Fallback: only the current total is known.
+  var v=fe.first_connections_total;
+  if(typeof v!=='number')return;
+  if(hint)hint.textContent='current total · real · weekly series builds from next refresh';
+  lineAxes('firstConnChart',[v,v],['',(d.as_of_label||'')],'#0C6B7A');
 }
 
 // ---- follower growth (REAL from history) -----------------------------------
+// Known fallback artifact: on a failed live fetch the old pipeline wrote the
+// manual-override value (15,611), which shows as a false dip below the prior
+// real value. Forward-fill those specific points on read (belt-and-braces; the
+// puller now carries the last real value forward and history.jsonl is migrated).
+// Genuine declines from real data (e.g. 16,091 -> 16,090) are left untouched.
+var FOLLOWER_FALLBACKS=[15611];
+function forwardFillFollowers(pts){
+  var lastGood=null;
+  return pts.map(function(p){
+    var v=p.value;
+    if(FOLLOWER_FALLBACKS.indexOf(v)!==-1&&lastGood!==null&&v<lastGood){
+      return {label:p.label,value:lastGood};
+    }
+    lastGood=v;
+    return p;
+  });
+}
 function renderFollowers(d, history){
   var s=histSeries(history,function(data){return data.linkedin&&data.linkedin.followers_current;},60);
+  s=forwardFillFollowers(s);
   var cur=(d.linkedin||{}).followers_current;
   if(s.length<2&&typeof cur==='number')s=[{label:'',value:cur},{label:'',value:cur}];
   if(!s.length)return;

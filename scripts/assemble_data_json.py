@@ -303,6 +303,10 @@ def main():
         "already_connected": ext_already,
         "no_li_profile": ext_email_only,
         "added_to_sequence": ext_added,
+        # Reconstructed weekly cumulative 1st-connections curve (HubSpot leg);
+        # carry the last good series forward when the leg skipped/failed it.
+        "first_connections_weekly": (fh.get("first_connections_weekly")
+                                     or old.get("funnel_ext", {}).get("first_connections_weekly", [])),
         "uninvited_breakdown": uninvited_breakdown,
         # transparency: the literal "no hs_linkedin_url" count. Near-zero live,
         # so the explainer uses the real reason breakdown above instead.

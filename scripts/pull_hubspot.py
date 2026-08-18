@@ -47,6 +47,7 @@ PIPELINE = beta pipeline 1663910348, ZTEST deals excluded, counted per stage
 
 import sys
 import os
+from datetime import datetime, timedelta
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import _common as C  # noqa: E402
@@ -575,10 +576,58 @@ def _build_completeness_pivot(companies, bucket_fn, order, roll):
     }
 
 
+def _parse_hs_date(raw):
+    """Parse a HubSpot date property (epoch-ms string or ISO date) -> date."""
+    if raw is None:
+        return None
+    s = str(raw).strip()
+    if not s:
+        return None
+    if s.isdigit():
+        try:
+            return datetime.utcfromtimestamp(int(s) / 1000).date()
+        except (ValueError, OSError):
+            return None
+    try:
+        return datetime.strptime(s[:10], "%Y-%m-%d").date()
+    except ValueError:
+        return None
+
+
+def _first_connections_weekly(contacts, weeks=27):
+    """Reconstruct the ICP 1st-connections growth curve as a weekly cumulative
+    series from the per-contact `linkedin_connected_date` (verified to hold the
+    real connection date, not the backfill tag date). Each point is the total
+    number of ICP CEO/SL contacts connected on/before that week end, so the last
+    point equals first_connections_total (~1,285) and the funnel reconciles.
+    Windowed to the last ~6 months so campaign-era growth is visible."""
+    dates = []
+    for c in contacts:
+        p = c.get("properties", {}) or {}
+        if (p.get("linkedin_connected") or "").strip().lower() != "true":
+            continue
+        d = _parse_hs_date(p.get("linkedin_connected_date"))
+        if d:
+            dates.append(d)
+    if not dates:
+        return None
+    dates.sort()
+    today = datetime.now(C.AEST).date()
+    monday = today - timedelta(days=today.weekday())   # Monday of current week
+    out = []
+    for i in range(weeks - 1, -1, -1):
+        wk = monday - timedelta(weeks=i)
+        cutoff = wk + timedelta(days=6)                # Sunday of that week
+        out.append({"w": wk.isoformat(),
+                    "v": sum(1 for x in dates if x <= cutoff)})
+    return out
+
+
 def build_coverage_and_completeness():
     """One bulk company pull + one ICP-contact pull, then derive every coverage
-    and completeness pivot in Python. Returns (coverage, completeness) or
-    (None, None) if the bulk pull looks untrustworthy (wedged filter)."""
+    and completeness pivot in Python. Returns (coverage, completeness, series)
+    where series is the weekly 1st-connections cumulative curve, or
+    (None, None, None) if the bulk pull looks untrustworthy (wedged filter)."""
     company_props = ["hs_object_id", "no_sellers", "hubspot_technoligies",
                      "crm_detected", "industry", "numberofemployees",
                      "annualrevenue", "founded_year"]
@@ -595,12 +644,13 @@ def build_coverage_and_completeness():
     if n < 3000 or n > 8000:
         C.log("  coverage: company pull returned {} rows (expected ~4,700) -- "
               "skipping coverage/completeness this run (carry forward)".format(n))
-        return None, None
+        return None, None, None
 
-    contact_props = ["hs_object_id", "hs_persona",
-                     "linkedin_connected", "associatedcompanyid"]
+    contact_props = ["hs_object_id", "hs_persona", "linkedin_connected",
+                     "linkedin_connected_date", "associatedcompanyid"]
     contacts = hs_search_all("contacts", icp_contact_base(), contact_props)
     roll = _company_rollup(contacts)
+    series = _first_connections_weekly(contacts)
 
     hs_companies = [c for c in companies
                     if _is_hubspot_company(c.get("properties", {}) or {})]
@@ -618,8 +668,10 @@ def build_coverage_and_completeness():
         "by_crm": _build_completeness_pivot(companies, _crm_bucket, CRM_COLUMNS[:-1], roll),
     }
     C.log("  coverage: {} companies ({} HubSpot), {} ICP contacts grouped to "
-          "{} companies".format(n, len(hs_companies), len(contacts), len(roll)))
-    return coverage, completeness
+          "{} companies; 1st-conn weekly points: {}".format(
+              n, len(hs_companies), len(contacts), len(roll),
+              len(series) if series else 0))
+    return coverage, completeness, series
 
 
 def fetch():
@@ -628,13 +680,17 @@ def fetch():
     funnel_hubspot.update(funnel_deals)
     funnel_hubspot.update(build_funnel_ext_anchors())
 
-    # Coverage/completeness are best-effort: a failure here must NOT blank the
-    # icp/bands/pipeline the rest of the dashboard depends on.
+    # Coverage/completeness (and the 1st-connections weekly curve) are
+    # best-effort: a failure here must NOT blank the icp/bands/pipeline the rest
+    # of the dashboard depends on.
     try:
-        coverage, completeness = build_coverage_and_completeness()
+        coverage, completeness, first_conn_weekly = build_coverage_and_completeness()
     except Exception as e:  # noqa: BLE001
         C.log("  coverage/completeness build failed: {} -- carrying forward".format(e))
-        coverage, completeness = None, None
+        coverage, completeness, first_conn_weekly = None, None, None
+
+    if first_conn_weekly:
+        funnel_hubspot["first_connections_weekly"] = first_conn_weekly
 
     out = {
         "icp": icp,
