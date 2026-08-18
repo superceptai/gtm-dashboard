@@ -542,8 +542,14 @@ function renderCrosstab(id, x){
   (x.row_labels||[]).forEach(function(rl,ri){
     var isTot=String(rl).toLowerCase()==='all';
     html+='<tr'+(isTot?' class="tot"':'')+'><td>'+esc(isTot?'All bands':rl)+'</td>';
-    var row=mat[ri]||[];
-    for(var ci=0;ci<n;ci++){html+='<td class="'+(ci===n-1?'allcol':'')+'">'+fmt(row[ci])+'</td>';}
+    var row=mat[ri]||[], tot=row[n-1];
+    for(var ci=0;ci<n;ci++){
+      var allc=ci===n-1?'allcol':'';
+      // % of that seller band (row share); the All column is always 100%, so leave it plain
+      var sub=(ci<n-1&&typeof row[ci]==='number'&&typeof tot==='number'&&tot>0)
+        ? '<span class="sub">'+Math.round(row[ci]/tot*100)+'%</span>' : '';
+      html+='<td class="'+allc+'">'+fmt(row[ci])+sub+'</td>';
+    }
     html+='</tr>';
   });
   document.getElementById(id).innerHTML=html+'</tbody>';
