@@ -156,7 +156,7 @@
     <div class="sec-h"><h2>The GTM funnel</h2></div>
     <div class="card funnel">
       <div class="fbar" id="funnelbar"></div>
-      <div class="flabel"><span>Real data through &ldquo;Added to sequence&rdquo;. <span class="samplebadge">sample</span> steps populate as the launch email &amp; LinkedIn sequences run.</span></div>
+      <div class="flabel"><span>Real data through &ldquo;Added to sequence&rdquo;. Invites sent &amp; accepted count the four launch connect sequences only (contacts invited via other sequences appear under &ldquo;routed to other outreach sequences&rdquo; below). <span class="samplebadge">sample</span> steps populate as the launch email &amp; LinkedIn sequences run.</span></div>
       <div class="fexplain" id="funnelexplain"></div>
     </div>
 
@@ -397,8 +397,8 @@ function renderFunnel(d){
       first=fe.first_connections_total,already=fe.already_connected,added=fe.added_to_sequence;
   var FUN=[
    {v:icp,k:'ICP',lab:'ICP contacts',sub:'CEO/SL &middot; 3+ ANZ',cvr:null},
-   {v:inv,k:'Invites',lab:'Connection invites sent',cvr:pctOf(inv,icp)},
-   {v:acc,k:'Accepted',lab:'Connections accepted',sub:'via Reply.io invites',cvr:pctOf(acc,inv)},
+   {v:inv,k:'Invites',lab:'Connection invites sent',sub:'4 launch connect sequences',cvr:pctOf(inv,icp)},
+   {v:acc,k:'Accepted',lab:'Connections accepted',sub:'via the 4 launch connect sequences',cvr:pctOf(acc,inv)},
    {v:first,k:'1st Conn',lab:'Total 1st connections',sub:(typeof already==='number'?'incl. '+fmt(already)+' pre-existing':''),cvr:null},
    {v:added,k:'Sequence',lab:'Added to sequence',cvr:pctOf(added,icp)},
    {v:null,k:'Sent',lab:'Sent email or LI',cvr:null,dim:1},
