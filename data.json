@@ -174,6 +174,16 @@
     "connected": 695,
     "connected_pct_of_invited": 23.1
   },
+  "funnel_ext": {
+    "icp_contacts": 4613,
+    "invites_sent": 2382,
+    "connections_accepted": 543,
+    "first_connections_total": 1285,
+    "already_connected": 742,
+    "no_li_profile": 1489,
+    "added_to_sequence": 4428,
+    "no_li_profile_raw": 4
+  },
   "pipeline": {
     "stages": [
       {

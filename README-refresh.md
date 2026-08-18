@@ -131,10 +131,28 @@ changes**). No code needed.
 
 | Source (secret) | Dashboard sections |
 |---|---|
-| HubSpot (`HUBSPOT_TOKEN`) | ICP database, seller bands, ICP coverage, beta pipeline, funnel Track A |
-| Reply.io (`REPLYIO_API_KEY`) | Outbound engine (sequences), funnel Track B |
+| HubSpot (`HUBSPOT_TOKEN`) | ICP database, seller bands, **account coverage tables** (by CRM / industry / seller band, + HubSpot-only variants), **data completeness tables**, beta pipeline, and the real top of the **launch GTM funnel** (`funnel_ext`: ICP contacts, 1st connections, added-to-sequence) |
+| Reply.io (`REPLYIO_API_KEY`) | Outbound engine (sequences), and the funnel's connection **invites sent / accepted** (`funnel_ext`) |
 | GA4 / Windsor.ai (`WINDSOR_API_KEY`) | Website — GA4 (sessions, key events) |
-| ConnectSafely (`CONNECTSAFELY_API_KEY`) | LinkedIn followers |
+| ConnectSafely (`CONNECTSAFELY_API_KEY`) | LinkedIn follower growth |
+
+### New `data.json` blocks (GTM Dashboard 2.0)
+
+The 2.0 layout added three blocks, all computed by the HubSpot + Reply.io legs:
+
+- **`funnel_ext`** — the real launch-funnel anchors (ICP contacts, invites sent,
+  connections accepted, total 1st connections, added to sequence). The lower
+  funnel steps (sent / replied / applications / intake / beta) stay flagged as
+  *sample* on the dashboard and show a dash until the launch campaigns run.
+- **`coverage`** — the five account-coverage pivots (raw counts; the dashboard
+  computes the percentages).
+- **`completeness`** — the three data-completeness pivots (percentages).
+
+`coverage` / `completeness` are **best-effort**: if the HubSpot bulk pull ever
+returns an odd row count (a wedged filter), that run skips them and the last good
+values carry forward. Until the pipeline has run once with the new code, those
+cards on the dashboard show a calm *"awaiting refresh"* note instead of any
+placeholder — real numbers are never confused with sample data.
 
 ---
 

@@ -63,6 +63,38 @@ ANZ = ["Australia", "New Zealand"]
 PERSONA_CEO = "persona_2"   # "Visionary founder or CEO"
 PERSONA_CRO = "persona_1"   # "Revenue leader" (Connor the CRO)
 
+# ---------------------------------------------------------------------------
+# Coverage / completeness pivot configuration (feeds the 2.0 dashboard).
+# Column orders match the mockup EXACTLY so the renderer stays a straight read.
+# ---------------------------------------------------------------------------
+# CRM dimension = company property `crm_detected` (BuiltWith detection). The
+# mockup collapses it to four visible buckets + All.
+CRM_COLUMNS = ["HubSpot", "Salesforce", "Pipedrive", "Other", "All"]
+
+# Industry dimension = company `industry` (UPPER_SNAKE_CASE enum). The mockup
+# shows five named buckets + Other + All; everything not named maps to Other.
+INDUSTRY_MAP = {
+    "INFORMATION_TECHNOLOGY_AND_SERVICES": "IT & Services",
+    "COMPUTER_SOFTWARE": "Software",
+    "STAFFING_AND_RECRUITING": "Staffing",
+    "MARKETING_AND_ADVERTISING": "Marketing",
+    "WHOLESALE": "Wholesale",
+}
+INDUSTRY_COLUMNS = ["IT & Services", "Software", "Staffing",
+                    "Marketing", "Wholesale", "Other", "All"]
+
+# Seller-band dimension = company `no_sellers` (already one of BAND_VALUES).
+BAND_COLUMNS = BAND_VALUES + ["All"]
+
+# The seven coverage rows, in render order. Raw counts are stored; the renderer
+# computes the percentages (coverage rows as % of that column's accounts,
+# 1st-degree rows as % of their parent row) exactly as the mockup does.
+COVERAGE_ROWS = ["accounts", "have_ceo", "ceo_1st", "have_sl",
+                 "sl_1st", "have_either", "either_1st"]
+
+# Completeness fields, in the mockup's column order.
+COMPLETENESS_FIELDS = ["seller", "employees", "revenue", "year_founded", "crm"]
+
 
 def _headers():
     return {"Authorization": "Bearer {}".format(C.require_env("HUBSPOT_TOKEN"))}
@@ -78,6 +110,39 @@ def hs_count(object_type, filters):
     }
     res = C.request_json(url, method="POST", headers=_headers(), body=body)
     return int(res.get("total", 0))
+
+
+def hs_search_all(object_type, filters, properties):
+    """Return ALL records matching a single AND filter group, following the
+    Search API `after` cursor. Used for the bulk company/contact pulls that feed
+    the coverage + completeness pivots (one pull, all pivots derived in Python --
+    per the brief, avoids many round-trips).
+
+    NOTE (brief guardrail): HubSpot filtered reads can occasionally wedge and
+    return the full object set regardless of filters. The caller sanity-checks
+    the company total against the known ANZ 3+ base (~4,711) before trusting the
+    breakdown; if it is wildly off, the coverage build is skipped and the leg
+    carries forward the previous pivots rather than publishing a bad breakdown.
+    """
+    url = "{}/crm/v3/objects/{}/search".format(HS_BASE, object_type)
+    out = []
+    after = None
+    pages = 0
+    while True:
+        body = {
+            "filterGroups": [{"filters": filters}],
+            "properties": properties,
+            "limit": 200,
+        }
+        if after:
+            body["after"] = after
+        res = C.request_json(url, method="POST", headers=_headers(), body=body)
+        out.extend(res.get("results", []))
+        after = (res.get("paging", {}) or {}).get("next", {}).get("after")
+        pages += 1
+        if not after or pages > 200:   # 200*200 = 40k hard ceiling, never hit
+            break
+    return out
 
 
 def band_filter(band, extra=None):
@@ -297,16 +362,256 @@ def build_pipeline():
     return pipeline, {"intake": intake, "deal": deal, "total_deals": total_deals}
 
 
+def icp_contact_base(extra=None):
+    """The ICP CEO/SL contact universe: hs_persona in {CEO, SL}, ANZ company,
+    3+ seller band. `extra` appends further AND filters."""
+    f = [
+        {"propertyName": "hs_persona", "operator": "IN",
+         "values": [PERSONA_CEO, PERSONA_CRO]},
+        {"propertyName": "company_country", "operator": "IN", "values": ANZ},
+        {"propertyName": "company_no__sellers", "operator": "IN", "values": BAND_VALUES},
+    ]
+    if extra:
+        f += extra
+    return f
+
+
+def build_funnel_ext_anchors():
+    """The real, launch-funnel anchor counts, each a single clean count on the
+    ICP CEO/SL contact base (NOT the persona-split sum, which is approximate --
+    see CONTACT_SPLIT_APPROX). Verified live against the signed-off mockup:
+        icp_contacts            4613
+        first_connections_total 1285   (linkedin_connected = true)
+        added_to_sequence       4428   (reply_sequence_name set)
+        no_li_profile           small  (hs_linkedin_url NOT set -- see note)
+
+    no_li_profile is the LITERAL "no hs_linkedin_url" count per the brief. Note:
+    live it is near-zero (almost every ICP contact carries hs_linkedin_url), so
+    the funnel explainer derives the email-only remainder arithmetically in the
+    assembler instead of trusting this raw signal. It is still emitted for
+    transparency.
+    """
+    icp_contacts = hs_count("contacts", icp_contact_base())
+    first_connections_total = hs_count("contacts", icp_contact_base(
+        [{"propertyName": "linkedin_connected", "operator": "EQ", "value": "true"}]))
+    added_to_sequence = hs_count("contacts", icp_contact_base(
+        [{"propertyName": "reply_sequence_name", "operator": "HAS_PROPERTY"}]))
+    no_li_profile = hs_count("contacts", icp_contact_base(
+        [{"propertyName": "hs_linkedin_url", "operator": "NOT_HAS_PROPERTY"}]))
+    return {
+        "icp_contacts": icp_contacts,
+        "first_connections_total": first_connections_total,
+        "added_to_sequence": added_to_sequence,
+        "no_li_profile_raw": no_li_profile,
+    }
+
+
+# ---- coverage + completeness (one bulk pull, all pivots derived) -----------
+
+def _crm_bucket(props):
+    v = (props.get("crm_detected") or "").strip()
+    if v in ("HubSpot", "Salesforce", "Pipedrive"):
+        return v
+    return "Other"
+
+
+def _industry_bucket(props):
+    return INDUSTRY_MAP.get((props.get("industry") or "").strip(), "Other")
+
+
+def _band_bucket(props):
+    v = (props.get("no_sellers") or "").strip()
+    return v if v in BAND_VALUES else None   # None -> excluded (sub-floor)
+
+
+def _is_hubspot_company(props):
+    return (props.get("hubspot_technoligies") or "").strip().lower() == "true"
+
+
+def _present(v):
+    return v is not None and str(v).strip() not in ("", "0")
+
+
+def _num_positive(v):
+    try:
+        return float(v) > 0
+    except (TypeError, ValueError):
+        return False
+
+
+def _crm_present(v):
+    v = (v or "").strip()
+    return bool(v) and v != "No CRM In Use"
+
+
+def _company_rollup(contacts):
+    """Group ICP CEO/SL contacts to their associated company. Returns
+    company_id -> {ceo, ceo1, sl, sl1} booleans (the company-level 1st-degree
+    rollups computed in the puller, per DECIDED in the brief)."""
+    roll = {}
+    for c in contacts:
+        p = c.get("properties", {}) or {}
+        cid = str(p.get("associatedcompanyid") or "").strip()
+        if not cid:
+            continue
+        persona = (p.get("hs_persona") or "").strip()
+        first = (p.get("linkedin_connected") or "").strip().lower() == "true"
+        r = roll.setdefault(cid, {"ceo": False, "ceo1": False,
+                                  "sl": False, "sl1": False})
+        if persona == PERSONA_CEO:
+            r["ceo"] = True
+            if first:
+                r["ceo1"] = True
+        elif persona == PERSONA_CRO:
+            r["sl"] = True
+            if first:
+                r["sl1"] = True
+    return roll
+
+
+def _build_coverage_pivot(companies, bucket_fn, columns, roll):
+    counts = {rk: {c: 0 for c in columns} for rk in COVERAGE_ROWS}
+    for co in companies:
+        props = co.get("properties", {}) or {}
+        col = bucket_fn(props)
+        if col is None:
+            continue
+        r = roll.get(str(co.get("id")), {})
+        ceo, ceo1 = r.get("ceo", False), r.get("ceo1", False)
+        sl, sl1 = r.get("sl", False), r.get("sl1", False)
+        either, either1 = (ceo or sl), (ceo1 or sl1)
+        for tgt in (col, "All"):
+            counts["accounts"][tgt] += 1
+            if ceo:
+                counts["have_ceo"][tgt] += 1
+            if ceo1:
+                counts["ceo_1st"][tgt] += 1
+            if sl:
+                counts["have_sl"][tgt] += 1
+            if sl1:
+                counts["sl_1st"][tgt] += 1
+            if either:
+                counts["have_either"][tgt] += 1
+            if either1:
+                counts["either_1st"][tgt] += 1
+    rows = {rk: [counts[rk][c] for c in columns] for rk in COVERAGE_ROWS}
+    return {"columns": columns, "rows": rows}
+
+
+def _build_completeness_pivot(companies, bucket_fn, order, roll):
+    def blank():
+        return {"accounts": 0, "either": 0, "seller": 0, "employees": 0,
+                "revenue": 0, "year_founded": 0, "crm": 0}
+
+    agg = {b: blank() for b in order}
+    allb = blank()
+    for co in companies:
+        props = co.get("properties", {}) or {}
+        b = bucket_fn(props)
+        if b is None or b not in agg:
+            continue
+        r = roll.get(str(co.get("id")), {})
+        has_either = r.get("ceo", False) or r.get("sl", False)
+        for tgt in (agg[b], allb):
+            tgt["accounts"] += 1
+            if _present(props.get("no_sellers")):
+                tgt["seller"] += 1
+            if _num_positive(props.get("numberofemployees")):
+                tgt["employees"] += 1
+            if _num_positive(props.get("annualrevenue")):
+                tgt["revenue"] += 1
+            if _present(props.get("founded_year")):
+                tgt["year_founded"] += 1
+            if _crm_present(props.get("crm_detected")):
+                tgt["crm"] += 1
+            if has_either:
+                tgt["either"] += 1
+
+    def pctrow(a):
+        n = a["accounts"] or 1
+        return {
+            "cesl_pct": round(a["either"] / n * 100),
+            "fields": [round(a[f] / n * 100) for f in COMPLETENESS_FIELDS],
+        }
+
+    return {
+        "rows": [dict(label=b, **pctrow(agg[b])) for b in order],
+        "all": pctrow(allb),
+    }
+
+
+def build_coverage_and_completeness():
+    """One bulk company pull + one ICP-contact pull, then derive every coverage
+    and completeness pivot in Python. Returns (coverage, completeness) or
+    (None, None) if the bulk pull looks untrustworthy (wedged filter)."""
+    company_props = ["hs_object_id", "no_sellers", "hubspot_technoligies",
+                     "crm_detected", "industry", "numberofemployees",
+                     "annualrevenue", "founded_year"]
+    company_filters = [
+        {"propertyName": "no_sellers", "operator": "IN", "values": BAND_VALUES},
+        {"propertyName": "country", "operator": "IN", "values": ANZ},
+    ]
+    companies = hs_search_all("companies", company_filters, company_props)
+
+    # Sanity gate: the ANZ 3+ base is ~4,700. If the filter wedged and returned
+    # the whole portal (tens of thousands) or almost nothing, do NOT publish a
+    # bad breakdown -- signal the assembler to carry forward instead.
+    n = len(companies)
+    if n < 3000 or n > 8000:
+        C.log("  coverage: company pull returned {} rows (expected ~4,700) -- "
+              "skipping coverage/completeness this run (carry forward)".format(n))
+        return None, None
+
+    contact_props = ["hs_object_id", "hs_persona",
+                     "linkedin_connected", "associatedcompanyid"]
+    contacts = hs_search_all("contacts", icp_contact_base(), contact_props)
+    roll = _company_rollup(contacts)
+
+    hs_companies = [c for c in companies
+                    if _is_hubspot_company(c.get("properties", {}) or {})]
+
+    coverage = {
+        "by_crm": _build_coverage_pivot(companies, _crm_bucket, CRM_COLUMNS, roll),
+        "by_industry": _build_coverage_pivot(companies, _industry_bucket, INDUSTRY_COLUMNS, roll),
+        "by_industry_hubspot": _build_coverage_pivot(hs_companies, _industry_bucket, INDUSTRY_COLUMNS, roll),
+        "by_band": _build_coverage_pivot(companies, _band_bucket, BAND_COLUMNS, roll),
+        "by_band_hubspot": _build_coverage_pivot(hs_companies, _band_bucket, BAND_COLUMNS, roll),
+    }
+    completeness = {
+        "by_band": _build_completeness_pivot(companies, _band_bucket, BAND_VALUES, roll),
+        "by_industry": _build_completeness_pivot(companies, _industry_bucket, INDUSTRY_COLUMNS[:-1], roll),
+        "by_crm": _build_completeness_pivot(companies, _crm_bucket, CRM_COLUMNS[:-1], roll),
+    }
+    C.log("  coverage: {} companies ({} HubSpot), {} ICP contacts grouped to "
+          "{} companies".format(n, len(hs_companies), len(contacts), len(roll)))
+    return coverage, completeness
+
+
 def fetch():
     icp, bands, funnel_hubspot = build_icp_and_bands()
     pipeline, funnel_deals = build_pipeline()
     funnel_hubspot.update(funnel_deals)
-    return {
+    funnel_hubspot.update(build_funnel_ext_anchors())
+
+    # Coverage/completeness are best-effort: a failure here must NOT blank the
+    # icp/bands/pipeline the rest of the dashboard depends on.
+    try:
+        coverage, completeness = build_coverage_and_completeness()
+    except Exception as e:  # noqa: BLE001
+        C.log("  coverage/completeness build failed: {} -- carrying forward".format(e))
+        coverage, completeness = None, None
+
+    out = {
         "icp": icp,
         "bands": bands,
         "pipeline": pipeline,
         "funnel_hubspot": funnel_hubspot,
     }
+    if coverage is not None:
+        out["coverage"] = coverage
+    if completeness is not None:
+        out["completeness"] = completeness
+    return out
 
 
 def check(data):

@@ -244,6 +244,10 @@ def fetch():
         "enrolled": enrolled,                     # sum of sequence totals
         "invited": invited,                       # sum of LinkedIn invites sent
         "connected_via_outreach": accepted,       # sum of invites accepted
+        # funnel_ext anchors (2.0 launch funnel). Same numbers, named to match
+        # the data.json funnel_ext contract so the assembler is a straight read:
+        "invites_sent": invited,                  # Reply.io connectionsSent, summed
+        "connections_accepted": accepted,         # Reply.io connectionsAccepted, summed
     }
     return {"sequences": sequences, "funnel_reply": funnel_reply}
 

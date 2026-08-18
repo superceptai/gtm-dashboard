@@ -127,17 +127,27 @@ def main():
         bands = hd["bands"]
         pipeline = hd["pipeline"]
         fh = hd["funnel_hubspot"]
+        # Coverage/completeness are best-effort in the puller: if this run
+        # skipped them (wedged filter), carry forward the last good pivots.
+        coverage = hd.get("coverage") or old.get("coverage")
+        completeness = hd.get("completeness") or old.get("completeness")
     else:
         icp = old.get("icp", {})
         bands = old.get("bands", {})
         pipeline = old.get("pipeline", {})
+        coverage = old.get("coverage")
+        completeness = old.get("completeness")
         tb = old_funnel.get("track_b", {})
+        old_ext = old.get("funnel_ext", {})
         fh = {
-            "icp_contacts": old_funnel.get("icp_contacts", 0),
+            "icp_contacts": old_ext.get("icp_contacts", old_funnel.get("icp_contacts", 0)),
             "connected": old_funnel.get("connected", 0),
             "enrolled": old_funnel.get("enrolled", 0),
             "intake": tb.get("intake", 0),
             "deal": tb.get("deal", 0),
+            "first_connections_total": old_ext.get("first_connections_total", 0),
+            "added_to_sequence": old_ext.get("added_to_sequence", 0),
+            "no_li_profile_raw": old_ext.get("no_li_profile_raw", 0),
         }
 
     # ---- sequences (Reply.io leg) -----------------------------------------
@@ -148,10 +158,18 @@ def main():
     else:
         sequences = old.get("sequences", [])
         tb = old_funnel.get("track_b", {})
+        old_ext_r = old.get("funnel_ext", {})
+        # Carry forward the last good funnel_ext anchors (invites/accepted) rather
+        # than recomputing from the older flat funnel fields, which measure a
+        # different cohort and would corrupt the launch funnel on a Reply.io error.
+        cf_invites = old_ext_r.get("invites_sent", old_funnel.get("invite_sent", 0))
+        cf_accepted = old_ext_r.get("connections_accepted", tb.get("connected_via_outreach", 0))
         fr = {
             "enrolled": old_funnel.get("enrolled", 0),
-            "invited": old_funnel.get("invite_sent", 0),
-            "connected_via_outreach": tb.get("connected_via_outreach", 0),
+            "invited": cf_invites,
+            "connected_via_outreach": cf_accepted,
+            "invites_sent": cf_invites,
+            "connections_accepted": cf_accepted,
         }
 
     # ---- ga4 leg ----------------------------------------------------------
@@ -222,6 +240,35 @@ def main():
         },
     }
 
+    # ---- funnel_ext (2.0 launch funnel, real top steps) -------------------
+    # Anchors are clean single counts (HubSpot leg) + Reply.io sums, verified
+    # live against the signed-off mockup. `already_connected` and the email-only
+    # remainder are decomposed arithmetically from those real anchors:
+    #   already_connected = first_connections_total - connections_accepted
+    #   no_li_profile     = (icp_contacts - invites_sent) - already_connected
+    # i.e. of the ICP contacts NOT sent a LinkedIn invite, how many were already
+    # 1st-degree connections vs reachable via email only. This mirrors the
+    # funnel explainer and uses only defensible real numbers (see note below).
+    ext_icp = fh.get("icp_contacts", 0) or icp_contacts
+    ext_invites = fr.get("invites_sent", fr.get("invited", 0))
+    ext_accepted = fr.get("connections_accepted", fr.get("connected_via_outreach", 0))
+    ext_first = fh.get("first_connections_total", 0)
+    ext_added = fh.get("added_to_sequence", 0)
+    ext_already = max(0, ext_first - ext_accepted)
+    ext_email_only = max(0, (ext_icp - ext_invites) - ext_already)
+    funnel_ext = {
+        "icp_contacts": ext_icp,
+        "invites_sent": ext_invites,
+        "connections_accepted": ext_accepted,
+        "first_connections_total": ext_first,
+        "already_connected": ext_already,
+        "no_li_profile": ext_email_only,
+        "added_to_sequence": ext_added,
+        # transparency: the literal "no hs_linkedin_url" count. Near-zero live,
+        # so the explainer uses the arithmetic remainder above instead.
+        "no_li_profile_raw": fh.get("no_li_profile_raw", 0),
+    }
+
     # ---- feed label -------------------------------------------------------
     def tag(leg, live, err="ERR"):
         return live if ok(leg) else err
@@ -248,9 +295,17 @@ def main():
         "sequences": sequences,
         "linkedin": linkedin,
         "funnel": funnel,
+        "funnel_ext": funnel_ext,
         "pipeline": pipeline,
         "ga4": ga4,
     }
+    # Coverage/completeness are optional (present once the HubSpot bulk pull has
+    # run at least once). Only emit when we have them so an early run does not
+    # write empty objects the renderer would mistake for real zeros.
+    if coverage:
+        data["coverage"] = coverage
+    if completeness:
+        data["completeness"] = completeness
 
     with open(DATA_JSON, "w") as f:
         json.dump(data, f, indent=2)
@@ -271,12 +326,18 @@ def append_history(data, now, history):
     if history:
         expected = set((history[-1].get("data") or {}).keys())
         got = set(data.keys())
-        if expected and got != expected:
+        # Additive evolution is allowed: NEW top-level keys (e.g. funnel_ext,
+        # coverage, completeness) must be able to flow into history without
+        # tripping the guard. We only refuse to append when a previously-present
+        # key has gone MISSING -- that signals a real regression / bad run, and
+        # appending it would corrupt the trend series downstream.
+        missing = expected - got
+        if missing:
             C.log("!" * 70)
-            C.log("WARNING: history row shape mismatch -- SKIPPING append to avoid "
-                  "corrupting history.jsonl.")
-            C.log("  missing: {}".format(sorted(expected - got)))
-            C.log("  extra:   {}".format(sorted(got - expected)))
+            C.log("WARNING: history row is missing previously-present keys -- "
+                  "SKIPPING append to avoid corrupting history.jsonl.")
+            C.log("  missing: {}".format(sorted(missing)))
+            C.log("  (new keys this run: {})".format(sorted(got - expected)))
             C.log("!" * 70)
             return
 
