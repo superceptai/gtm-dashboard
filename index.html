@@ -156,7 +156,7 @@
     <div class="sec-h"><h2>The GTM funnel</h2></div>
     <div class="card funnel">
       <div class="fbar" id="funnelbar"></div>
-      <div class="flabel"><span>Real data through &ldquo;Added to sequence&rdquo;. Invites sent &amp; accepted count the four launch connect sequences only (contacts invited via other sequences appear under &ldquo;routed to other outreach sequences&rdquo; below). <span class="samplebadge">sample</span> steps populate as the launch email &amp; LinkedIn sequences run.</span></div>
+      <div class="flabel"><span>Real data through &ldquo;Total 1st connections&rdquo;. Invites sent &amp; accepted count the four launch connect sequences only (contacts invited via other sequences appear under &ldquo;routed to other outreach sequences&rdquo; below). <span class="samplebadge">sample</span> steps &mdash; including &ldquo;Added to sequence&rdquo;, which will count contacts added to the new launch sequences &mdash; populate as the launch email &amp; LinkedIn sequences run.</span></div>
       <div class="fexplain" id="funnelexplain"></div>
     </div>
 
@@ -183,6 +183,9 @@
 
     <div class="subhead">Account coverage &#8212; by CRM</div>
     <div class="card" id="card_cov_crm"><div class="pad"><table class="pivfull" id="cov_crm"></table></div></div>
+
+    <div class="subhead">Account coverage &#8212; seller bands by CRM</div>
+    <div class="card" id="card_cov_bandcrm"><div class="pad"><table class="pivfull" id="cov_bandcrm"></table></div></div>
 
     <div class="subhead">Account coverage &#8212; by industry</div>
     <div class="card" id="card_cov_ind"><div class="pad"><table class="pivfull" id="cov_ind"></table></div></div>
@@ -307,8 +310,13 @@ function lineAxes(id,vals,labels,color){var el=document.getElementById(id);if(!e
   var dd=vals.map(function(v,i){return (i?'L':'M')+X(i).toFixed(1)+' '+Y(v).toFixed(1);}).join(' ');
   var step=Math.ceil(labels.length/6);var xl='';for(var i=0;i<labels.length;i+=step){xl+='<text class="axis" x="'+X(i).toFixed(1)+'" y="'+(h-8)+'" text-anchor="middle">'+labels[i]+'</text>';}
   var area=dd+' L '+X(vals.length-1).toFixed(1)+' '+Y(0)+' L '+X(0).toFixed(1)+' '+Y(0)+' Z';
+  // Periodic value labels along the line (not just the end state), aligned to
+  // the same sampling as the x-axis date labels so each labelled point reads.
+  var vl='';for(var j=0;j<vals.length-1;j+=step){if(vals.length-1-j<step)continue;var anchor=j===0?'start':'middle';
+    vl+='<circle cx="'+X(j).toFixed(1)+'" cy="'+Y(vals[j]).toFixed(1)+'" r="2.2" fill="'+color+'"/>'+
+        '<text class="dlabel" x="'+X(j).toFixed(1)+'" y="'+(Y(vals[j])-6).toFixed(1)+'" text-anchor="'+anchor+'">'+vals[j].toLocaleString()+'</text>';}
   el.innerHTML='<defs><linearGradient id="ga_'+id+'" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="'+color+'" stop-opacity=".16"/><stop offset="1" stop-color="'+color+'" stop-opacity="0"/></linearGradient></defs>'+g+
-    '<path d="'+area+'" fill="url(#ga_'+id+')"/><path d="'+dd+'" fill="none" stroke="'+color+'" stroke-width="2" stroke-linejoin="round"/>'+
+    '<path d="'+area+'" fill="url(#ga_'+id+')"/><path d="'+dd+'" fill="none" stroke="'+color+'" stroke-width="2" stroke-linejoin="round"/>'+vl+
     '<circle cx="'+X(vals.length-1).toFixed(1)+'" cy="'+Y(vals[vals.length-1]).toFixed(1)+'" r="3" fill="'+color+'"/>'+
     '<text class="dlabel" x="'+(X(vals.length-1)-4).toFixed(1)+'" y="'+(Y(vals[vals.length-1])-6).toFixed(1)+'" text-anchor="end">'+vals[vals.length-1].toLocaleString()+'</text>'+xl;}
 
@@ -399,8 +407,8 @@ function renderFunnel(d){
    {v:icp,k:'ICP',lab:'ICP contacts',sub:'CEO/SL &middot; 3+ ANZ',cvr:null},
    {v:inv,k:'Invites',lab:'Connection invites sent',sub:'4 launch connect sequences',cvr:pctOf(inv,icp)},
    {v:acc,k:'Accepted',lab:'Connections accepted',sub:'via the 4 launch connect sequences',cvr:pctOf(acc,inv)},
-   {v:first,k:'1st Conn',lab:'Total 1st connections',sub:((pctOf(first,icp)?pctOf(first,icp)+' of ICP':'')+(typeof already==='number'?' &middot; incl. '+fmt(already)+' pre-existing':'')).replace(/^ &middot; /,''),cvr:null},
-   {v:added,k:'Sequence',lab:'Added to sequence',cvr:pctOf(added,icp)},
+   {v:first,k:'1st Conn',lab:'Total 1st connections',sub:((pctOf(first,icp)?pctOf(first,icp)+' of ICP':'')+(typeof already==='number'?' &middot; incl. '+fmt(already)+' pre-existing':'')).replace(/^ &middot; /,''),cvr:pctOf(first,icp)},
+   {v:null,k:'Sequence',lab:'Added to sequence',sub:'new launch sequences',cvr:null,dim:1},
    {v:null,k:'Sent',lab:'Sent email or LI',cvr:null,dim:1},
    {v:null,k:'Replied',lab:'Replied',cvr:null,dim:1},
    {v:null,k:'Apps',lab:'Applications',cvr:null,dim:1},
@@ -527,6 +535,20 @@ function renderCovTable(id, pivot){
   });
   document.getElementById(id).innerHTML=html+'</tbody>';
 }
+// Simple counts crosstab: rows x columns of account counts (e.g. seller band x CRM).
+function renderCrosstab(id, x){
+  var cols=x.columns||[], n=cols.length, mat=x.matrix||[];
+  var html='<thead><tr><th>No. sellers</th>'+cols.map(function(c,ci){return '<th'+(ci===n-1?' class="allcol"':'')+'>'+esc(c)+'</th>';}).join('')+'</tr></thead><tbody>';
+  (x.row_labels||[]).forEach(function(rl,ri){
+    var isTot=String(rl).toLowerCase()==='all';
+    html+='<tr'+(isTot?' class="tot"':'')+'><td>'+esc(isTot?'All bands':rl)+'</td>';
+    var row=mat[ri]||[];
+    for(var ci=0;ci<n;ci++){html+='<td class="'+(ci===n-1?'allcol':'')+'">'+fmt(row[ci])+'</td>';}
+    html+='</tr>';
+  });
+  document.getElementById(id).innerHTML=html+'</tbody>';
+}
+
 function renderCoverage(d){
   var cov=d.coverage;
   var map=[['cov_crm','by_crm'],['cov_ind','by_industry'],['cov_indhs','by_industry_hubspot'],['cov_band','by_band'],['cov_bandhs','by_band_hubspot']];
@@ -535,6 +557,10 @@ function renderCoverage(d){
     if(pivot&&pivot.columns&&pivot.rows){renderCovTable(m[0],pivot);}
     else{awaitingCard('card_'+m[0],'This coverage breakdown');}
   });
+  // seller bands x CRM crosstab (account counts)
+  var xt=cov&&cov.by_band_crm;
+  if(xt&&xt.columns&&xt.matrix){renderCrosstab('cov_bandcrm',xt);}
+  else{awaitingCard('card_cov_bandcrm','This coverage breakdown');}
 }
 
 // ---- completeness tables (REAL from data.completeness, else awaiting) ------

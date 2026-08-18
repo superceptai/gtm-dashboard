@@ -576,6 +576,32 @@ def _build_completeness_pivot(companies, bucket_fn, order, roll):
     }
 
 
+def _build_band_crm_crosstab(companies):
+    """Account counts as a seller-band x CRM crosstab (rows = bands + All,
+    columns = HubSpot/Salesforce/Pipedrive/Other + All). Plain counts, so the
+    renderer is a straight read. Row/column totals reconcile with by_band and
+    by_crm."""
+    crms = ["HubSpot", "Salesforce", "Pipedrive", "Other"]
+    counts = {b: {c: 0 for c in crms} for b in BAND_VALUES}
+    for co in companies:
+        props = co.get("properties", {}) or {}
+        b = _band_bucket(props)
+        if b is None:
+            continue
+        counts[b][_crm_bucket(props)] += 1
+    matrix = []
+    for b in BAND_VALUES:
+        row = [counts[b][c] for c in crms]
+        row.append(sum(row))
+        matrix.append(row)
+    all_row = [sum(counts[b][c] for b in BAND_VALUES) for c in crms]
+    all_row.append(sum(all_row))
+    matrix.append(all_row)
+    return {"columns": crms + ["All"],
+            "row_labels": BAND_VALUES + ["All"],
+            "matrix": matrix}
+
+
 def _parse_hs_date(raw):
     """Parse a HubSpot date property (epoch-ms string or ISO date) -> date."""
     if raw is None:
@@ -657,6 +683,7 @@ def build_coverage_and_completeness():
 
     coverage = {
         "by_crm": _build_coverage_pivot(companies, _crm_bucket, CRM_COLUMNS, roll),
+        "by_band_crm": _build_band_crm_crosstab(companies),
         "by_industry": _build_coverage_pivot(companies, _industry_bucket, INDUSTRY_COLUMNS, roll),
         "by_industry_hubspot": _build_coverage_pivot(hs_companies, _industry_bucket, INDUSTRY_COLUMNS, roll),
         "by_band": _build_coverage_pivot(companies, _band_bucket, BAND_COLUMNS, roll),
