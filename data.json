@@ -182,6 +182,12 @@
     "already_connected": 742,
     "no_li_profile": 1489,
     "added_to_sequence": 4428,
+    "uninvited_breakdown": {
+      "already_connected": 742,
+      "routed_other_sequence": 741,
+      "connect_invite_queued": 586,
+      "not_yet_enrolled": 162
+    },
     "no_li_profile_raw": 4
   },
   "pipeline": {

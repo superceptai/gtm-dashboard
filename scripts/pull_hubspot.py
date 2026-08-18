@@ -63,6 +63,19 @@ ANZ = ["Australia", "New Zealand"]
 PERSONA_CEO = "persona_2"   # "Visionary founder or CEO"
 PERSONA_CRO = "persona_1"   # "Revenue leader" (Connor the CRO)
 
+# The four LinkedIn connect-only launch sequences (Reply.io IDs 1658117,
+# 1676940, 1695697, 1695700). `reply_sequence_name` on HubSpot contacts carries
+# the Reply.io sequence name; the IN match is case-insensitive and verified live
+# to return the full connect-enrolled set. These are the ONLY sequences that
+# send the tracked launch connection invites, so they define "invited via the
+# launch campaign" at the contact level (used for the uninvited breakdown).
+CONNECT_SEQUENCE_NAMES = [
+    "LI connect only - ANZ 2nd Degree Connection CEOs at 3+ Rep Companies Using HubSpot",
+    "LI Connect Only - ANZ 2nd Degree Connection CROs at 3+ Rep Companies Using HubSpot",
+    "LI connect only - ANZ 2nd Degree Connection CEOs at 3+ Rep Companies - Non-HubSpot",
+    "LI Connect Only - ANZ 2nd Degree Connection CROs at 3+ Rep Companies - Non-HubSpot",
+]
+
 # ---------------------------------------------------------------------------
 # Coverage / completeness pivot configuration (feeds the 2.0 dashboard).
 # Column orders match the mockup EXACTLY so the renderer stays a straight read.
@@ -391,18 +404,40 @@ def build_funnel_ext_anchors():
     assembler instead of trusting this raw signal. It is still emitted for
     transparency.
     """
+    first = [{"propertyName": "linkedin_connected", "operator": "EQ", "value": "true"}]
+    in_connect = [{"propertyName": "reply_sequence_name", "operator": "IN",
+                   "values": CONNECT_SEQUENCE_NAMES}]
+    no_seq = [{"propertyName": "reply_sequence_name", "operator": "NOT_HAS_PROPERTY"}]
+
     icp_contacts = hs_count("contacts", icp_contact_base())
-    first_connections_total = hs_count("contacts", icp_contact_base(
-        [{"propertyName": "linkedin_connected", "operator": "EQ", "value": "true"}]))
+    first_connections_total = hs_count("contacts", icp_contact_base(first))
     added_to_sequence = hs_count("contacts", icp_contact_base(
         [{"propertyName": "reply_sequence_name", "operator": "HAS_PROPERTY"}]))
     no_li_profile = hs_count("contacts", icp_contact_base(
         [{"propertyName": "hs_linkedin_url", "operator": "NOT_HAS_PROPERTY"}]))
+
+    # ---- uninvited breakdown pieces (why non-connected ICP contacts were not
+    # sent a launch connection invite). Computed as NOT-connected counts per
+    # reply_sequence_name bucket; NEQ on a nullable boolean would drop nulls, so
+    # each bucket's not-connected count = bucket_total - bucket_connected.
+    connect_total = hs_count("contacts", icp_contact_base(in_connect))
+    connect_conn = hs_count("contacts", icp_contact_base(in_connect + first))
+    none_total = hs_count("contacts", icp_contact_base(no_seq))
+    none_conn = hs_count("contacts", icp_contact_base(no_seq + first))
+    nc_connect = max(0, connect_total - connect_conn)   # not-connected, in a launch connect seq
+    nc_none = max(0, none_total - none_conn)             # not-connected, no sequence yet
+    not_connected = max(0, icp_contacts - first_connections_total)
+    nc_other = max(0, not_connected - nc_connect - nc_none)  # not-connected, other/email seq
+
     return {
         "icp_contacts": icp_contacts,
         "first_connections_total": first_connections_total,
         "added_to_sequence": added_to_sequence,
         "no_li_profile_raw": no_li_profile,
+        # uninvited breakdown inputs (see assembler for the final reason split):
+        "uninvited_nc_connect": nc_connect,
+        "uninvited_nc_none": nc_none,
+        "uninvited_nc_other": nc_other,
     }
 
 

@@ -256,6 +256,45 @@ def main():
     ext_added = fh.get("added_to_sequence", 0)
     ext_already = max(0, ext_first - ext_accepted)
     ext_email_only = max(0, (ext_icp - ext_invites) - ext_already)
+
+    # ---- uninvited_breakdown: WHY the non-connected, non-invited ICP contacts
+    # were not sent a launch connection invite. Real reasons, not a remainder.
+    #   already_connected     = 1st connections (no invite needed)
+    #   routed_other_sequence = not connected, enrolled in a non-launch sequence
+    #                           (email or a different LinkedIn campaign)
+    #   connect_invite_queued = not connected, in a launch connect sequence but
+    #                           the invite is not yet sent (LinkedIn daily limits)
+    #   not_yet_enrolled      = not connected, not in any sequence yet
+    # By construction routed + queued + not_enrolled == not_connected - invited_pending
+    # == icp - invites_sent - already_connected (the ~1,489). Asserted below.
+    if ok("hubspot_icp"):
+        invited_pending = max(0, ext_invites - ext_accepted)
+        nc_connect = fh.get("uninvited_nc_connect", 0)
+        connect_queued = max(0, nc_connect - invited_pending)
+        uninvited_breakdown = {
+            "already_connected": ext_already,
+            "routed_other_sequence": fh.get("uninvited_nc_other", 0),
+            "connect_invite_queued": connect_queued,
+            "not_yet_enrolled": fh.get("uninvited_nc_none", 0),
+        }
+        reasons_sum = (uninvited_breakdown["routed_other_sequence"]
+                       + uninvited_breakdown["connect_invite_queued"]
+                       + uninvited_breakdown["not_yet_enrolled"])
+        expected = max(0, ext_icp - ext_invites - ext_already)
+        if reasons_sum != expected:
+            C.log("WARNING: uninvited_breakdown reasons sum {} != expected "
+                  "remainder {} (icp {} - invites {} - already_connected {}). "
+                  "Rendering will use the reasons' own sum.".format(
+                      reasons_sum, expected, ext_icp, ext_invites, ext_already))
+        else:
+            C.log("uninvited_breakdown OK: {} already connected + {} reasons = "
+                  "{} not invited".format(ext_already, reasons_sum,
+                                          ext_already + reasons_sum))
+    else:
+        # HubSpot down: carry forward the last good breakdown verbatim.
+        uninvited_breakdown = (old.get("funnel_ext", {}) or {}).get(
+            "uninvited_breakdown", {"already_connected": ext_already})
+
     funnel_ext = {
         "icp_contacts": ext_icp,
         "invites_sent": ext_invites,
@@ -264,8 +303,9 @@ def main():
         "already_connected": ext_already,
         "no_li_profile": ext_email_only,
         "added_to_sequence": ext_added,
+        "uninvited_breakdown": uninvited_breakdown,
         # transparency: the literal "no hs_linkedin_url" count. Near-zero live,
-        # so the explainer uses the arithmetic remainder above instead.
+        # so the explainer uses the real reason breakdown above instead.
         "no_li_profile_raw": fh.get("no_li_profile_raw", 0),
     }
 

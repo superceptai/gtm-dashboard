@@ -412,14 +412,29 @@ function renderFunnel(d){
     '<div class="bar"><span class="n">'+fmt(f.v)+'</span><span class="k">'+f.k+'</span></div>'+
     '<div class="lab">'+f.lab+(f.sub?'<small>'+f.sub+'</small>':'')+'</div></div>';}).join('');
 
-  // explainer built entirely from real anchors
-  var excluded=(typeof icp==='number'&&typeof inv==='number')?Math.max(0,icp-inv):null;
-  var noli=fe.no_li_profile;
+  // explainer: real reason breakdown from funnel_ext.uninvited_breakdown.
+  // Labels live here; every number comes from data.json.
+  var REASON_LABELS={
+    routed_other_sequence:'were routed to other outreach sequences (email or non-launch LinkedIn)',
+    connect_invite_queued:'are queued in a launch connect sequence (LinkedIn daily invite limits)',
+    not_yet_enrolled:'are not yet enrolled in a sequence'
+  };
+  var REASON_ORDER=['routed_other_sequence','connect_invite_queued','not_yet_enrolled'];
+  var ub=fe.uninvited_breakdown||{};
   var ex='';
   if(typeof icp==='number'&&typeof inv==='number'){
-    ex='<b>Why invites were only sent to '+pctOf(inv,icp)+' of ICP:</b> of the '+fmt(icp)+' ICP contacts, '+
-       fmt(already)+' were already 1st connections and '+fmt(noli)+' have no LinkedIn profile populated/available. '+
-       'So '+fmt(excluded)+' contacts were excluded from being sent invites and are reachable via email only.';
+    var clauses=REASON_ORDER
+      .filter(function(k){return typeof ub[k]==='number'&&ub[k]>0;})
+      .map(function(k){return '<b>'+fmt(ub[k])+'</b> '+REASON_LABELS[k];});
+    var remainder=REASON_ORDER.reduce(function(a,k){return a+(typeof ub[k]==='number'?ub[k]:0);},0);
+    ex='<b>Why invites were only sent to '+pctOf(inv,icp)+' of ICP:</b> of the '+fmt(icp)+
+       ' ICP contacts, '+fmt(already)+' were already 1st connections (no invite needed).';
+    if(clauses.length){
+      var joined=clauses.length>1
+        ? clauses.slice(0,-1).join(', ')+' and '+clauses[clauses.length-1]
+        : clauses[0];
+      ex+=' Of the remaining '+fmt(remainder)+', '+joined+'.';
+    }
   }
   $('#funnelexplain').innerHTML=ex;
 }
