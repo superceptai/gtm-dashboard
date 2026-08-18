@@ -1,881 +1,627 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow">
-<title>Supercept GTM Dashboard</title>
+<title>Supercept GTM Dashboard 2.0</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
   :root{
-    --primary:#0B0BD6;
-    --primary-06:rgba(11,11,214,0.06);
-    --primary-12:rgba(11,11,214,0.12);
-    --secondary:#914BF9;
-    --secondary-10:rgba(145,75,249,0.10);
-    --accent:#19F991;
-    --accent-darker:#19A674;
-    --accent-darker-10:rgba(25,166,116,0.10);
-    --showcase-green:#12A050;
-    --ebony:#1E232C;
-    --ebony-70:#6A6E74;
-    --ebony-65:#737780;
-    --ebony-50:#8F9299;
-    --mercury:#E8E8E8;
-    --surface-light:#F7F7FA;
-    --white:#FFFFFF;
-    --border:rgba(30,35,44,0.10);
-    --border-strong:rgba(30,35,44,0.18);
-    --success-bg:rgba(25,166,116,0.10);
-    --success-text:#0F6E56;
-    --danger-bg:rgba(217,71,71,0.10);
-    --danger-text:#A32D2D;
-    --warn-bg:rgba(186,117,23,0.10);
-    --warn-text:#854F0B;
-    --info-bg:rgba(11,11,214,0.06);
-    --info-text:#0C447C;
-    --r-sm:6px;
-    --r-md:10px;
-    --r-lg:12px;
-    --r-xl:16px;
-    --shadow-resting:0 2px 6px rgba(15,23,42,0.04), 0 16px 40px -16px rgba(15,23,42,0.08);
-    --max:1280px;
+    --paper:#F4F7F9; --card:#FFFFFF; --ink:#14202E; --ink-2:#3A4B5C; --muted:#6B7C8B;
+    --line:#E4EAEF; --line-2:#EEF2F5;
+    --teal:#0C6B7A; --teal-600:#0A5A67; --teal-wash:#E4F0F2; --teal-mid:#7FB4BC;
+    --pos:#1F9D6B; --neg:#D6564B; --amber:#C08717;
+    --disp:"Space Grotesk",system-ui,sans-serif; --body:"Inter",system-ui,sans-serif;
+    --mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+    --r:10px; --sh:0 1px 2px rgba(20,32,46,.04),0 1px 10px rgba(20,32,46,.04);
   }
   *{box-sizing:border-box}
-  html,body{margin:0;padding:0}
-  body{
-    background:var(--white);
-    color:var(--ebony);
-    font-family:"IBM Plex Sans",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-    font-weight:400;
-    font-size:14px;
-    line-height:1.5;
-    letter-spacing:0;
-    -webkit-font-smoothing:antialiased;
-    text-rendering:optimizeLegibility;
-  }
-  .num{font-variant-numeric:tabular-nums;font-feature-settings:"tnum"}
-  .wrap{max-width:var(--max);margin:0 auto;padding:0 28px}
-  @media (max-width:640px){.wrap{padding:0 16px}}
-  header.masthead{padding:32px 0 24px;border-bottom:1px solid var(--border);margin-bottom:32px}
-  .masthead-row{display:flex;align-items:flex-start;justify-content:space-between;gap:24px;flex-wrap:wrap}
-  .brand{display:flex;align-items:baseline;gap:12px;margin-bottom:6px}
-  .brand .mark{font-weight:600;font-size:22px;line-height:1;letter-spacing:-0.01em;color:var(--ebony)}
-  .brand .divider{height:16px;width:1px;background:var(--border-strong);align-self:center}
-  .brand .label{text-transform:uppercase;letter-spacing:0.18em;font-size:11px;font-weight:600;color:var(--primary)}
-  .masthead-meta{font-size:12px;color:var(--ebony-70);margin-top:4px}
+  html{scroll-behavior:smooth}
+  body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--body);font-size:15px;line-height:1.5;-webkit-font-smoothing:antialiased}
+  h1,h2,h3{font-family:var(--disp);margin:0;letter-spacing:-.01em}
+  a{color:inherit;text-decoration:none}
 
-  .source-status{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
-  .src-badge{display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border-radius:999px;font-size:11px;font-weight:500;color:var(--ebony);background:var(--surface-light);border:1px solid var(--border);line-height:1.4}
-  .src-badge .dot{width:6px;height:6px;border-radius:50%;background:var(--accent-darker);flex-shrink:0}
-  .src-badge.fresh{color:var(--success-text);background:var(--success-bg);border-color:rgba(25,166,116,0.20)}
-  .src-badge.fresh .dot{background:var(--accent-darker)}
-  .src-badge.cached{color:var(--info-text);background:var(--info-bg);border-color:rgba(11,11,214,0.18)}
-  .src-badge.cached .dot{background:var(--info-text)}
-  .src-badge.stale{color:var(--warn-text);background:var(--warn-bg);border-color:rgba(186,117,23,0.20)}
-  .src-badge.stale .dot{background:var(--warn-text)}
-  .src-badge.failed{color:var(--danger-text);background:var(--danger-bg);border-color:rgba(217,71,71,0.20)}
-  .src-badge.failed .dot{background:var(--danger-text)}
-  .src-badge.fallback{color:var(--ebony-70);background:var(--surface-light);border-color:var(--border)}
-  .src-badge.fallback .dot{background:var(--ebony-50)}
-  .src-badge .st{opacity:0.75;text-transform:uppercase;letter-spacing:0.08em;font-size:10px;margin-left:2px}
-  .freshness{text-align:right;color:var(--ebony-70);font-size:13px;line-height:1.45}
-  .freshness .dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--accent-darker);margin-right:6px;vertical-align:middle}
-  .freshness.stale .dot{background:#F2DC13}
-  .freshness.error .dot{background:var(--danger-text)}
-  .freshness small{display:block;font-size:11px;margin-top:4px;text-transform:uppercase;letter-spacing:0.18em;font-weight:600}
-  .sl{font-size:13px;font-weight:600;color:var(--ebony);margin:0 0 4px;letter-spacing:0}
-  .sr{font-size:11.5px;color:var(--ebony-70);margin:0 0 14px;line-height:1.5}
-  .mc{background:var(--surface-light);border-radius:var(--r-md);padding:14px 16px}
-  .mc.featured{background:var(--white);border:1px solid var(--border-strong)}
-  .mc .lbl{margin:0 0 4px;font-size:11.5px;color:var(--ebony-70);font-weight:500}
-  .mc .val{margin:0;font-size:24px;font-weight:500;line-height:1;letter-spacing:-0.01em;color:var(--ebony);font-variant-numeric:tabular-nums;font-feature-settings:"tnum"}
-  .mc .val.success{color:var(--accent-darker)}
-  .mc .val.muted{color:var(--ebony-50)}
-  .mc .val.info{color:var(--primary)}
-  .mc .sub{margin:4px 0 0;font-size:11px;color:var(--ebony-70);line-height:1.4}
-  .mc .conn{margin:8px 0 0;padding-top:8px;border-top:1px solid var(--border);font-size:11.5px;color:var(--ebony-70);display:flex;justify-content:space-between;align-items:baseline}
-  .mc .conn b{color:var(--ebony);font-weight:500;font-size:13px;font-variant-numeric:tabular-nums}
-  .mc-ph{background:var(--surface-light);border-radius:var(--r-md);padding:14px 16px;opacity:0.6}
-  .mc-ph .lbl{margin:0 0 4px;font-size:11.5px;color:var(--ebony-70);font-weight:500}
-  .mc-ph .val{margin:0;font-size:24px;font-weight:500;color:var(--ebony-50);font-variant-numeric:tabular-nums;line-height:1}
-  .mc-ph .sub{margin:4px 0 0;font-size:11px;color:var(--ebony-70)}
-  .mc-grid-4{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-bottom:12px}
-  .mc-grid-2{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:12px}
-  @media (max-width:520px){.mc-grid-2{grid-template-columns:1fr}}
-  .panel{background:var(--white);border:1px solid var(--border);border-radius:var(--r-lg);padding:20px 22px;margin-bottom:14px;box-shadow:var(--shadow-resting)}
-  .panel-title{margin:0 0 10px;font-size:13px;font-weight:600;color:var(--ebony)}
-  .panel-legend{display:flex;gap:18px;flex-wrap:wrap;margin-bottom:14px;font-size:11.5px;color:var(--ebony-70)}
-  .panel-legend span{display:flex;align-items:center;gap:6px}
-  .panel-legend i{width:10px;height:10px;border-radius:2px;display:inline-block}
-  .div{height:1px;background:var(--border);margin:32px 0}
-  .seq-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(310px,1fr));gap:12px;margin-bottom:20px}
-  .sc{background:var(--white);border:1px solid var(--border);border-radius:var(--r-lg);padding:16px 18px;box-shadow:var(--shadow-resting)}
-  .sc-head{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;margin-bottom:12px}
-  .sc-head .name{margin:0;font-size:12.5px;font-weight:500;line-height:1.4;color:var(--ebony)}
-  .sc-head .meta{margin:4px 0 0;font-size:11px;color:var(--ebony-70);font-variant-numeric:tabular-nums}
-  .sc-section-label{margin:10px 0 6px;font-size:10px;color:var(--ebony-70);text-transform:uppercase;letter-spacing:0.06em;font-weight:500}
-  .sc-section-label:first-of-type{margin-top:0}
-  .sc-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:6px}
-  .sc-stats-3{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:6px}
-  .sc-stats-2{display:grid;grid-template-columns:repeat(2,1fr);gap:6px;margin-bottom:6px}
-  .sc-total{display:flex;justify-content:flex-end;font-size:11px;color:var(--ebony-70);padding:6px 2px 0;border-top:1px solid var(--border);margin-top:6px}
-  .sc-total b{color:var(--ebony);font-weight:500;margin-left:4px;font-variant-numeric:tabular-nums}
-  .sc-footnote{margin-top:12px;padding:10px 12px;background:var(--info-bg);border-left:3px solid var(--primary);border-radius:0 var(--r-sm) var(--r-sm) 0}
-  .sc-footnote p{margin:0 0 6px;font-size:11px;line-height:1.5;color:var(--info-text)}
-  .sc-footnote p:last-child{margin-bottom:0}
-  .sc-footnote b{font-weight:500;color:var(--info-text)}
-  .ss{background:var(--surface-light);border-radius:var(--r-sm);padding:8px 10px;min-width:0}
-  .ss .l{margin:0 0 2px;font-size:10.5px;color:var(--ebony-70);font-weight:500}
-  .ss .v{margin:0;font-size:16px;font-weight:500;line-height:1.1;color:var(--ebony);font-variant-numeric:tabular-nums;font-feature-settings:"tnum"}
-  .ss .v.success{color:var(--accent-darker)}
-  .ss .v.danger{color:var(--danger-text)}
-  .ss .v.info{color:var(--primary)}
-  .ss .v.muted{color:var(--ebony-50)}
-  .ss .v.warn{color:var(--warn-text)}
-  .pill{display:inline-block;font-size:11px;font-weight:600;padding:3px 10px;border-radius:99px;line-height:1.4;flex-shrink:0;text-transform:lowercase;letter-spacing:0}
-  .pill.active{background:var(--success-bg);color:var(--success-text)}
-  .pill.paused{background:var(--surface-light);color:var(--ebony-70)}
-  .pill.danger{background:var(--danger-bg);color:var(--danger-text)}
-  .pill.warn{background:var(--warn-bg);color:var(--warn-text)}
-  .pill.success{background:var(--success-bg);color:var(--success-text)}
-  .pill.info{background:var(--info-bg);color:var(--info-text)}
-  #funnel{padding:6px 0}
-  .funnel-row{display:flex;flex-direction:column;align-items:center;margin-bottom:2px}
-  .funnel-drop{font-size:11.5px;color:var(--ebony-70);padding:5px 0;text-align:center}
-  .funnel-drop b{color:var(--ebony);font-weight:500}
-  .funnel-bar{border-radius:var(--r-sm);padding:11px 16px;display:flex;justify-content:space-between;align-items:center;gap:10px;box-sizing:border-box;color:var(--white)}
-  .funnel-bar .left p:first-child{margin:0;font-size:12.5px;font-weight:500;color:var(--white)}
-  .funnel-bar .left p:last-child{margin:2px 0 0;font-size:11px;color:rgba(255,255,255,0.78)}
-  .funnel-bar .right{text-align:right;flex-shrink:0;font-size:20px;font-weight:500;font-variant-numeric:tabular-nums;font-feature-settings:"tnum"}
-  .pipeline-flow{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:1px;background:var(--border);border-radius:var(--r-md);overflow:hidden;margin-bottom:10px}
-  .pstage{background:var(--white);padding:14px 12px;text-align:center}
-  .pstage .lbl{margin:0 0 4px;font-size:11px;color:var(--ebony-70);font-weight:500}
-  .pstage .val{margin:0;font-size:24px;font-weight:500;line-height:1;letter-spacing:-0.01em;color:var(--ebony);font-variant-numeric:tabular-nums;font-feature-settings:"tnum"}
-  .pstage .val.muted{color:var(--ebony-50)}
-  .note{font-size:11.5px;color:var(--ebony-70);background:var(--surface-light);border-radius:var(--r-md);padding:10px 12px;margin-top:10px;line-height:1.5}
-  .note.setup{display:flex;align-items:flex-start;gap:8px}
-  .note .icon{flex-shrink:0;margin-top:1px;color:var(--primary)}
-  .note .icon svg{width:14px;height:14px;display:block;stroke:currentColor;stroke-width:1.75;fill:none}
-  footer{margin-top:80px;padding:32px 0 40px;border-top:1px solid var(--border);color:var(--ebony-70);font-size:12.5px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:14px}
-  footer a{color:var(--primary);text-decoration:none;font-weight:500}
-  footer a:hover{text-decoration:underline}
-  footer code{font-family:"IBM Plex Sans",sans-serif;font-size:12px;color:var(--ebony);background:var(--surface-light);padding:2px 8px;border-radius:var(--r-sm)}
-  .loading{padding:80px 0;text-align:center;color:var(--ebony-70);font-size:13px}
-  .error-banner{padding:16px 20px;background:var(--danger-bg);border:1px solid rgba(163,45,45,0.30);border-radius:var(--r-md);color:var(--danger-text);font-size:13px;margin:20px 0;line-height:1.5}
-  .error-banner strong{display:block;margin-bottom:4px;font-weight:600}
-  .error-banner code{font-family:"IBM Plex Sans",sans-serif;background:rgba(255,255,255,0.5);padding:1px 6px;border-radius:4px;font-size:12px}
+  .top{position:sticky;top:0;z-index:40;background:rgba(244,247,249,.9);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+  .top-in{max-width:1600px;margin:0 auto;padding:14px 28px;display:flex;align-items:center;gap:18px;flex-wrap:wrap}
+  .brand{display:flex;align-items:baseline;gap:10px}
+  .brand .mark{font-family:var(--disp);font-weight:700;font-size:17px;letter-spacing:-.02em}
+  .brand .mark b{color:var(--teal)}
+  .brand .sub{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.14em}
+  .mocktag{font-family:var(--mono);font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);background:#fff;border:1px solid var(--line);padding:2px 6px;border-radius:5px}
+  .top-right{margin-left:auto;display:flex;align-items:center;gap:18px;flex-wrap:wrap}
+  .asof{font-size:12px;color:var(--ink-2)}.asof b{font-family:var(--mono);font-weight:600}
+  .freshness{display:flex;gap:10px;align-items:center}
+  .fdot{display:inline-flex;align-items:center;gap:5px;font-size:11px;color:var(--muted)}
+  .fdot i{width:7px;height:7px;border-radius:50%;background:var(--pos);display:inline-block}
+  .periods{display:flex;gap:3px;background:var(--card);border:1px solid var(--line);border-radius:8px;padding:3px}
+  .periods button{font:inherit;font-size:11px;border:0;background:transparent;color:var(--muted);padding:5px 9px;border-radius:6px;cursor:pointer}
+  .periods button.on{background:var(--teal);color:#fff}
 
-  /* --- refresh pipeline additions: source health, NO DATA, tracks, trends --- */
-  .src-badge.error,.src-badge.failed{color:var(--danger-text);background:var(--danger-bg);border-color:rgba(217,71,71,0.20)}
-  .src-badge.error .dot,.src-badge.failed .dot{background:var(--danger-text)}
-  .src-badge .ls{opacity:0.7;font-size:10px;margin-left:4px;letter-spacing:0;text-transform:none}
-  .nodata{display:flex;align-items:center;gap:8px;padding:14px 16px;background:var(--danger-bg);border:1px dashed rgba(163,45,45,0.40);border-radius:var(--r-md);color:var(--danger-text);font-size:12.5px;font-weight:500;margin-bottom:14px}
-  .nodata b{font-weight:600}
-  .nodata .tag{font-size:10px;text-transform:uppercase;letter-spacing:0.12em;background:var(--danger-text);color:var(--white);padding:2px 8px;border-radius:999px}
-  .track-wrap{display:grid;grid-template-columns:1fr 1fr;gap:14px}
-  @media (max-width:760px){.track-wrap{grid-template-columns:1fr}}
-  .track{background:var(--white);border:1px solid var(--border);border-radius:var(--r-lg);padding:16px 18px;box-shadow:var(--shadow-resting)}
-  .track h4{margin:0 0 2px;font-size:12.5px;font-weight:600;color:var(--ebony)}
-  .track .track-sub{margin:0 0 12px;font-size:11px;color:var(--ebony-70);line-height:1.45}
-  .tstep{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--border)}
-  .tstep:last-of-type{border-bottom:none}
-  .tstep .tl{font-size:12px;color:var(--ebony)}
-  .tstep .tl small{display:block;font-size:10.5px;color:var(--ebony-70)}
-  .tstep .tv{font-size:16px;font-weight:500;font-variant-numeric:tabular-nums;color:var(--ebony);text-align:right;white-space:nowrap}
-  .tstep .tv small{font-size:11px;color:var(--ebony-70);font-weight:400;margin-left:6px}
-  .tstep .tv.muted{color:var(--ebony-50)}
-  .track-target{margin-top:12px;padding:8px 10px;background:var(--info-bg);border-left:3px solid var(--primary);border-radius:0 var(--r-sm) var(--r-sm) 0;font-size:11px;color:var(--info-text);line-height:1.5}
-  .track-target b{font-weight:600}
-  .wow{font-size:11.5px;font-variant-numeric:tabular-nums;font-weight:500}
-  .wow.up{color:var(--accent-darker)}
-  .wow.down{color:var(--danger-text)}
-  .wow.flat{color:var(--ebony-70)}
-  .conv-row{display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap;margin:10px 0 0;font-size:11.5px;color:var(--ebony-70)}
-  .conv-row .cv{background:var(--surface-light);border-radius:999px;padding:3px 10px;font-variant-numeric:tabular-nums}
-  .conv-row .cv b{color:var(--ebony);font-weight:600}
+  .nav{position:sticky;top:57px;z-index:30;background:var(--card);border-bottom:1px solid var(--line)}
+  .nav-in{max-width:1600px;margin:0 auto;padding:0 28px;display:flex;gap:2px;overflow-x:auto}
+  .nav-in a{padding:12px 14px;font-size:12px;color:var(--muted);border-bottom:2px solid transparent;white-space:nowrap;font-weight:500}
+  .nav-in a.on,.nav-in a:hover{color:var(--teal);border-color:var(--teal)}
+
+  main{max-width:1600px;margin:0 auto;padding:8px 28px 90px}
+  section{margin-top:38px;scroll-margin-top:120px}
+  .eyebrow{font-family:var(--mono);font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--teal);font-weight:600}
+  .sec-h{display:flex;align-items:baseline;gap:12px;margin:4px 0 16px}
+  .sec-h h2{font-size:21px;font-weight:600}
+  .subhead{font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-2);margin:22px 0 8px;font-weight:600}
+
+  .card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--sh)}
+  .card-h{display:flex;align-items:center;gap:8px;padding:14px 18px 2px}
+  .card-h h3{font-size:13.5px;font-weight:600}
+  .card-h .hint{font-size:11px;color:var(--muted);margin-left:auto;font-family:var(--mono)}
+  .pad{padding:14px 18px}
+  .grid{display:grid;gap:14px}
+  .g2{grid-template-columns:1fr 1fr}.g3{grid-template-columns:repeat(3,1fr)}
+  @media(max-width:900px){.g2,.g3{grid-template-columns:1fr}}
+  .samplebadge{font-family:var(--mono);font-size:9px;letter-spacing:.06em;text-transform:uppercase;color:var(--amber);background:#FBF3E2;border:1px solid #F0DFB6;padding:2px 6px;border-radius:4px;vertical-align:middle}
+  .tag{display:inline-block;font-family:var(--mono);font-size:10px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;padding:3px 9px;border-radius:5px;vertical-align:middle}
+  .tag-real{background:#E2F1EA;color:#1C7A52;border:1px solid #BFE3D2}
+  .tag-sample{background:#FBF3E2;color:#B57A10;border:1px solid #F0DFB6}
+  .tag-mixed{background:#EAF0F3;color:#3A6076;border:1px solid #D3E0E7}
+  .tagbar{padding:12px 18px 0;text-align:right}
+  .card-h .samplebadge,.subhead .samplebadge{display:none}
+
+  /* awaiting-data state (real cards whose pipeline field is not populated yet) */
+  .awaiting{margin:0;padding:22px 18px;display:flex;align-items:center;gap:10px;color:var(--ink-2);font-size:12.5px;line-height:1.5}
+  .awaiting .tagw{font-family:var(--mono);font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--teal);background:var(--teal-wash);border:1px solid #CDE3E6;padding:3px 8px;border-radius:5px;white-space:nowrap}
+  .awaiting b{color:var(--ink);font-weight:600}
+
+  /* funnel */
+  .funnel{padding:22px 18px 12px}
+  .fbar{display:flex;gap:0}
+  .fstep{flex:1;position:relative;padding:0 3px}
+  .fstep .bar{height:82px;background:linear-gradient(180deg,var(--teal),var(--teal-600));border-radius:6px;display:flex;flex-direction:column;justify-content:center;align-items:center;color:#fff}
+  .fstep .bar .n{font-family:var(--mono);font-weight:600;font-size:15px}
+  .fstep .bar .k{font-size:10px;opacity:.9;text-transform:uppercase;letter-spacing:.04em;margin-top:3px}
+  .fstep .lab{font-size:10.5px;color:var(--ink-2);text-align:center;margin-top:8px;line-height:1.3;min-height:44px}
+  .fstep .lab small{display:block;color:var(--muted);font-size:9.5px}
+  .fstep .cvr{position:absolute;top:30px;right:-1px;transform:translateX(50%);z-index:2;background:#fff;border:1px solid var(--line);border-radius:20px;font-family:var(--mono);font-size:10px;font-weight:600;color:var(--teal);padding:2px 6px;box-shadow:var(--sh)}
+  .fstep.dim .bar{background:linear-gradient(180deg,#AEC3CB,#98B0B8)}
+  .flabel{display:flex;justify-content:space-between;margin-top:10px;font-size:12px;color:var(--muted)}
+  .fexplain{margin-top:10px;font-size:12.5px;color:var(--ink-2);line-height:1.5;max-width:940px}
+  .fexplain b{color:var(--ink);font-weight:600}
+
+  /* charts */
+  .chartwrap{padding:10px 12px 6px}
+  .axis{font-family:var(--mono);font-size:10.5px;fill:var(--muted)}
+  .gridln{stroke:var(--line-2);stroke-width:1}
+  .chartlegend{display:flex;gap:18px;justify-content:center;padding:2px 0 12px;font-size:11px;color:var(--muted)}
+  .chartlegend span{display:inline-flex;align-items:center;gap:6px}
+  .chartlegend i{width:10px;height:10px;border-radius:2px;display:inline-block}
+  .dlabel{font-family:var(--mono);font-size:10px;fill:var(--ink-2)}
+
+  /* full-width plain pivot */
+  .pivfull{width:100%;border-collapse:collapse;font-size:14.5px}
+  .pivfull th{font-size:11.5px;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);font-weight:600;text-align:center;padding:12px 8px;border-bottom:1.5px solid var(--line)}
+  .pivfull th:first-child{text-align:left}
+  .pivfull td{padding:12px 8px;border-bottom:1px solid var(--line-2);font-family:var(--mono);text-align:center;font-weight:500;font-size:14.5px}
+  .pivfull td:first-child{font-family:var(--body);color:var(--ink-2);text-align:left;font-weight:500}
+  .pivfull tr:last-child td{border-bottom:0}
+  .pivfull .sub{font-size:12px;color:var(--muted);display:block;font-weight:400;margin-top:2px}
+  .pivfull td.ind{padding-left:20px;color:var(--muted)}
+  .pivfull tr.tot td{background:#FAFBFC}
+  .pivfull td.allcol,.pivfull th.allcol{border-left:1px solid var(--line);font-weight:600}
+
+  table.seq{width:100%;border-collapse:collapse;font-size:12.5px}
+  table.seq th{font-size:10px;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);font-weight:600;text-align:right;padding:9px 8px;border-bottom:1px solid var(--line)}
+  table.seq th:first-child{text-align:left}
+  table.seq td{padding:9px 8px;border-bottom:1px solid var(--line-2);font-family:var(--mono);text-align:right}
+  table.seq td.txt{font-family:var(--body);color:var(--ink-2);text-align:left}
+  table.seq tr:last-child td{border-bottom:0}
+  .pill{font-size:10px;font-family:var(--mono);padding:2px 7px;border-radius:20px;background:var(--teal-wash);color:var(--teal-600)}
+  .pill.li{background:#E7EEF6;color:#2C5A86}
+
+  .banner{max-width:1600px;margin:14px auto 0;padding:14px 18px;background:#FBECEA;border:1px solid #F2C9C4;border-radius:var(--r);color:#8A2F27;font-size:13px}
+  .banner b{font-weight:600}
+  .foot{margin-top:56px;padding-top:16px;border-top:1px solid var(--line);color:var(--muted);font-size:11.5px}
+  .foot a{color:var(--teal);font-weight:500}
 </style>
 </head>
 <body>
 
-<div class="wrap">
+<header class="top">
+  <div class="top-in">
+    <div class="brand"><span class="mark">GTM <b>Command</b></span></div>
+    <div class="top-right">
+      <div class="freshness" id="freshness"></div>
+      <span class="asof">as of <b id="asof">&#8212;</b></span>
+      <div class="periods"><button>Wk</button><button class="on">30d</button><button>90d</button><button>Qtr</button><button>YTD</button></div>
+    </div>
+  </div>
+</header>
 
-  <header class="masthead">
-    <div class="masthead-row">
-      <div>
-        <div class="brand">
-          <span class="mark">Supercept</span>
-          <span class="divider"></span>
-          <span class="label">GTM Dashboard</span>
-        </div>
-        <div class="masthead-meta" id="masthead-meta">Loading...</div>
-        <div class="source-status" id="source-status"></div>
+<nav class="nav">
+  <div class="nav-in" id="secnav">
+    <a href="#funnel" class="on">GTM Funnel</a>
+    <a href="#coverage">ICP &amp; Coverage</a>
+    <a href="#outbound">Outbound Campaigns</a>
+    <a href="#website">Website</a>
+    <a href="#linkedin">LinkedIn</a>
+  </div>
+</nav>
+
+<div id="loadbanner"></div>
+
+<main id="main" style="display:none">
+  <!-- FUNNEL -->
+  <section id="funnel">
+    <div class="eyebrow">Big picture &middot; Private beta launch campaign</div>
+    <div class="sec-h"><h2>The GTM funnel</h2></div>
+    <div class="card funnel">
+      <div class="fbar" id="funnelbar"></div>
+      <div class="flabel"><span>Real data through &ldquo;Added to sequence&rdquo;. Invites sent &amp; accepted count the four launch connect sequences only (contacts invited via other sequences appear under &ldquo;routed to other outreach sequences&rdquo; below). <span class="samplebadge">sample</span> steps populate as the launch email &amp; LinkedIn sequences run.</span></div>
+      <div class="fexplain" id="funnelexplain"></div>
+    </div>
+
+    <div class="subhead">Launch outputs over time <span class="samplebadge">sample</span></div>
+    <div class="grid g3">
+      <div class="card"><div class="card-h"><h3>Applications</h3><span class="hint">cumulative</span></div><div class="chartwrap"><svg id="appsChart" width="100%" height="200" viewBox="0 0 400 200" preserveAspectRatio="none"></svg></div></div>
+      <div class="card"><div class="card-h"><h3>Intake calls</h3><span class="hint">cumulative</span></div><div class="chartwrap"><svg id="intakeChart" width="100%" height="200" viewBox="0 0 400 200" preserveAspectRatio="none"></svg></div></div>
+      <div class="card"><div class="card-h"><h3>In beta (onboarded)</h3><span class="hint">cumulative</span></div><div class="chartwrap"><svg id="betaChart" width="100%" height="200" viewBox="0 0 400 200" preserveAspectRatio="none"></svg></div></div>
+    </div>
+
+    <div class="subhead">Sequence engagement, week over week <span class="samplebadge">sample</span></div>
+    <div class="card"><div class="card-h"><h3>Active in sequence vs replied</h3><span class="hint">cumulative / week</span></div><div class="chartwrap"><svg id="engageChart" width="100%" height="220" viewBox="0 0 900 220"></svg></div>
+      <div class="chartlegend"><span><i style="background:#0C6B7A"></i>Active in sequence</span><span><i style="background:#C08717"></i>Replied</span></div>
+    </div>
+
+    <div class="subhead">ICP 1st connections, week over week</div>
+    <div class="card"><div class="card-h"><h3>ICP 1st connections</h3><span class="hint" id="firstConnHint">cumulative &middot; real</span></div><div class="chartwrap"><svg id="firstConnChart" width="100%" height="200" viewBox="0 0 900 200"></svg></div></div>
+  </section>
+
+  <!-- COVERAGE -->
+  <section id="coverage">
+    <div class="eyebrow">Raw material</div>
+    <div class="sec-h"><h2>ICP &amp; data coverage</h2></div>
+
+    <div class="subhead">Account coverage &#8212; by CRM</div>
+    <div class="card" id="card_cov_crm"><div class="pad"><table class="pivfull" id="cov_crm"></table></div></div>
+
+    <div class="subhead">Account coverage &#8212; by industry</div>
+    <div class="card" id="card_cov_ind"><div class="pad"><table class="pivfull" id="cov_ind"></table></div></div>
+
+    <div class="subhead">Account coverage &#8212; by industry (HubSpot accounts only)</div>
+    <div class="card" id="card_cov_indhs"><div class="pad"><table class="pivfull" id="cov_indhs"></table></div></div>
+
+    <div class="subhead">Account coverage &#8212; by number of sellers</div>
+    <div class="card" id="card_cov_band"><div class="pad"><table class="pivfull" id="cov_band"></table></div></div>
+
+    <div class="subhead">Account coverage &#8212; by number of sellers (HubSpot accounts only)</div>
+    <div class="card" id="card_cov_bandhs"><div class="pad"><table class="pivfull" id="cov_bandhs"></table></div></div>
+
+    <div class="subhead">Data completeness &#8212; by number of sellers</div>
+    <div class="card" id="card_cpl_band"><div class="pad"><table class="pivfull" id="cpl_band"></table></div></div>
+
+    <div class="subhead">Data completeness &#8212; by industry</div>
+    <div class="card" id="card_cpl_ind"><div class="pad"><table class="pivfull" id="cpl_ind"></table></div></div>
+
+    <div class="subhead">Data completeness &#8212; by CRM</div>
+    <div class="card" id="card_cpl_crm"><div class="pad"><table class="pivfull" id="cpl_crm"></table></div></div>
+  </section>
+
+  <!-- OUTBOUND -->
+  <section id="outbound">
+    <div class="eyebrow">Channels</div>
+    <div class="sec-h"><h2>Outbound campaigns &#8212; Reply.io</h2></div>
+    <div class="grid g2">
+      <div class="card">
+        <div class="card-h"><h3>Launch sequence performance <span class="samplebadge">sample</span></h3></div>
+        <div class="pad" style="padding-top:6px"><table class="seq">
+          <thead><tr><th>Sequence</th><th>Channel</th><th>Sent</th><th>Opened</th><th>Open%</th><th>Replied</th><th>Reply%</th></tr></thead>
+          <tbody id="seqRows"></tbody>
+        </table></div>
       </div>
-      <div class="freshness" id="freshness">
-        <div><span class="dot"></span><span id="as-of">Loading...</span></div>
-        <small id="freshness-label">Loading</small>
+      <div class="card">
+        <div class="card-h"><h3>Messages sent &amp; reply rate <span class="samplebadge">sample</span></h3><span class="hint">weekly</span></div>
+        <div class="chartwrap"><svg id="replyChart" width="100%" height="220" viewBox="0 0 560 220"></svg></div>
+        <div class="chartlegend"><span><i style="background:#0C6B7A"></i>Sent</span><span><i style="background:#C08717"></i>Replied</span></div>
       </div>
     </div>
-  </header>
+  </section>
 
-  <div id="app">
-    <div class="loading">Loading dashboard data...</div>
-  </div>
+  <!-- WEBSITE -->
+  <section id="website">
+    <div class="eyebrow">Channels</div>
+    <div class="sec-h"><h2>Website &#8212; GA4</h2></div>
+    <div class="grid g2">
+      <div class="card">
+        <div class="card-h"><h3>Traffic &amp; applications <span class="samplebadge">sample</span></h3><span class="hint">week over week</span></div>
+        <div class="chartwrap"><svg id="siteChart" width="100%" height="220" viewBox="0 0 560 220"></svg></div>
+        <div class="chartlegend"><span><i style="background:#7FB4BC"></i>Sessions</span><span><i style="background:#0C6B7A"></i>Applications</span></div>
+      </div>
+      <div class="card">
+        <div class="card-h"><h3>Conversion rate <span class="samplebadge">sample</span></h3><span class="hint">applications / sessions</span></div>
+        <div class="chartwrap"><svg id="cvrChart" width="100%" height="220" viewBox="0 0 560 220"></svg></div>
+      </div>
+    </div>
+  </section>
 
-  <footer>
-    <div>Source: <code>data.json</code> &middot; refreshed daily via Cowork pipeline plus on-demand</div>
-    <div><a href="https://www.notion.so/36e406423d7181e69e88e5d0d718f4a3">PRD</a> &middot; <a href="https://www.notion.so/36e406423d718113b3f6c9d33c8d9488">Metrics spec</a> &middot; <a href="https://www.notion.so/36f406423d7181d9921ae21b75a9f1a5">Iteration log</a></div>
-  </footer>
+  <!-- LINKEDIN -->
+  <section id="linkedin">
+    <div class="eyebrow">Channels</div>
+    <div class="sec-h"><h2>LinkedIn organic &#8212; founder brand</h2></div>
+    <div class="grid g2">
+      <div class="card"><div class="card-h"><h3>Follower growth</h3><span class="hint">real</span></div><div class="chartwrap"><svg id="follChart" width="100%" height="190" viewBox="0 0 560 190" preserveAspectRatio="none"></svg></div></div>
+      <div class="card"><div class="card-h"><h3>Post performance <span class="samplebadge">sample</span></h3></div>
+        <div class="pad" style="padding-top:6px"><table class="seq">
+          <thead><tr><th>Recent post</th><th>Impr.</th><th>Comments</th><th>Eng%</th></tr></thead>
+          <tbody>
+            <tr><td class="txt">Why pipeline reviews fail</td><td>4,210</td><td>28</td><td>4.4%</td></tr>
+            <tr><td class="txt">The 3-rep threshold</td><td>2,980</td><td>12</td><td>3.3%</td></tr>
+            <tr><td class="txt">Founder-led sales, honestly</td><td>6,540</td><td>54</td><td>6.3%</td></tr>
+            <tr><td class="txt">Buyer Pulse in 60 seconds</td><td>1,870</td><td>7</td><td>2.8%</td></tr>
+          </tbody>
+        </table></div>
+      </div>
+    </div>
+    <div class="grid g2" style="margin-top:14px">
+      <div class="card"><div class="card-h"><h3>Post impressions <span class="samplebadge">sample</span></h3><span class="hint">weekly</span></div><div class="chartwrap"><svg id="imprChart" width="100%" height="190" viewBox="0 0 560 190"></svg></div></div>
+      <div class="card"><div class="card-h"><h3>Post comments <span class="samplebadge">sample</span></h3><span class="hint">weekly</span></div><div class="chartwrap"><svg id="commChart" width="100%" height="190" viewBox="0 0 560 190"></svg></div></div>
+    </div>
+  </section>
 
-</div>
+  <div class="foot">Supercept GTM Dashboard 2.0 (launch build). <span class="samplebadge">sample</span> marks illustrative data for views that populate once the launch campaigns run. Real sections read live from <a href="https://github.com/superceptai/gtm-dashboard/blob/main/data.json">data.json</a> / history.jsonl, refreshed daily.</div>
+</main>
 
 <script>
-const SCHEMA_VERSION_EXPECTED = 1;
+function $(s){return document.querySelector(s);}
+function fmt(n){return (n===null||n===undefined||isNaN(n))?'—':Number(n).toLocaleString('en-AU');}
+function pctOf(a,b){return (typeof a==='number'&&typeof b==='number'&&b>0)?Math.round(a/b*100)+'%':null;}
+function esc(s){return s===null||s===undefined?'':String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
 
-// Planning assumption: Reply.io per-sequence safety setting.
-// The dashboard uses this for the Rate cell and runway calculation, overriding the 7-day actual
-// (stored in data.json as s.rate_per_day and s.runway_days). The 7-day actual is artificially low
-// while sequences ramp to steady state, so the dashboard runway view uses the per-sequence ceiling
-// instead to produce a deliberately conservative planning floor. See the Reply.io Sequence Health
-// Feed change log (31 May 2026) for context.
-const ASSUMED_SEND_RATE_PER_DAY = 35;
-
-// Runway is days until the send queue is exhausted. Numerator is s.new (queued for send,
-// CSV Active+Step2). v1.1 incorrectly used s.pending (in-wait, CSV Active+Step255) which
-// measured the wrong cohort. Fixed in v1.2 (31 May 2026).
-const assumedRunway = (s) => {
-  if (typeof s.new === 'number' && s.new >= 0) {
-    return s.new / ASSUMED_SEND_RATE_PER_DAY;
-  }
-  return null;
-};
-
-const fmt = (n) => {
-  if (n === null || n === undefined) return '\u2014';
-  if (typeof n === 'number') return n.toLocaleString('en-AU');
-  return String(n);
-};
-const fmtPct = (n) => {
-  if (n === null || n === undefined) return '\u2014';
-  if (typeof n === 'number') return n.toFixed(1) + '%';
-  return String(n);
-};
-const fmtDays = (n) => {
-  if (n === null || n === undefined) return '\u2014';
-  if (typeof n !== 'number') return String(n);
-  return '~' + n.toFixed(1) + 'd';
-};
-const fmtRate = (n) => {
-  if (n === null || n === undefined) return '\u2014';
-  if (typeof n !== 'number') return String(n);
-  return n.toFixed(1) + '/d';
-};
-const fmtFollowerDelta = (li) => {
-  // Prefer longest window with data: 30d > 7d > 24h. Returns "+N last 30d", "-3 last 7d", etc.
-  // Falls back to "last 30d —" while the followers feed is still bootstrapping its history.
-  if (!li) return 'last 30d \u2014';
-  const candidates = [
-    { v: li.followers_30d_delta, label: 'last 30d' },
-    { v: li.followers_7d_delta,  label: 'last 7d'  },
-    { v: li.followers_24h_delta, label: 'last 24h' }
-  ];
-  for (const c of candidates) {
-    if (typeof c.v === 'number') {
-      return (c.v > 0 ? '+' : '') + fmt(c.v) + ' ' + c.label;
-    }
-  }
-  return 'last 30d \u2014';
-};
-const escapeHtml = (s) => {
-  if (s === null || s === undefined) return '';
-  return String(s)
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&#039;');
-};
-
-function runwayPill(days, status) {
-  if (status === 'paused') return { cls: 'paused', text: 'paused' };
-  if (days === null || days === undefined) return { cls: 'paused', text: '\u2014' };
-  if (days < 3) return { cls: 'danger', text: fmtDays(days) + ' \u26A0' };
-  if (days < 7) return { cls: 'warn', text: fmtDays(days) + ' \u26A0' };
-  return { cls: 'success', text: fmtDays(days) };
+// ---- data load -------------------------------------------------------------
+async function loadJSON(url){const r=await fetch(url+'?t='+Date.now(),{cache:'no-store'});if(!r.ok)throw new Error('HTTP '+r.status+' for '+url);return r.json();}
+async function loadHistory(){
+  try{const r=await fetch('history.jsonl?t='+Date.now(),{cache:'no-store'});if(!r.ok)return [];
+    const rows=[];for(const line of (await r.text()).split('\n')){const t=line.trim();if(!t)continue;try{rows.push(JSON.parse(t));}catch(e){}}
+    rows.sort((a,b)=>String(a.snapshot_timestamp).localeCompare(String(b.snapshot_timestamp)));return rows;
+  }catch(e){return [];}
 }
 
-function runwayValClass(days, status) {
-  if (status === 'paused') return 'muted';
-  if (days === null || days === undefined) return 'muted';
-  if (days < 3) return 'danger';
-  if (days < 7) return 'warn';
-  return 'success';
-}
+(async function(){
+  let d, history;
+  try{ d = await loadJSON('data.json'); }
+  catch(e){ $('#loadbanner').innerHTML='<div class="banner"><b>Could not load data.json.</b> '+esc(e.message)+' &mdash; the daily refresh pipeline writes it nightly.</div>'; return; }
+  history = await loadHistory();
+  try{ render(d, history); $('#main').style.display=''; }
+  catch(e){ console.error(e); $('#loadbanner').innerHTML='<div class="banner"><b>Dashboard render failed.</b> '+esc(e.message)+'</div>'; }
+})();
 
-function showError(title, detail) {
-  document.getElementById('as-of').textContent = 'Data load failed';
-  document.getElementById('freshness-label').textContent = 'Error';
-  document.getElementById('freshness').classList.add('error');
-  document.getElementById('masthead-meta').textContent = 'Live data could not be loaded';
-  document.getElementById('app').innerHTML = `
-    <div class="error-banner">
-      <strong>${escapeHtml(title)}</strong>
-      ${escapeHtml(detail)}<br>
-      The Cowork refresh pipeline writes <code>data.json</code> nightly at 23:00 AEST.
-      If this persists, check the latest commit on
-      <a href="https://github.com/superceptai/gtm-dashboard/commits/main" style="color:inherit;text-decoration:underline">GitHub</a>
-      or open the <a href="https://www.notion.so/36f406423d7181d9921ae21b75a9f1a5" style="color:inherit;text-decoration:underline">iteration log</a>.
-    </div>
-  `;
-}
+// ===========================================================================
+// SVG chart helpers (ported verbatim from the signed-off 2.0 mockup)
+// ===========================================================================
+function lineAxes(id,vals,labels,color){var el=document.getElementById(id);if(!el)return;
+  var w=el.viewBox.baseVal.width,h=el.viewBox.baseVal.height;var pad={t:14,r:14,b:26,l:44};
+  var mx=Math.max.apply(null,vals)||1;var mn=0;
+  function X(i){return pad.l+i*(w-pad.l-pad.r)/(vals.length-1||1);}
+  function Y(v){return pad.t+(h-pad.t-pad.b)*(1-(v-mn)/(mx-mn||1));}
+  var g='',yt=3;for(var t=0;t<=yt;t++){var vv=Math.round(mx*t/yt);var y=Y(vv);
+    g+='<line class="gridln" x1="'+pad.l+'" y1="'+y.toFixed(1)+'" x2="'+(w-pad.r)+'" y2="'+y.toFixed(1)+'"/><text class="axis" x="'+(pad.l-5)+'" y="'+(y+3).toFixed(1)+'" text-anchor="end">'+vv.toLocaleString()+'</text>';}
+  var dd=vals.map(function(v,i){return (i?'L':'M')+X(i).toFixed(1)+' '+Y(v).toFixed(1);}).join(' ');
+  var step=Math.ceil(labels.length/6);var xl='';for(var i=0;i<labels.length;i+=step){xl+='<text class="axis" x="'+X(i).toFixed(1)+'" y="'+(h-8)+'" text-anchor="middle">'+labels[i]+'</text>';}
+  var area=dd+' L '+X(vals.length-1).toFixed(1)+' '+Y(0)+' L '+X(0).toFixed(1)+' '+Y(0)+' Z';
+  el.innerHTML='<defs><linearGradient id="ga_'+id+'" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="'+color+'" stop-opacity=".16"/><stop offset="1" stop-color="'+color+'" stop-opacity="0"/></linearGradient></defs>'+g+
+    '<path d="'+area+'" fill="url(#ga_'+id+')"/><path d="'+dd+'" fill="none" stroke="'+color+'" stroke-width="2" stroke-linejoin="round"/>'+
+    '<circle cx="'+X(vals.length-1).toFixed(1)+'" cy="'+Y(vals[vals.length-1]).toFixed(1)+'" r="3" fill="'+color+'"/>'+
+    '<text class="dlabel" x="'+(X(vals.length-1)-4).toFixed(1)+'" y="'+(Y(vals[vals.length-1])-6).toFixed(1)+'" text-anchor="end">'+vals[vals.length-1].toLocaleString()+'</text>'+xl;}
 
-async function loadData() {
-  let data;
-  try {
-    const res = await fetch('data.json?t=' + Date.now(), { cache: 'no-store' });
-    if (!res.ok) {
-      showError('Could not load data.json', `HTTP ${res.status} ${res.statusText}.`);
-      return;
-    }
-    data = await res.json();
-  } catch (e) {
-    showError('Could not load data.json', `Fetch or parse failed: ${e.message}.`);
-    return;
+function follLine(id,vals,startLabel,endLabel){var el=document.getElementById(id);if(!el)return;var w=560,h=190,pad={t:14,r:12,b:22,l:44};
+  var mn=Math.min.apply(null,vals),mx=Math.max.apply(null,vals);
+  function X(i){return pad.l+i*(w-pad.l-pad.r)/(vals.length-1||1);}function Y(v){return pad.t+(h-pad.t-pad.b)*(1-(v-mn)/((mx-mn)||1));}
+  var g='';[mn,Math.round((mn+mx)/2),mx].forEach(function(vv){var y=Y(vv);g+='<line class="gridln" x1="'+pad.l+'" y1="'+y.toFixed(1)+'" x2="'+(w-pad.r)+'" y2="'+y.toFixed(1)+'"/><text class="axis" x="'+(pad.l-5)+'" y="'+(y+3).toFixed(1)+'" text-anchor="end">'+vv.toLocaleString()+'</text>';});
+  var dd=vals.map(function(v,i){return (i?'L':'M')+X(i).toFixed(1)+' '+Y(v).toFixed(1);}).join(' ');
+  el.innerHTML=g+'<path d="'+dd+'" fill="none" stroke="#0C6B7A" stroke-width="2"/><circle cx="'+X(vals.length-1).toFixed(1)+'" cy="'+Y(vals[vals.length-1]).toFixed(1)+'" r="3" fill="#0C6B7A"/>'+
+    '<text class="dlabel" x="'+(X(vals.length-1)-4).toFixed(1)+'" y="'+(Y(vals[vals.length-1])-6).toFixed(1)+'" text-anchor="end">'+vals[vals.length-1].toLocaleString()+'</text>'+
+    '<text class="axis" x="'+pad.l+'" y="'+(h-6)+'">'+esc(startLabel)+'</text><text class="axis" x="'+(w-12)+'" y="'+(h-6)+'" text-anchor="end">'+esc(endLabel)+'</text>';}
+
+function barsWeekly(id,series,labels,stacked,showLabels){var el=document.getElementById(id);if(!el)return;
+  var w=el.viewBox.baseVal.width,h=el.viewBox.baseVal.height;var pad={t:showLabels?20:14,r:14,b:24,l:38};
+  var mx=Math.max.apply(null,labels.map(function(_,i){return Math.max.apply(null,series.map(function(s){return s.vals[i];}));}))||1;
+  var g=labels.length,gw=(w-pad.l-pad.r)/g;
+  function Y(v){return pad.t+(h-pad.t-pad.b)*(1-v/mx);}
+  var out='';[0,mx/2,mx].forEach(function(vv){var y=Y(vv);out+='<line class="gridln" x1="'+pad.l+'" y1="'+y.toFixed(1)+'" x2="'+(w-pad.r)+'" y2="'+y.toFixed(1)+'"/><text class="axis" x="'+(pad.l-5)+'" y="'+(y+3).toFixed(1)+'" text-anchor="end">'+Math.round(vv).toLocaleString()+'</text>';});
+  var bw=gw*0.6/series.length;
+  var step=Math.ceil(labels.length/8);
+  labels.forEach(function(L,i){var x0=pad.l+i*gw;
+    series.forEach(function(s,si){var bh=(h-pad.t-pad.b)*s.vals[i]/mx;var bx=x0+gw*0.2+si*bw;var by=Y(s.vals[i]);
+      out+='<rect x="'+bx.toFixed(1)+'" y="'+by.toFixed(1)+'" width="'+(bw-1).toFixed(1)+'" height="'+Math.max(0,bh).toFixed(1)+'" rx="1" fill="'+s.c+'"/>';
+      if(showLabels&&s.vals[i]>0)out+='<text class="dlabel" x="'+(bx+bw/2).toFixed(1)+'" y="'+(by-3).toFixed(1)+'" text-anchor="middle">'+s.vals[i].toLocaleString()+'</text>';});
+    if(i%step===0)out+='<text class="axis" x="'+(x0+gw*0.5)+'" y="'+(h-8)+'" text-anchor="middle">'+L+'</text>';});
+  el.innerHTML=out;}
+
+// history -> a sampled real series {labels, vals} for the given accessor
+function histSeries(history,accessor,maxPts){
+  var pts=[];var seen={};
+  (history||[]).forEach(function(row){
+    var data=row&&row.data;if(!data)return;var v;
+    try{v=accessor(data);}catch(e){v=undefined;}
+    if(typeof v!=='number'||isNaN(v))return;
+    var iso=String(row.snapshot_timestamp||'').slice(0,10);
+    seen[iso]={label:shortDate(iso),value:v};
+  });
+  Object.keys(seen).sort().forEach(function(k){pts.push(seen[k]);});
+  if(maxPts&&pts.length>maxPts){
+    var out=[],stepf=(pts.length-1)/(maxPts-1);
+    for(var i=0;i<maxPts;i++)out.push(pts[Math.round(i*stepf)]);
+    out[out.length-1]=pts[pts.length-1];
+    pts=out;
   }
+  return pts;
+}
+function shortDate(iso){var m=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  var p=String(iso).split('-');if(p.length<3)return iso;return parseInt(p[2],10)+' '+m[parseInt(p[1],10)-1];}
 
-  if (data.schema_version !== undefined && data.schema_version !== SCHEMA_VERSION_EXPECTED) {
-    console.warn(
-      `schema_version mismatch: renderer expects ${SCHEMA_VERSION_EXPECTED}, data.json has ${data.schema_version}. ` +
-      `Rendering may be incomplete or incorrect.`
-    );
-  }
+// ===========================================================================
+// RENDER
+// ===========================================================================
+function render(d, history){
+  // header freshness + as-of
+  $('#asof').textContent = d.as_of_label || (d.last_updated||'').slice(0,10) || '—';
+  renderFreshness(d);
 
-  // history.jsonl powers the week-over-week trend views. It is optional: if it
-  // cannot be loaded the dashboard still renders, just without the trend lines.
-  const history = await loadHistory();
+  renderFunnel(d);
+  renderSampleOverTime();
+  renderFirstConn(d, history);
+  renderCoverage(d);
+  renderCompleteness(d);
+  renderOutboundSample();
+  renderFollowers(d, history);
+  renderLinkedInSample();
 
-  try {
-    render(data, history);
-  } catch (e) {
-    console.error('Render failed:', e);
-    showError('Dashboard render failed', `${e.message}. The data file loaded successfully but the renderer hit an error.`);
-  }
+  tagAllCards(d);
+  wireNav();
 }
 
-// Parse history.jsonl (one JSON object per line) into an array of snapshots,
-// oldest first. Each row is { snapshot_timestamp, schema_version, data }.
-async function loadHistory() {
-  try {
-    const res = await fetch('history.jsonl?t=' + Date.now(), { cache: 'no-store' });
-    if (!res.ok) return [];
-    const text = await res.text();
-    const rows = [];
-    for (const line of text.split('\n')) {
-      const t = line.trim();
-      if (!t) continue;
-      try { rows.push(JSON.parse(t)); } catch (e) { /* skip a bad line */ }
-    }
-    rows.sort((a, b) => String(a.snapshot_timestamp).localeCompare(String(b.snapshot_timestamp)));
-    return rows;
-  } catch (e) {
-    console.warn('history.jsonl not loaded:', e.message);
-    return [];
-  }
-}
-
-// Pull a numeric series out of history via an accessor, returning the most
-// recent `limit` points as { label, value }. `label` is the short as_of label.
-function histSeries(history, accessor, limit) {
-  const pts = [];
-  for (const row of (history || [])) {
-    const d = row && row.data;
-    if (!d) continue;
-    let v;
-    try { v = accessor(d); } catch (e) { v = undefined; }
-    if (typeof v !== 'number' || isNaN(v)) continue;
-    const label = d.as_of_label || String(row.snapshot_timestamp || '').slice(0, 10);
-    pts.push({ label, value: v });
-  }
-  return limit ? pts.slice(-limit) : pts;
-}
-
-// Week-over-week delta: compares the latest value to the value ~7 days earlier
-// in history. Returns { html } for a coloured up/down/flat chip, or '' if we
-// lack a comparison point.
-function wowChip(history, accessor, opts) {
-  opts = opts || {};
-  const series = histSeries(history, accessor);
-  if (series.length < 2) return '';
-  const latest = series[series.length - 1].value;
-  // find a point roughly a week back (at least 1 step back)
-  let prevIdx = series.length - 2;
-  const targetTs = Date.now() - 7 * 864e5;
-  for (let i = series.length - 2; i >= 0; i--) {
-    const ts = Date.parse((history[i] && history[i].snapshot_timestamp) || '');
-    if (!isNaN(ts) && ts <= targetTs) { prevIdx = i; break; }
-  }
-  const prev = series[prevIdx].value;
-  const diff = latest - prev;
-  const cls = diff > 0 ? 'up' : (diff < 0 ? 'down' : 'flat');
-  const arrow = diff > 0 ? '▲' : (diff < 0 ? '▼' : '–');
-  const sign = diff > 0 ? '+' : '';
-  const val = opts.pct ? (sign + diff.toFixed(1) + ' pts') : (sign + fmt(diff));
-  return `<span class="wow ${cls}">${arrow} ${val} <span style="opacity:.7">WoW</span></span>`;
-}
-
-
-function getSourceStatus(d) {
-  // Prefer structured source_status; fall back to parsing feed_label
-  const structured = d.source_status;
-  if (structured) {
-    const mk = (key, label) => ({
-      key, label,
-      status: structured[key]?.status || 'fresh',
-      last_success: structured[key]?.last_success || null
-    });
-    return [
-      mk('hubspot_icp', 'HubSpot ICP'),
-      mk('reply_io', 'Reply.io'),
-      mk('ga4', 'GA4'),
-      mk('linkedin', 'LinkedIn')
-    ];
-  }
-  const label = (d.feed_label || '').toUpperCase();
-  function detect(cases, defaultStatus) {
-    for (const [needle, status] of cases) {
-      if (label.includes(needle)) return status;
-    }
-    return defaultStatus;
-  }
-  return [
-    { key: 'hubspot_icp', label: 'HubSpot ICP',
-      status: detect([['HS_ICP_UNAVAILABLE','failed'],['HS_ICP_STALE','stale'],['HS_ICP_CACHED','cached']], 'fresh') },
-    { key: 'reply_io',    label: 'Reply.io',
-      status: detect([['REPLY_UNAVAILABLE','failed'],['REPLY_STALE','stale'],['REPLY_CACHED','cached']], 'fresh') },
-    { key: 'ga4',         label: 'GA4',
-      status: detect([['GA4_UNAVAILABLE','failed'],['GA4_STALE','stale'],['GA4_CACHED','cached']], 'fresh') },
-    { key: 'linkedin',    label: 'LinkedIn',
-      status: (d.linkedin && d.linkedin.status === 'stale_fallback') ? 'fallback'
-              : detect([['LINKEDIN_UNAVAILABLE','failed'],['LINKEDIN_STALE','stale'],['LINKEDIN_CACHED','cached']], 'fresh') }
-  ];
-}
-
-// Short "last success" label, e.g. "2h ago" / "3d ago", from an ISO timestamp.
-function fmtAgo(iso) {
-  if (!iso) return '';
-  const t = Date.parse(iso);
-  if (isNaN(t)) return '';
-  const mins = Math.max(0, Math.round((Date.now() - t) / 6e4));
-  if (mins < 60) return mins + 'm ago';
-  const hrs = Math.round(mins / 60);
-  if (hrs < 24) return hrs + 'h ago';
-  return Math.round(hrs / 24) + 'd ago';
-}
-
-// A leg is "down" when its source_status is error or failed. Its section must
-// render NO DATA instead of showing carried-forward numbers as if current.
-function legDown(d, key) {
-  const s = d.source_status && d.source_status[key] && d.source_status[key].status;
-  return s === 'error' || s === 'failed';
-}
-
-function renderSourceStatus(d) {
-  const el = document.getElementById('source-status');
-  if (!el) return;
-  const sources = getSourceStatus(d);
-  el.innerHTML = sources.map(s => {
-    const down = s.status === 'error' || s.status === 'failed';
-    const stText = down ? 'NO DATA' : s.status;
-    const ago = s.last_success ? `<span class="ls">${escapeHtml(fmtAgo(s.last_success))}</span>` : '';
-    return `<span class="src-badge ${s.status}" title="${escapeHtml(s.last_success ? 'Last success: ' + s.last_success : 'No successful pull recorded')}">` +
-      `<span class="dot"></span><span>${escapeHtml(s.label)}</span>` +
-      `<span class="st">${escapeHtml(stText)}</span>${ago}</span>`;
+function renderFreshness(d){
+  var ss=d.source_status||{};
+  var legs=[['hubspot_icp','HubSpot'],['reply_io','Reply.io'],['ga4','GA4'],['linkedin','LinkedIn']];
+  $('#freshness').innerHTML=legs.map(function(l){
+    var st=(ss[l[0]]||{}).status||'fresh';
+    var down=st==='error'||st==='failed';
+    var col=down?'var(--neg)':(st==='stale'?'var(--amber)':'var(--pos)');
+    return '<span class="fdot"><i style="background:'+col+'"></i>'+esc(l[1])+'</span>';
   }).join('');
 }
 
-// Reusable NO DATA panel for a section whose source leg is down.
-function noDataPanel(label) {
-  return `<div class="nodata"><span class="tag">No data</span>` +
-    `<span><b>${escapeHtml(label)}</b> source is currently unavailable. ` +
-    `Showing nothing rather than stale numbers — check the source health strip above.</span></div>`;
-}
+// ---- funnel (real top from funnel_ext, sample tail as awaiting dashes) -----
+function renderFunnel(d){
+  var fe=d.funnel_ext||{};
+  var icp=fe.icp_contacts,inv=fe.invites_sent,acc=fe.connections_accepted,
+      first=fe.first_connections_total,already=fe.already_connected,added=fe.added_to_sequence;
+  var FUN=[
+   {v:icp,k:'ICP',lab:'ICP contacts',sub:'CEO/SL &middot; 3+ ANZ',cvr:null},
+   {v:inv,k:'Invites',lab:'Connection invites sent',sub:'4 launch connect sequences',cvr:pctOf(inv,icp)},
+   {v:acc,k:'Accepted',lab:'Connections accepted',sub:'via the 4 launch connect sequences',cvr:pctOf(acc,inv)},
+   {v:first,k:'1st Conn',lab:'Total 1st connections',sub:((pctOf(first,icp)?pctOf(first,icp)+' of ICP':'')+(typeof already==='number'?' &middot; incl. '+fmt(already)+' pre-existing':'')).replace(/^ &middot; /,''),cvr:null},
+   {v:added,k:'Sequence',lab:'Added to sequence',cvr:pctOf(added,icp)},
+   {v:null,k:'Sent',lab:'Sent email or LI',cvr:null,dim:1},
+   {v:null,k:'Replied',lab:'Replied',cvr:null,dim:1},
+   {v:null,k:'Apps',lab:'Applications',cvr:null,dim:1},
+   {v:null,k:'Intake',lab:'Intake calls',cvr:null,dim:1},
+   {v:null,k:'Beta',lab:'In beta (onboarded)',cvr:null,dim:1}
+  ];
+  $('#funnelbar').innerHTML=FUN.map(function(f,i){return '<div class="fstep '+(f.dim?'dim':'')+'">'+
+    (f.cvr&&i<FUN.length-1?'<span class="cvr">'+f.cvr+'</span>':'')+
+    '<div class="bar"><span class="n">'+fmt(f.v)+'</span><span class="k">'+f.k+'</span></div>'+
+    '<div class="lab">'+f.lab+(f.sub?'<small>'+f.sub+'</small>':'')+'</div></div>';}).join('');
 
-function render(d, history) {
-  history = history || [];
-  const fetched = new Date(d.last_updated);
-  const now = new Date();
-  const hours = (now - fetched) / 36e5;
-  document.getElementById('as-of').textContent = d.as_of_label || fetched.toDateString();
-  document.getElementById('freshness-label').textContent = hours < 24 ? 'Live' : 'Stale';
-  document.getElementById('masthead-meta').textContent = d.feed_label || '';
-  renderSourceStatus(d);
-  const fEl = document.getElementById('freshness');
-  fEl.classList.remove('error');
-  if (hours >= 24) fEl.classList.add('stale');
-  else fEl.classList.remove('stale');
-
-  // When a leg is down we render NO DATA rather than carried-forward numbers.
-  // These guarded lists/panels also keep chart canvases out of the DOM so the
-  // chart code below safely no-ops for a down leg.
-  const seqList = legDown(d, 'reply_io') ? [] : (d.sequences || []);
-  const pipeStages = legDown(d, 'hubspot_icp') ? [] : (d.pipeline.stages || []);
-  const pipeDealsTotal = pipeStages.reduce((a, s) => a + (typeof s.deals === 'number' ? s.deals : 0), 0);
-  const ga4DailyPanel = (!legDown(d, 'ga4') && Array.isArray(d.ga4.daily) && d.ga4.daily.length > 0)
-    ? `<div class="panel" style="margin-top:14px"><p class="panel-title">Daily sessions — last 7 days</p><div style="position:relative;width:100%;height:180px"><canvas id="ga4DailyChart"></canvas></div></div>`
-    : '';
-
-  document.getElementById('app').innerHTML = `
-
-    ${legDown(d, 'hubspot_icp') ? noDataPanel('ICP database & seller bands (HubSpot)') : `
-    <p class="sl">ICP database \u2014 combined ANZ</p>
-    <p class="sr">All ANZ companies \u00B7 No. Sellers = 3, 4, 5-9, 10-19, 20-49, 50+ \u00B7 Company Country = Australia or New Zealand</p>
-    <div class="mc-grid-4">
-      <div class="mc featured"><p class="lbl">Total ICP</p><p class="val">${fmt(d.icp.combined.total)}</p><p class="sub">all ANZ companies</p></div>
-      <div class="mc featured"><p class="lbl">Core ICP (5-19)</p><p class="val success">${fmt(d.icp.combined.core_5_19)}</p><p class="sub">${fmtPct(d.icp.combined.core_pct)} of combined</p></div>
-      <div class="mc featured"><p class="lbl">Borderline (3-4)</p><p class="val muted">${fmt(d.icp.combined.borderline_3_4)}</p><p class="sub">${fmtPct(d.icp.combined.borderline_pct)} of combined</p></div>
-      <div class="mc featured"><p class="lbl">High value (20+)</p><p class="val info">${fmt(d.icp.combined.high_value_20p)}</p><p class="sub">${fmtPct(d.icp.combined.high_value_pct)} of combined</p></div>
-    </div>
-    <div class="mc-grid-2">
-      <div class="mc featured"><p class="lbl">CEO contacts</p><p class="val">${fmt(d.icp.combined.ceo_contacts)}</p><p class="sub">all ANZ ICP companies</p><div class="conn">1st connections<b>${fmt(d.icp.combined.ceo_1st)} \u00B7 ${fmtPct(d.icp.combined.ceo_1st_pct)}</b></div></div>
-      <div class="mc featured"><p class="lbl">CRO contacts</p><p class="val">${fmt(d.icp.combined.cro_contacts)}</p><p class="sub">all ANZ ICP companies</p><div class="conn">1st connections<b>${fmt(d.icp.combined.cro_1st)} \u00B7 ${fmtPct(d.icp.combined.cro_1st_pct)}</b></div></div>
-    </div>
-
-    <div class="div"></div>
-
-    <p class="sl">ICP database \u2014 HubSpot ANZ</p>
-    <p class="sr">HubSpot Technologies = True \u00B7 No. Sellers = 3, 4, 5-9, 10-19, 20-49, 50+ \u00B7 Company Country = Australia or New Zealand</p>
-    <div class="mc-grid-4">
-      <div class="mc"><p class="lbl">Total ICP</p><p class="val">${fmt(d.icp.hubspot.total)}</p><p class="sub">HubSpot ANZ companies</p></div>
-      <div class="mc"><p class="lbl">Core ICP (5-19)</p><p class="val success">${fmt(d.icp.hubspot.core_5_19)}</p><p class="sub">${fmtPct(d.icp.hubspot.core_pct)}</p></div>
-      <div class="mc"><p class="lbl">Borderline (3-4)</p><p class="val muted">${fmt(d.icp.hubspot.borderline_3_4)}</p><p class="sub">${fmtPct(d.icp.hubspot.borderline_pct)}</p></div>
-      <div class="mc"><p class="lbl">High value (20+)</p><p class="val info">${fmt(d.icp.hubspot.high_value_20p)}</p><p class="sub">20-49: ${fmt(d.icp.hubspot.hv_20_49)} \u00B7 50+: ${fmt(d.icp.hubspot.hv_50p)}</p></div>
-    </div>
-    <div class="mc-grid-2">
-      <div class="mc"><p class="lbl">CEO contacts</p><p class="val">${fmt(d.icp.hubspot.ceo_contacts)}</p><p class="sub">at HubSpot ICP companies</p><div class="conn">1st connections<b>${fmt(d.icp.hubspot.ceo_1st)} \u00B7 ${fmtPct(d.icp.hubspot.ceo_1st_pct)}</b></div></div>
-      <div class="mc"><p class="lbl">CRO contacts</p><p class="val">${fmt(d.icp.hubspot.cro_contacts)}</p><p class="sub">at HubSpot ICP companies</p><div class="conn">1st connections<b>${fmt(d.icp.hubspot.cro_1st)} \u00B7 ${fmtPct(d.icp.hubspot.cro_1st_pct)}</b></div></div>
-    </div>
-
-    <div class="div"></div>
-
-    <p class="sl">ICP database \u2014 non-HubSpot ANZ</p>
-    <p class="sr">HubSpot Technologies \u2260 True \u00B7 No. Sellers = 3, 4, 5-9, 10-19, 20-49, 50+ \u00B7 Company Country = Australia or New Zealand</p>
-    <div class="mc-grid-4">
-      <div class="mc"><p class="lbl">Total ICP</p><p class="val">${fmt(d.icp.non_hubspot.total)}</p><p class="sub">non-HubSpot ANZ companies</p></div>
-      <div class="mc"><p class="lbl">Core ICP (5-19)</p><p class="val success">${fmt(d.icp.non_hubspot.core_5_19)}</p><p class="sub">${fmtPct(d.icp.non_hubspot.core_pct)}</p></div>
-      <div class="mc"><p class="lbl">Borderline (3-4)</p><p class="val muted">${fmt(d.icp.non_hubspot.borderline_3_4)}</p><p class="sub">${fmtPct(d.icp.non_hubspot.borderline_pct)}</p></div>
-      <div class="mc"><p class="lbl">High value (20+)</p><p class="val info">${fmt(d.icp.non_hubspot.high_value_20p)}</p><p class="sub">20-49: ${fmt(d.icp.non_hubspot.hv_20_49)} \u00B7 50+: ${fmt(d.icp.non_hubspot.hv_50p)}</p></div>
-    </div>
-    <div class="mc-grid-2">
-      <div class="mc"><p class="lbl">CEO contacts</p><p class="val">${fmt(d.icp.non_hubspot.ceo_contacts)}</p><p class="sub">at non-HubSpot ICP companies</p><div class="conn">1st connections<b>${fmt(d.icp.non_hubspot.ceo_1st)} \u00B7 ${fmtPct(d.icp.non_hubspot.ceo_1st_pct)}</b></div></div>
-      <div class="mc"><p class="lbl">CRO contacts</p><p class="val">${fmt(d.icp.non_hubspot.cro_contacts)}</p><p class="sub">at non-HubSpot ICP companies</p><div class="conn">1st connections<b>${fmt(d.icp.non_hubspot.cro_1st)} \u00B7 ${fmtPct(d.icp.non_hubspot.cro_1st_pct)}</b></div></div>
-    </div>
-
-    <div class="panel">
-      <p class="panel-title">Companies by seller band \u2014 HubSpot vs non-HubSpot</p>
-      <div class="panel-legend">
-        <span><i style="background:var(--primary)"></i>HubSpot ANZ</span>
-        <span><i style="background:var(--secondary)"></i>Non-HubSpot ANZ</span>
-      </div>
-      <div style="position:relative;width:100%;height:220px"><canvas id="bandChart"></canvas></div>
-    </div>
-
-    <div class="panel">
-      <p class="panel-title">ICP coverage \u2014 week over week ${wowChip(history, x => x.icp.combined.ceo_1st + x.icp.combined.cro_1st)}</p>
-      <div class="panel-legend">
-        <span><i style="background:var(--primary)"></i>CEO 1st-degree</span>
-        <span><i style="background:var(--secondary)"></i>CRO 1st-degree</span>
-        <span><i style="background:var(--accent-darker)"></i>Total ICP contacts</span>
-      </div>
-      <div style="position:relative;width:100%;height:200px"><canvas id="coverageChart"></canvas></div>
-      <div class="conv-row">
-        <span class="cv">CEO coverage <b>${fmtPct(d.icp.combined.ceo_1st_pct)}</b></span>
-        <span class="cv">CRO coverage <b>${fmtPct(d.icp.combined.cro_1st_pct)}</b></span>
-        <span class="cv">HubSpot CRM <b>${fmt(d.icp.hubspot.total)}</b></span>
-        <span class="cv">Non-HubSpot CRM <b>${fmt(d.icp.non_hubspot.total)}</b></span>
-      </div>
-      <p style="margin:10px 0 0;font-size:11px;color:var(--ebony-70)">Coverage by industry is not yet in the data feed \u2014 scaffolded here for a future HubSpot industry rollup.</p>
-    </div>
-    `}
-
-    <div class="div"></div>
-
-    <p class="sl">ICP funnel \u2014 two tracks</p>
-    <p class="sr">Track A = coverage of the whole ICP (includes pre-existing first-degree connections). Track B = conversion of contacts actually sent outreach (Reply.io sequences).${d.funnel.note ? ' \u00B7 ' + escapeHtml(d.funnel.note) : ''}</p>
-    ${(legDown(d, 'hubspot_icp') || legDown(d, 'reply_io')) ? noDataPanel('ICP funnel') : `
-    <div class="track-wrap" id="funnel-tracks"></div>
-    `}
-
-    <div class="div"></div>
-
-    <p class="sl">Outbound engine \u2014 Reply.io</p>
-    <p class="sr">Reply.io sequence inspection \u00B7 Bucket labels match Reply.io UI sidebar (Throttled / Active / Finished) \u00B7 Connection rate read direct from Reply.io UI (Stats > LinkedIn > All time) \u00B7 Send rate uses 35/d Reply.io safety setting per sequence</p>
-    ${legDown(d, 'reply_io') ? noDataPanel('Outbound engine \u2014 Reply.io') : ''}
-    <div class="seq-grid">
-      ${seqList.map(s => {
-        const arDays = assumedRunway(s);
-        const runway = runwayPill(arDays, s.status);
-        const runwayLabel = s.status === 'paused' ? 'If active' : 'Runway';
-        const runwayValCls = runwayValClass(arDays, s.status);
-
-        // Derived buckets matching Reply.io UI sidebar exactly
-        const stopped = s.total - s.new - s.pending - s.finished;
-        const activeCount = s.new + stopped;
-        const finishedCount = s.pending + s.finished;
-
-        // Footnote shown only for active sequences with activity
-        const isActive = s.status === 'active';
-        const hasActivity = s.total > 0;
-        const showFootnote = isActive && hasActivity;
-        const inactiveClause = stopped > 0
-          ? ` plus ${fmt(stopped)} currently inactive (opt-outs, bounces, manual stops)`
-          : '';
-        const footnoteHtml = showFootnote ? `
-            <div class="sc-footnote">
-              <p><b>About Active.</b> Includes ${fmt(s.new)} contacts queued for send${inactiveClause}. Runway uses the ${fmt(s.new)} queued count only.</p>
-              <p><b>About Finished.</b> Includes contacts in the post-send waiting period, those who had a request sent and the sequence ran its course, those who auto-passed because Reply.io detected they were already a 1st-degree connection at step time, and those whose previous connection request was withdrawn and are now in LinkedIn's 2-3 month cooldown before another invite can be sent.</p>
-            </div>
-          ` : '';
-
-        return `
-          <div class="sc">
-            <div class="sc-head">
-              <div>
-                <p class="name">${escapeHtml(s.name)}</p>
-                <p class="meta">${escapeHtml(s.reply_id)} &middot; List ${escapeHtml(s.list_id)}</p>
-              </div>
-              <span class="pill ${runway.cls}">${runway.text}</span>
-            </div>
-            <p class="sc-section-label">Members</p>
-            <div class="sc-stats-3">
-              <div class="ss"><p class="l">Throttled</p><p class="v muted">0</p></div>
-              <div class="ss"><p class="l">Active</p><p class="v">${fmt(activeCount)}</p></div>
-              <div class="ss"><p class="l">Finished</p><p class="v ${finishedCount === 0 ? 'muted' : ''}">${fmt(finishedCount)}</p></div>
-            </div>
-            <div class="sc-total">Total enrolled<b>${fmt(s.total)}</b></div>
-            <p class="sc-section-label">Outreach lifetime</p>
-            <div class="sc-stats-3">
-              <div class="ss"><p class="l">Invites sent</p><p class="v ${s.connections_sent > 0 ? '' : 'muted'}">${fmt(s.connections_sent)}</p></div>
-              <div class="ss"><p class="l">Accepted</p><p class="v ${s.connection_requests_accepted > 0 ? 'success' : 'muted'}">${fmt(s.connection_requests_accepted)}</p></div>
-              <div class="ss"><p class="l">Connection rate</p><p class="v ${s.connection_rate === null || s.connection_rate === undefined ? 'muted' : ''}">${fmtPct(s.connection_rate)}</p></div>
-            </div>
-            <p class="sc-section-label">Operations</p>
-            <div class="sc-stats-2">
-              <div class="ss"><p class="l">Send rate</p><p class="v">${ASSUMED_SEND_RATE_PER_DAY}/d</p></div>
-              <div class="ss"><p class="l">${runwayLabel}</p><p class="v ${runwayValCls}">${fmtDays(arDays)}${s.status !== 'paused' && typeof arDays === 'number' && arDays < 7 ? ' \u26A0' : ''}</p></div>
-            </div>
-            ${footnoteHtml}
-          </div>
-        `;
-      }).join('')}
-    </div>
-
-    <div class="div"></div>
-
-    <p class="sl">Beta pipeline ${legDown(d, 'hubspot_icp') ? '' : wowChip(history, x => (x.pipeline && Array.isArray(x.pipeline.stages) ? x.pipeline.stages.reduce((a, s) => a + (s.deals || 0), 0) : 0))}</p>
-    <p class="sr">HubSpot pipeline 1663910348 \u00B7 test records excluded \u00B7 stages match private beta lifecycle</p>
-    ${legDown(d, 'hubspot_icp') ? noDataPanel('Beta pipeline') : `
-    <div class="panel">
-      ${pipeDealsTotal === 0
-        ? `<div class="note setup"><span class="icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"></circle><path d="M12 8v4M12 16h.01"></path></svg></span><span>No deals in the beta pipeline yet \u2014 this view fills in automatically once applications enter the pipeline. ${d.pipeline.note ? escapeHtml(d.pipeline.note) : ''}</span></div>`
-        : `<div class="pipeline-flow">
-             ${pipeStages.map(st => `
-               <div class="pstage"><p class="lbl">${escapeHtml(st.label)}</p><p class="val ${st.deals ? '' : 'muted'}">${st.deals === null || st.deals === undefined ? '\u2014' : fmt(st.deals)}</p></div>
-             `).join('')}
-           </div>
-           <div class="conv-row"><span>Live deals by stage:</span>${pipeStages.filter(s => s.deals > 0).map(s => `<span class="cv">${escapeHtml(s.label)} <b>${fmt(s.deals)}</b></span>`).join('')}</div>
-           ${d.pipeline.note ? `<p style="margin:10px 0 0;font-size:11.5px;color:var(--ebony-70)">${escapeHtml(d.pipeline.note)}</p>` : ''}`}
-    </div>
-    `}
-
-    <div class="div"></div>
-
-    <p class="sl">Website \u2014 GA4 ${legDown(d, 'ga4') ? '' : wowChip(history, x => x.ga4.sessions)}</p>
-    <p class="sr">Last 7 days \u00B7 GA4 account 536587504${d.ga4 && d.ga4.setup_note ? ' \u00B7 ' + escapeHtml(d.ga4.setup_note) : ''}</p>
-    ${legDown(d, 'ga4') ? noDataPanel('Website \u2014 GA4') : `
-    <div class="mc-grid-4">
-      <div class="mc"><p class="lbl">Sessions</p><p class="val">${fmt(d.ga4.sessions)}</p><p class="sub">last 7 days \u00B7 ${fmt(d.ga4.users)} users</p></div>
-      <div class="mc"><p class="lbl">Qualified applications</p><p class="val">${fmt(d.ga4.qualified)}</p><p class="sub">application_qualified \u00B7 CVR ${fmtPct(d.ga4.qualified_cvr)}</p></div>
-      <div class="mc"><p class="lbl">Disqualified</p><p class="val">${fmt(d.ga4.disqualified)}</p><p class="sub">application_disqualified</p></div>
-      <div class="mc"><p class="lbl">Intake calls booked</p><p class="val">${fmt(d.ga4.intake)}</p><p class="sub">intake_call_booked \u00B7 CVR ${fmtPct(d.ga4.intake_cvr)}</p></div>
-      <div class="mc"><p class="lbl">Purchases</p><p class="val">${fmt(d.ga4.purchase)}</p><p class="sub">purchase \u00B7 CVR ${fmtPct(d.ga4.purchase_cvr)}</p></div>
-    </div>
-    ${ga4DailyPanel}
-    `}
-
-    <div class="div"></div>
-
-    <p class="sl">LinkedIn \u2014 Aaron's profile ${legDown(d, 'linkedin') ? '' : wowChip(history, x => x.linkedin.followers_current)}</p>
-    <p class="sr">Personal profile analytics${d.linkedin && d.linkedin.source ? ' \u00B7 source: ' + escapeHtml(d.linkedin.source === 'manual_override' ? 'manual override' : d.linkedin.source) : ''}</p>
-    ${legDown(d, 'linkedin') ? noDataPanel('LinkedIn \u2014 Aaron\'s profile') : `
-    <div class="mc-grid-4">
-      <div class="mc"><p class="lbl">Followers</p><p class="val">${fmt(d.linkedin.followers_current)}</p><p class="sub">${fmtFollowerDelta(d.linkedin)}</p></div>
-      <div class="${d.linkedin.impressions === null || d.linkedin.impressions === undefined ? 'mc-ph' : 'mc'}"><p class="lbl">Impressions</p><p class="val">${fmt(d.linkedin.impressions)}</p><p class="sub">this week</p></div>
-      <div class="${d.linkedin.engagement === null || d.linkedin.engagement === undefined ? 'mc-ph' : 'mc'}"><p class="lbl">Engagement rate</p><p class="val">${fmtPct(d.linkedin.engagement)}</p><p class="sub">interactions / impressions</p></div>
-      <div class="${d.linkedin.profile_views === null || d.linkedin.profile_views === undefined ? 'mc-ph' : 'mc'}"><p class="lbl">Profile views</p><p class="val">${fmt(d.linkedin.profile_views)}</p><p class="sub">this week</p></div>
-    </div>
-    `}
-
-  `;
-
-  setTimeout(() => {
-    const ctx = document.getElementById('bandChart');
-    if (ctx && window.Chart) {
-      new Chart(ctx.getContext('2d'), {
-        type: 'bar',
-        data: {
-          labels: d.bands.labels,
-          datasets: [
-            { label: 'HubSpot ANZ', data: d.bands.hubspot, backgroundColor: '#0B0BD6', borderRadius: 3, borderSkipped: false },
-            { label: 'Non-HubSpot ANZ', data: d.bands.non_hubspot, backgroundColor: '#914BF9', borderRadius: 3, borderSkipped: false }
-          ]
-        },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          plugins: {
-            legend: { display: false },
-            tooltip: { callbacks: { label: (c) => c.dataset.label + ': ' + c.raw.toLocaleString() } }
-          },
-          scales: {
-            x: { grid: { color: 'rgba(30,35,44,0.06)' }, ticks: { color: '#6A6E74', font: { size: 11, family: 'IBM Plex Sans' }, autoSkip: false, maxRotation: 30 } },
-            y: { grid: { color: 'rgba(30,35,44,0.06)' }, ticks: { color: '#6A6E74', font: { size: 11, family: 'IBM Plex Sans' }, callback: (v) => v.toLocaleString() } }
-          }
-        }
-      });
+  // explainer: real reason breakdown from funnel_ext.uninvited_breakdown.
+  // Labels live here; every number comes from data.json.
+  var REASON_LABELS={
+    routed_other_sequence:'were routed to other outreach sequences (email or non-launch LinkedIn)',
+    connect_invite_queued:'are queued in a launch connect sequence (LinkedIn daily invite limits)',
+    not_yet_enrolled:'are not yet enrolled in a sequence'
+  };
+  var REASON_ORDER=['routed_other_sequence','connect_invite_queued','not_yet_enrolled'];
+  var ub=fe.uninvited_breakdown||{};
+  var ex='';
+  if(typeof icp==='number'&&typeof inv==='number'){
+    var clauses=REASON_ORDER
+      .filter(function(k){return typeof ub[k]==='number'&&ub[k]>0;})
+      .map(function(k){return '<b>'+fmt(ub[k])+'</b> '+REASON_LABELS[k];});
+    var remainder=REASON_ORDER.reduce(function(a,k){return a+(typeof ub[k]==='number'?ub[k]:0);},0);
+    ex='<b>Why invites were only sent to '+pctOf(inv,icp)+' of ICP:</b> of the '+fmt(icp)+
+       ' ICP contacts, '+fmt(already)+' were already 1st connections (no invite needed).';
+    if(clauses.length){
+      var joined=clauses.length>1
+        ? clauses.slice(0,-1).join(', ')+' and '+clauses[clauses.length-1]
+        : clauses[0];
+      ex+=' Of the remaining '+fmt(remainder)+', '+joined+'.';
     }
-
-    const ga4Ctx = document.getElementById('ga4DailyChart');
-    if (ga4Ctx && window.Chart && Array.isArray(d.ga4.daily) && d.ga4.daily.length > 0) {
-      new Chart(ga4Ctx.getContext('2d'), {
-        type: 'line',
-        data: {
-          labels: d.ga4.daily.map(p => p.date),
-          datasets: [{
-            label: 'Sessions',
-            data: d.ga4.daily.map(p => p.sessions),
-            borderColor: '#0B0BD6',
-            backgroundColor: 'rgba(11,11,214,0.10)',
-            fill: true,
-            tension: 0.3,
-            pointRadius: 3,
-            pointBackgroundColor: '#0B0BD6'
-          }]
-        },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          plugins: { legend: { display: false } },
-          scales: {
-            x: { grid: { display: false }, ticks: { color: '#6A6E74', font: { size: 11 } } },
-            y: { beginAtZero: true, grid: { color: 'rgba(30,35,44,0.06)' }, ticks: { color: '#6A6E74', font: { size: 11 }, precision: 0 } }
-          }
-        }
-      });
-    }
-
-    // ICP coverage week-over-week (from history.jsonl). Two y-axes because the
-    // total-ICP series is an order of magnitude larger than the 1st-degree ones.
-    const covCtx = document.getElementById('coverageChart');
-    if (covCtx && window.Chart) {
-      const ceoS = histSeries(history, x => x.icp.combined.ceo_1st, 12);
-      const croS = histSeries(history, x => x.icp.combined.cro_1st, 12);
-      const totS = histSeries(history, x => x.icp.combined.ceo_contacts + x.icp.combined.cro_contacts, 12);
-      new Chart(covCtx.getContext('2d'), {
-        type: 'line',
-        data: {
-          labels: ceoS.map(p => p.label),
-          datasets: [
-            { label: 'CEO 1st', data: ceoS.map(p => p.value), borderColor: '#0B0BD6', backgroundColor: 'rgba(11,11,214,0.08)', tension: 0.3, pointRadius: 2, fill: false, yAxisID: 'y' },
-            { label: 'CRO 1st', data: croS.map(p => p.value), borderColor: '#914BF9', backgroundColor: 'rgba(145,75,249,0.08)', tension: 0.3, pointRadius: 2, fill: false, yAxisID: 'y' },
-            { label: 'Total ICP', data: totS.map(p => p.value), borderColor: '#19A674', backgroundColor: 'rgba(25,166,116,0.06)', tension: 0.3, pointRadius: 2, fill: false, yAxisID: 'y1' }
-          ]
-        },
-        options: {
-          responsive: true, maintainAspectRatio: false,
-          plugins: { legend: { display: false }, tooltip: { callbacks: { label: (c) => c.dataset.label + ': ' + c.raw.toLocaleString() } } },
-          scales: {
-            x: { grid: { display: false }, ticks: { color: '#6A6E74', font: { size: 10 }, maxRotation: 0, autoSkip: true, maxTicksLimit: 6 } },
-            y: { position: 'left', beginAtZero: true, grid: { color: 'rgba(30,35,44,0.06)' }, ticks: { color: '#6A6E74', font: { size: 10 } } },
-            y1: { position: 'right', beginAtZero: true, grid: { display: false }, ticks: { color: '#19A674', font: { size: 10 } } }
-          }
-        }
-      });
-    }
-  }, 0);
-
-  // Funnel \u2014 two tracks (see brief). Track A is whole-ICP coverage and includes
-  // pre-existing first-degree connections; Track B is outreach conversion and
-  // counts only contacts actually sent outreach (Reply.io sequences). The split
-  // between pre-existing and outreach-driven connections is computed as:
-  //   outreach-driven = Reply.io invites accepted (funnel.track_a.outreach_connected)
-  //   pre-existing     = total first-degree connected \u2212 outreach-driven
-  // This is FLAGGED for reconciliation against the funnel spec.
-  const tracks = document.getElementById('funnel-tracks');
-  if (tracks) {
-    const f = d.funnel || {};
-    // Prefer the pipeline-produced track objects; if an older data.json is being
-    // served (before the refresh pipeline first runs) derive them from the
-    // existing ICP + sequence fields so the view still renders correctly.
-    const sumSeq = (k) => (d.sequences || []).reduce((a, s) => a + (typeof s[k] === 'number' ? s[k] : 0), 0);
-    const icpC = (d.icp && d.icp.combined) || {};
-    const connectedFallback = (icpC.ceo_1st || 0) + (icpC.cro_1st || 0);
-    const outreachFallback = sumSeq('connection_requests_accepted');
-    const A = f.track_a || {
-      icp_contacts: f.icp_contacts,
-      connected: connectedFallback,
-      connected_pct_of_icp: f.icp_contacts ? (connectedFallback / f.icp_contacts) * 100 : null,
-      pre_existing_connected: Math.max(0, connectedFallback - outreachFallback),
-      outreach_connected: outreachFallback
-    };
-    const B = f.track_b || {
-      enrolled: sumSeq('total'),
-      invited: sumSeq('connections_sent'),
-      invited_pct_of_enrolled: sumSeq('total') ? (sumSeq('connections_sent') / sumSeq('total')) * 100 : null,
-      connected_via_outreach: outreachFallback,
-      connected_pct_of_invited: sumSeq('connections_sent') ? (outreachFallback / sumSeq('connections_sent')) * 100 : null,
-      intake: 0,
-      deal: 0
-    };
-    const tgt = f.targets || {};
-    const stepRow = (label, sub, val, extra) =>
-      `<div class="tstep"><div class="tl">${escapeHtml(label)}${sub ? `<small>${escapeHtml(sub)}</small>` : ''}</div>` +
-      `<div class="tv">${val}${extra ? `<small>${escapeHtml(extra)}</small>` : ''}</div></div>`;
-
-    const goalLine = (label, actual, target) =>
-      (typeof target === 'number' && target > 0)
-        ? `<div class="track-target">Goal: <b>${fmt(target)}</b> ${escapeHtml(label)} \u00B7 ${fmtPct((actual / target) * 100)} of target</div>`
-        : '';
-
-    const trackA = `<div class="track">
-      <h4>Track A \u2014 ICP coverage</h4>
-      <p class="track-sub">Whole ICP \u2192 first-degree connected. Includes pre-existing first-degree connections.</p>
-      ${stepRow('ICP contacts', 'CEO + CRO, all ANZ ICP', fmt(A.icp_contacts))}
-      ${stepRow('Connected (1st-degree)', 'incl. pre-existing', fmt(A.connected), fmtPct(A.connected_pct_of_icp) + ' of ICP')}
-      ${stepRow('\u2014 of which pre-existing', 'connected before outreach', fmt(A.pre_existing_connected))}
-      ${stepRow('\u2014 of which via outreach', 'accepted an outreach invite', fmt(A.outreach_connected))}
-      ${goalLine('connected', A.connected, tgt.connected)}
-    </div>`;
-
-    const trackB = `<div class="track">
-      <h4>Track B \u2014 outreach conversion</h4>
-      <p class="track-sub">Only contacts actually sent outreach (contacts enrolled in a Reply.io sequence).</p>
-      ${stepRow('Enrolled', 'in active sequences', fmt(B.enrolled))}
-      ${stepRow('Invited', 'LinkedIn invites sent', fmt(B.invited), fmtPct(B.invited_pct_of_enrolled) + ' of enrolled')}
-      ${stepRow('Connected via outreach', 'invites accepted', fmt(B.connected_via_outreach), fmtPct(B.connected_pct_of_invited) + ' of invited')}
-      ${stepRow('Intake calls', 'booked (beta pipeline)', fmt(B.intake))}
-      ${stepRow('Deals', 'accepted to beta', fmt(B.deal))}
-      ${goalLine('intake calls', B.intake, tgt.intake)}
-    </div>`;
-
-    tracks.innerHTML = trackA + trackB;
   }
+  $('#funnelexplain').innerHTML=ex;
 }
 
-loadData();
-</script>
+function renderSampleOverTime(){
+  var WKL=['Sep 1','Sep 8','Sep 15','Sep 22','Sep 29','Oct 6','Oct 13','Oct 20','Oct 27','Nov 3'];
+  barsWeekly('appsChart',[{name:'Cumulative',vals:[0,1,2,4,5,7,8,10,11,12],c:'#0C6B7A'}],WKL,false,true);
+  barsWeekly('intakeChart',[{name:'Cumulative',vals:[0,0,1,2,3,4,5,6,7,8],c:'#0C6B7A'}],WKL,false,true);
+  barsWeekly('betaChart',[{name:'Cumulative',vals:[0,0,0,0,1,1,1,1,2,2],c:'#1F9D6B'}],WKL,false,true);
+  barsWeekly('engageChart',[{name:'Active in sequence',vals:[300,800,1400,2000,2500,2850,3000,3060,3090,3100],c:'#0C6B7A'},{name:'Replied',vals:[1,4,8,13,18,23,26,28,30,31],c:'#C08717'}],WKL,false,true);
+}
 
+// ---- ICP 1st connections over time (REAL) ----------------------------------
+// Metric = cumulative count of ICP CEO/SL contacts with linkedin_connected=true
+// as of each week end, reconstructed in the puller from the per-contact
+// linkedin_connected_date (verified to hold real connection dates, not the
+// backfill tag date). The series ends at funnel_ext.first_connections_total
+// (1,285) so it reconciles exactly with the "Total 1st connections" box. The
+// x-axis defaults to ~the last 6 months so campaign-era growth is visible
+// (many connections predate Supercept and would otherwise flatten the slope).
+// Falls back to a flat current-total line only if the series is unavailable.
+function renderFirstConn(d, history){
+  var fe=d.funnel_ext||{};
+  var series=Array.isArray(fe.first_connections_weekly)?fe.first_connections_weekly:[];
+  var hint=document.getElementById('firstConnHint');
+  if(series.length>=2){
+    var vals=series.map(function(p){return p.v;});
+    var labs=series.map(function(p){return shortDate(p.w);});
+    if(hint)hint.textContent='cumulative · real · last 6 months';
+    lineAxes('firstConnChart',vals,labs,'#0C6B7A');
+    return;
+  }
+  // Fallback: only the current total is known.
+  var v=fe.first_connections_total;
+  if(typeof v!=='number')return;
+  if(hint)hint.textContent='current total · real · weekly series builds from next refresh';
+  lineAxes('firstConnChart',[v,v],['',(d.as_of_label||'')],'#0C6B7A');
+}
+
+// ---- follower growth (REAL from history) -----------------------------------
+// Known fallback artifact: on a failed live fetch the old pipeline wrote the
+// manual-override value (15,611), which shows as a false dip below the prior
+// real value. Forward-fill those specific points on read (belt-and-braces; the
+// puller now carries the last real value forward and history.jsonl is migrated).
+// Genuine declines from real data (e.g. 16,091 -> 16,090) are left untouched.
+var FOLLOWER_FALLBACKS=[15611];
+function forwardFillFollowers(pts){
+  var lastGood=null;
+  return pts.map(function(p){
+    var v=p.value;
+    if(FOLLOWER_FALLBACKS.indexOf(v)!==-1&&lastGood!==null&&v<lastGood){
+      return {label:p.label,value:lastGood};
+    }
+    lastGood=v;
+    return p;
+  });
+}
+function renderFollowers(d, history){
+  var s=histSeries(history,function(data){return data.linkedin&&data.linkedin.followers_current;},60);
+  s=forwardFillFollowers(s);
+  var cur=(d.linkedin||{}).followers_current;
+  if(s.length<2&&typeof cur==='number')s=[{label:'',value:cur},{label:'',value:cur}];
+  if(!s.length)return;
+  follLine('follChart',s.map(function(p){return p.value;}),s[0].label,s[s.length-1].label);
+}
+
+// ---- coverage tables (REAL from data.coverage, else awaiting) --------------
+var COV_DISPLAY=[
+ {key:'accounts',   label:'Accounts (ANZ 3+)',        base:null,          tot:true},
+ {key:'have_either',label:'Have CEO or sales leader', base:'accounts'},
+ {key:'either_1st', label:'— 1st-degree',        base:'have_either', ind:true},
+ {key:'have_ceo',   label:'Have CEO contact',         base:'accounts'},
+ {key:'ceo_1st',    label:'— 1st-degree',        base:'have_ceo',    ind:true},
+ {key:'have_sl',    label:'Have sales leader',        base:'accounts'},
+ {key:'sl_1st',     label:'— 1st-degree',        base:'have_sl',     ind:true}
+];
+function renderCovTable(id, pivot){
+  var cols=pivot.columns, rows=pivot.rows, n=cols.length;
+  var html='<thead><tr><th>Coverage</th>'+cols.map(function(c,ci){return '<th'+(ci===n-1?' class="allcol"':'')+'>'+esc(c)+'</th>';}).join('')+'</tr></thead><tbody>';
+  COV_DISPLAY.forEach(function(r){
+    html+='<tr'+(r.tot?' class="tot"':'')+'><td'+(r.ind?' class="ind"':'')+'>'+r.label+'</td>';
+    for(var ci=0;ci<n;ci++){
+      var v=(rows[r.key]||[])[ci];
+      var allc=ci===n-1?' allcol':'';
+      var sub='';
+      if(r.base){var b=(rows[r.base]||[])[ci];if(typeof b==='number'&&b>0&&typeof v==='number')sub='<span class="sub">'+Math.round(v/b*100)+'%</span>';}
+      html+='<td class="'+allc.trim()+'">'+fmt(v)+sub+'</td>';
+    }
+    html+='</tr>';
+  });
+  document.getElementById(id).innerHTML=html+'</tbody>';
+}
+function renderCoverage(d){
+  var cov=d.coverage;
+  var map=[['cov_crm','by_crm'],['cov_ind','by_industry'],['cov_indhs','by_industry_hubspot'],['cov_band','by_band'],['cov_bandhs','by_band_hubspot']];
+  map.forEach(function(m){
+    var pivot=cov&&cov[m[1]];
+    if(pivot&&pivot.columns&&pivot.rows){renderCovTable(m[0],pivot);}
+    else{awaitingCard('card_'+m[0],'This coverage breakdown');}
+  });
+}
+
+// ---- completeness tables (REAL from data.completeness, else awaiting) ------
+var CPL_FIELDS=['Seller count','Employees','Revenue','Year founded','CRM detected'];
+function renderCplTable(id, cpl){
+  var html='<thead><tr><th>Dimension</th><th>% CEO or SL</th>'+CPL_FIELDS.map(function(f){return '<th>'+f+'</th>';}).join('')+'</tr></thead><tbody>';
+  (cpl.rows||[]).forEach(function(r){
+    html+='<tr><td>'+esc(r.label)+'</td><td>'+r.cesl_pct+'%</td>'+(r.fields||[]).map(function(v){return '<td>'+v+'%</td>';}).join('')+'</tr>';
+  });
+  if(cpl.all){html+='<tr class="tot"><td>All accounts</td><td>'+cpl.all.cesl_pct+'%</td>'+(cpl.all.fields||[]).map(function(v){return '<td>'+v+'%</td>';}).join('')+'</tr>';}
+  document.getElementById(id).innerHTML=html+'</tbody>';
+}
+function renderCompleteness(d){
+  var cpl=d.completeness;
+  var map=[['cpl_band','by_band'],['cpl_ind','by_industry'],['cpl_crm','by_crm']];
+  map.forEach(function(m){
+    var t=cpl&&cpl[m[1]];
+    if(t&&t.rows){renderCplTable(m[0],t);}
+    else{awaitingCard('card_'+m[0],'This completeness breakdown');}
+  });
+}
+
+function awaitingCard(cardId, label){
+  var card=document.getElementById(cardId);if(!card)return;
+  card.innerHTML='<div class="awaiting"><span class="tagw">awaiting refresh</span>'+
+    '<span><b>'+esc(label)+'</b> is computed by the HubSpot aggregation in the daily refresh pipeline and appears here after the next run. '+
+    'No placeholder is shown so the real numbers are never confused with sample data.</span></div>';
+}
+
+// ---- outbound (SAMPLE placeholders, badged) --------------------------------
+function renderOutboundSample(){
+  var WKL=['Sep 1','Sep 8','Sep 15','Sep 22','Sep 29','Oct 6','Oct 13','Oct 20','Oct 27','Nov 3'];
+  var SEQ=[
+   {n:'CEO &middot; Beta launch',c:'Email',s:1240,o:520,op:'42%',r:12,rr:'1.0%'},
+   {n:'CRO &middot; Beta launch',c:'Email',s:880,o:360,op:'41%',r:9,rr:'1.0%'},
+   {n:'CEO &middot; Beta launch',c:'LinkedIn',s:640,o:'—',op:'—',r:6,rr:'0.9%'},
+   {n:'CRO &middot; Beta launch',c:'LinkedIn',s:410,o:'—',op:'—',r:4,rr:'1.0%'}
+  ];
+  $('#seqRows').innerHTML=SEQ.map(function(s){return '<tr><td class="txt">'+s.n+'</td><td><span class="pill '+(s.c==='LinkedIn'?'li':'')+'">'+s.c+'</span></td><td>'+s.s.toLocaleString()+'</td><td>'+s.o+'</td><td>'+s.op+'</td><td>'+s.r+'</td><td>'+s.rr+'</td></tr>';}).join('');
+  barsWeekly('replyChart',[{name:'Sent',vals:[400,900,1500,2100,2600,2950,3080,3130,3160,3170],c:'#0C6B7A'},{name:'Replied',vals:[1,4,8,13,18,23,26,28,30,31],c:'#C08717'}],WKL,false,true);
+
+  // website WoW stacked traffic + apps + conv% (sample)
+  (function(){var el=$('#siteChart');if(!el)return;var w=560,h=220,pad={t:22,r:14,b:24,l:40};
+    var sess=[40,120,220,340,460,600,760,900,1020,1150],apps=[0,1,1,2,1,2,1,2,1,1];
+    var mx=Math.max.apply(null,sess)||1;var g=WKL.length,gw=(w-pad.l-pad.r)/g;
+    function Y(v){return pad.t+(h-pad.t-pad.b)*(1-v/mx);}
+    var out='';[0,mx/2,mx].forEach(function(vv){var y=Y(vv);out+='<line class="gridln" x1="'+pad.l+'" y1="'+y.toFixed(1)+'" x2="'+(w-pad.r)+'" y2="'+y.toFixed(1)+'"/><text class="axis" x="'+(pad.l-5)+'" y="'+(y+3).toFixed(1)+'" text-anchor="end">'+Math.round(vv)+'</text>';});
+    WKL.forEach(function(L,i){var x0=pad.l+i*gw;var bh=(h-pad.t-pad.b)*sess[i]/mx;out+='<rect x="'+(x0+gw*0.22)+'" y="'+Y(sess[i]).toFixed(1)+'" width="'+(gw*0.56)+'" height="'+bh.toFixed(1)+'" fill="#7FB4BC"/>';
+      var ah=(h-pad.t-pad.b)*apps[i]/mx;out+='<rect x="'+(x0+gw*0.22)+'" y="'+Y(apps[i]).toFixed(1)+'" width="'+(gw*0.56)+'" height="'+Math.max(ah,apps[i]?2:0).toFixed(1)+'" fill="#0C6B7A"/>';
+      if(sess[i]>0)out+='<text class="dlabel" x="'+(x0+gw*0.5).toFixed(1)+'" y="'+(Y(sess[i])-4).toFixed(1)+'" text-anchor="middle">'+sess[i].toLocaleString()+'</text>';
+      if(i%2===0)out+='<text class="axis" x="'+(x0+gw*0.5)+'" y="'+(h-8)+'" text-anchor="middle">'+L+'</text>';});
+    el.innerHTML=out;})();
+  (function(){var el=$('#cvrChart');if(!el)return;var w=560,h=220,pad={t:20,r:14,b:24,l:38};
+    var cvr=[0,1.2,1.8,2.2,2.6,2.9,3.1,3.3,3.5,3.6];var mx=4;var g=WKL.length,gw=(w-pad.l-pad.r)/g;
+    function X(i){return pad.l+gw*(i+0.5);}function Y(v){return pad.t+(h-pad.t-pad.b)*(1-v/mx);}
+    var out='';[0,2,4].forEach(function(vv){var y=Y(vv);out+='<line class="gridln" x1="'+pad.l+'" y1="'+y.toFixed(1)+'" x2="'+(w-pad.r)+'" y2="'+y.toFixed(1)+'"/><text class="axis" x="'+(pad.l-5)+'" y="'+(y+3).toFixed(1)+'" text-anchor="end">'+vv+'%</text>';});
+    var dd=cvr.map(function(v,i){return (i?'L':'M')+X(i).toFixed(1)+' '+Y(v).toFixed(1);}).join(' ');
+    out+='<path d="'+dd+'" fill="none" stroke="#C08717" stroke-width="2"/>';
+    cvr.forEach(function(v,i){out+='<circle cx="'+X(i).toFixed(1)+'" cy="'+Y(v).toFixed(1)+'" r="2.2" fill="#C08717"/>';if(v>0)out+='<text class="dlabel" x="'+X(i).toFixed(1)+'" y="'+(Y(v)-5).toFixed(1)+'" text-anchor="middle">'+v+'%</text>';});
+    WKL.forEach(function(L,i){if(i%2===0)out+='<text class="axis" x="'+X(i).toFixed(1)+'" y="'+(h-8)+'" text-anchor="middle">'+L+'</text>';});
+    el.innerHTML=out;})();
+}
+
+// ---- linkedin post charts (SAMPLE placeholders, badged) --------------------
+function renderLinkedInSample(){
+  var WKL=['Sep 1','Sep 8','Sep 15','Sep 22','Sep 29','Oct 6','Oct 13','Oct 20','Oct 27','Nov 3'];
+  barsWeekly('imprChart',[{name:'Impressions',vals:[0,1200,2100,3400,4200,5100,5800,6500,7100,7900],c:'#0C6B7A'}],WKL,false,true);
+  barsWeekly('commChart',[{name:'Comments',vals:[0,6,11,18,24,30,36,42,47,52],c:'#0C6B7A'}],WKL,false,true);
+}
+
+// ---- per-card Real / Sample / Real+sample badges (from mockup) -------------
+function tagAllCards(d){
+  function mkTag(type){var t=document.createElement('span');t.className='tag tag-'+type;t.textContent=type==='real'?'Real data':type==='mixed'?'Real + sample':'Sample data';return t;}
+  function tag(card,type){var h=card.querySelector('.card-h');if(h){var t=mkTag(type);t.style.marginLeft='8px';h.insertBefore(t,h.querySelector('.hint')||null);}else{var bar=document.createElement('div');bar.className='tagbar';bar.appendChild(mkTag(type));card.insertBefore(bar,card.firstChild);}}
+  document.querySelectorAll('#coverage .card').forEach(function(c){tag(c,'real');});
+  document.querySelectorAll('#outbound .card, #website .card').forEach(function(c){tag(c,'sample');});
+  document.querySelectorAll('#funnel .card').forEach(function(c){tag(c,c.classList.contains('funnel')?'mixed':(c.querySelector('#firstConnChart')?'real':'sample'));});
+  document.querySelectorAll('#linkedin .card').forEach(function(c){tag(c,c.querySelector('#follChart')?'real':'sample');});
+}
+
+// ---- section nav + period buttons ------------------------------------------
+function wireNav(){
+  var links=[].slice.call(document.querySelectorAll('#secnav a'));
+  var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting)links.forEach(function(l){l.classList.toggle('on',l.getAttribute('href')==='#'+e.target.id);});});},{rootMargin:'-45% 0px -50% 0px'});
+  document.querySelectorAll('section').forEach(function(s){io.observe(s);});
+  document.querySelectorAll('.periods button').forEach(function(b){b.onclick=function(){document.querySelectorAll('.periods button').forEach(function(x){x.classList.remove('on');});b.classList.add('on');};});
+}
+</script>
 </body>
 </html>

@@ -57,10 +57,9 @@ FOLLOWER_PATHS = [
     "/accounts/{acct}/followers/analytics?resultType=GROWTH",
 ]
 
-OVERRIDE_FILE = os.path.join(
-    os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
-    "config", "manual_overrides.json",
-)
+ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+OVERRIDE_FILE = os.path.join(ROOT, "config", "manual_overrides.json")
+DATA_JSON = os.path.join(ROOT, "data.json")
 
 
 def _headers():
@@ -112,9 +111,30 @@ def _from_override():
         return None
 
 
+def _last_real_followers():
+    """The last committed followers_current from data.json. Used to carry the
+    value forward on a failed live fetch so the follower line holds flat instead
+    of dropping to the manual-override fallback (which reads as a false unfollow
+    dip on the dashboard)."""
+    try:
+        with open(DATA_JSON) as f:
+            n = (json.load(f).get("linkedin") or {}).get("followers_current")
+        return int(n) if n else None
+    except Exception:  # noqa: BLE001
+        return None
+
+
 def fetch():
     followers = _from_connectsafely()
     source = "connectsafely"
+    if not followers:
+        # Prefer carrying the last real value forward over the fallback constant,
+        # so a failed fetch never manufactures a downward step.
+        followers = _last_real_followers()
+        if followers:
+            source = "carry_forward"
+            C.log("  connectsafely unavailable -> carrying forward last real "
+                  "followers ({})".format(followers))
     if not followers:
         followers = _from_override()
         source = "manual_override"
@@ -122,8 +142,8 @@ def fetch():
             C.log("  using manual override for followers ({})".format(followers))
     if not followers:
         raise RuntimeError(
-            "no follower count from ConnectSafely and no config/manual_overrides.json "
-            "linkedin_followers value")
+            "no follower count from ConnectSafely, no prior data.json value, and no "
+            "config/manual_overrides.json linkedin_followers value")
     return {
         "linkedin": {
             "followers_current": followers,
