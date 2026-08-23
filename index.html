@@ -52,6 +52,7 @@
   .sec-h{display:flex;align-items:baseline;gap:12px;margin:4px 0 16px}
   .sec-h h2{font-size:21px;font-weight:600}
   .subhead{font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-2);margin:22px 0 8px;font-weight:600}
+  .cov-note{font-size:11.5px;color:var(--muted);margin:8px 2px 0;line-height:1.5}.cov-note b{color:var(--ink-2);font-weight:600}
 
   .card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--sh)}
   .card-h{display:flex;align-items:center;gap:8px;padding:14px 18px 2px}
@@ -205,6 +206,10 @@
 
     <div class="subhead">Account coverage &#8212; by number of sellers (HubSpot accounts only)</div>
     <div class="card" id="card_cov_bandhs"><div class="pad"><table class="pivfull" id="cov_bandhs"></table></div></div>
+
+    <div class="subhead">Account coverage &#8212; by fit tier</div>
+    <div class="card" id="card_cov_fit"><div class="pad"><table class="pivfull" id="cov_fit"></table></div></div>
+    <div class="cov-note">Fit tiers by seller band: <b>Core (5&#8211;19)</b> highest-conversion &middot; <b>High-value (20+)</b> larger deals, longer cycles &middot; <b>Borderline (3&#8211;4)</b> lower band, less priority but still ICP.</div>
 
     <div class="subhead">Data completeness &#8212; by number of sellers</div>
     <div class="card" id="card_cpl_band"><div class="pad"><table class="pivfull" id="cpl_band"></table></div></div>
@@ -564,7 +569,7 @@ function renderCrosstab(id, x){
 
 function renderCoverage(d){
   var cov=d.coverage;
-  var map=[['cov_crm','by_crm'],['cov_ind','by_industry'],['cov_indhs','by_industry_hubspot'],['cov_band','by_band'],['cov_bandhs','by_band_hubspot']];
+  var map=[['cov_crm','by_crm'],['cov_ind','by_industry'],['cov_indhs','by_industry_hubspot'],['cov_band','by_band'],['cov_bandhs','by_band_hubspot'],['cov_fit','by_fit_tier']];
   map.forEach(function(m){
     var pivot=cov&&cov[m[1]];
     if(pivot&&pivot.columns&&pivot.rows){renderCovTable(m[0],pivot);}

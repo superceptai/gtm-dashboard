@@ -499,6 +499,23 @@ def _band_bucket(props):
     return v if v in BAND_VALUES else None   # None -> excluded (sub-floor)
 
 
+# Fit tiers group the seller bands by how we prioritise them:
+#   Core fit       = no_sellers in {5-9, 10-19}  -- highest-conversion band.
+#   High-value fit = no_sellers in {20-49, 50+}  -- larger deals, longer cycles.
+#   Borderline fit = no_sellers in {3, 4}        -- lower band, less priority but
+#                                                   still ICP.
+FIT_TIER_MAP = {
+    "5-9": "Core (5-19)", "10-19": "Core (5-19)",
+    "20-49": "High-value (20+)", "50+": "High-value (20+)",
+    "3": "Borderline (3-4)", "4": "Borderline (3-4)",
+}
+FIT_TIER_COLUMNS = ["Core (5-19)", "High-value (20+)", "Borderline (3-4)", "All"]
+
+
+def _fit_tier_bucket(props):
+    return FIT_TIER_MAP.get((props.get("no_sellers") or "").strip())
+
+
 def _is_hubspot_company(props):
     return (props.get("hubspot_technoligies") or "").strip().lower() == "true"
 
@@ -742,6 +759,7 @@ def build_coverage_and_completeness():
         "by_industry_hubspot": _build_coverage_pivot(hs_companies, _industry_bucket, INDUSTRY_COLUMNS, roll),
         "by_band": _build_coverage_pivot(companies, _band_bucket, BAND_COLUMNS, roll),
         "by_band_hubspot": _build_coverage_pivot(hs_companies, _band_bucket, BAND_COLUMNS, roll),
+        "by_fit_tier": _build_coverage_pivot(companies, _fit_tier_bucket, FIT_TIER_COLUMNS, roll),
     }
     completeness = {
         "by_band": _build_completeness_pivot(companies, _band_bucket, BAND_VALUES, roll),
