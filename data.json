@@ -1,24 +1,24 @@
 {
   "schema_version": 1,
-  "last_updated": "2026-08-23T15:21:21+10:00",
+  "last_updated": "2026-08-23T18:17:36+10:00",
   "as_of_label": "23 Aug 2026",
   "feed_label": "refresh: HS_ICP_LIVE, REPLY_LIVE, GA4_LIVE, LINKEDIN_MANUAL",
   "source_status": {
     "hubspot_icp": {
       "status": "fresh",
-      "last_success": "2026-08-23T15:21:15+10:00"
+      "last_success": "2026-08-23T18:17:31+10:00"
     },
     "reply_io": {
       "status": "fresh",
-      "last_success": "2026-08-23T15:21:17+10:00"
+      "last_success": "2026-08-23T18:17:31+10:00"
     },
     "ga4": {
       "status": "fresh",
-      "last_success": "2026-08-23T15:21:18+10:00"
+      "last_success": "2026-08-23T18:17:32+10:00"
     },
     "linkedin": {
       "status": "fresh",
-      "last_success": "2026-08-23T15:21:21+10:00"
+      "last_success": "2026-08-23T18:17:36+10:00"
     }
   },
   "icp": {
@@ -30,12 +30,12 @@
       "borderline_pct": 24.4,
       "high_value_20p": 825,
       "high_value_pct": 17.5,
-      "ceo_contacts": 3307,
+      "ceo_contacts": 3485,
       "ceo_1st": 841,
-      "ceo_1st_pct": 25.4,
-      "cro_contacts": 1306,
+      "ceo_1st_pct": 24.1,
+      "cro_contacts": 1333,
       "cro_1st": 444,
-      "cro_1st_pct": 34.0
+      "cro_1st_pct": 33.3
     },
     "hubspot": {
       "total": 1880,
@@ -46,12 +46,12 @@
       "high_value_20p": 261,
       "hv_20_49": 177,
       "hv_50p": 84,
-      "ceo_contacts": 1239,
+      "ceo_contacts": 1367,
       "ceo_1st": 411,
-      "ceo_1st_pct": 33.2,
-      "cro_contacts": 719,
+      "ceo_1st_pct": 30.1,
+      "cro_contacts": 733,
       "cro_1st": 278,
-      "cro_1st_pct": 38.7
+      "cro_1st_pct": 37.9
     },
     "non_hubspot": {
       "total": 2831,
@@ -62,12 +62,12 @@
       "high_value_20p": 564,
       "hv_20_49": 362,
       "hv_50p": 202,
-      "ceo_contacts": 2068,
+      "ceo_contacts": 2118,
       "ceo_1st": 430,
-      "ceo_1st_pct": 20.8,
-      "cro_contacts": 587,
+      "ceo_1st_pct": 20.3,
+      "cro_contacts": 600,
       "cro_1st": 166,
-      "cro_1st_pct": 28.3
+      "cro_1st_pct": 27.7
     }
   },
   "bands": {
@@ -167,18 +167,18 @@
     "source": "carry_forward"
   },
   "funnel": {
-    "icp_contacts": 4613,
+    "icp_contacts": 4818,
     "enrolled": 4428,
-    "enrolled_pct_of_icp": 96.0,
+    "enrolled_pct_of_icp": 91.9,
     "invite_sent": 2382,
     "invite_sent_pct_of_enrolled": 53.8,
     "connected": 1285,
     "connected_pct_of_invited": 53.9,
     "track_a": {
       "label": "Coverage (ICP contacts -> connected, incl. pre-existing)",
-      "icp_contacts": 4613,
+      "icp_contacts": 4818,
       "connected": 1285,
-      "connected_pct_of_icp": 27.9,
+      "connected_pct_of_icp": 26.7,
       "pre_existing_connected": 742,
       "outreach_connected": 543
     },
@@ -199,12 +199,12 @@
     }
   },
   "funnel_ext": {
-    "icp_contacts": 4613,
+    "icp_contacts": 4818,
     "invites_sent": 2382,
     "connections_accepted": 543,
     "first_connections_total": 1285,
     "already_connected": 742,
-    "no_li_profile": 1489,
+    "no_li_profile": 1694,
     "added_to_sequence": 4428,
     "first_connections_weekly": [
       {
@@ -320,7 +320,7 @@
       "already_connected": 742,
       "routed_other_sequence": 741,
       "connect_invite_queued": 586,
-      "not_yet_enrolled": 162
+      "not_yet_enrolled": 367
     },
     "no_li_profile_raw": 4
   },
@@ -478,12 +478,12 @@
           4711
         ],
         "have_ceo": [
-          505,
-          508,
+          589,
+          525,
           7,
-          313,
-          1088,
-          2421
+          331,
+          1126,
+          2578
         ],
         "ceo_1st": [
           215,
@@ -494,12 +494,12 @@
           747
         ],
         "have_sl": [
-          249,
-          247,
+          258,
+          253,
           3,
-          115,
-          267,
-          881
+          118,
+          273,
+          905
         ],
         "sl_1st": [
           130,
@@ -510,12 +510,12 @@
           375
         ],
         "have_either": [
-          615,
-          610,
+          703,
+          632,
           8,
-          355,
-          1220,
-          2808
+          375,
+          1262,
+          2980
         ],
         "either_1st": [
           292,
@@ -770,19 +770,19 @@
           4711
         ],
         "have_ceo": [
-          588,
-          396,
-          247,
-          221,
-          129,
-          103,
-          82,
-          94,
-          66,
-          31,
-          47,
-          417,
-          2421
+          635,
+          409,
+          248,
+          231,
+          132,
+          110,
+          90,
+          95,
+          80,
+          40,
+          52,
+          456,
+          2578
         ],
         "ceo_1st": [
           235,
@@ -800,19 +800,19 @@
           747
         ],
         "have_sl": [
-          319,
+          330,
           105,
-          102,
-          70,
+          103,
+          73,
           18,
-          43,
+          46,
           22,
           17,
-          21,
-          16,
-          8,
-          140,
-          881
+          22,
+          17,
+          9,
+          143,
+          905
         ],
         "sl_1st": [
           155,
@@ -830,19 +830,19 @@
           375
         ],
         "have_either": [
-          713,
-          435,
-          300,
-          261,
-          138,
-          123,
-          92,
-          101,
-          77,
-          42,
-          50,
-          476,
-          2808
+          766,
+          448,
+          302,
+          273,
+          141,
+          131,
+          100,
+          102,
+          91,
+          52,
+          56,
+          518,
+          2980
         ],
         "either_1st": [
           334,
@@ -894,19 +894,19 @@
           1880
         ],
         "have_ceo": [
-          322,
-          122,
-          41,
-          64,
-          33,
+          357,
+          127,
+          42,
+          72,
+          34,
+          27,
+          37,
           25,
+          45,
           32,
-          24,
-          32,
-          23,
-          15,
-          178,
-          911
+          16,
+          211,
+          1025
         ],
         "ceo_1st": [
           147,
@@ -924,19 +924,19 @@
           364
         ],
         "have_sl": [
-          209,
+          215,
           45,
           27,
-          34,
+          35,
           4,
-          13,
+          14,
           9,
           7,
-          19,
-          14,
-          5,
-          76,
-          462
+          20,
+          15,
+          6,
+          79,
+          476
         ],
         "sl_1st": [
           116,
@@ -954,19 +954,19 @@
           230
         ],
         "have_either": [
-          397,
-          138,
-          58,
-          85,
-          33,
-          30,
-          38,
-          29,
+          434,
+          143,
+          59,
+          93,
+          34,
+          32,
           43,
-          33,
-          16,
-          206,
-          1106
+          30,
+          56,
+          43,
+          18,
+          242,
+          1227
         ],
         "either_1st": [
           222,
@@ -1006,13 +1006,13 @@
           4711
         ],
         "have_ceo": [
-          123,
-          350,
-          902,
-          569,
-          306,
-          171,
-          2421
+          148,
+          372,
+          973,
+          599,
+          312,
+          174,
+          2578
         ],
         "ceo_1st": [
           58,
@@ -1024,13 +1024,13 @@
           747
         ],
         "have_sl": [
-          50,
-          108,
-          281,
-          236,
-          145,
-          61,
-          881
+          54,
+          110,
+          288,
+          241,
+          150,
+          62,
+          905
         ],
         "sl_1st": [
           18,
@@ -1042,13 +1042,13 @@
           375
         ],
         "have_either": [
-          158,
-          398,
-          1030,
-          665,
-          361,
-          196,
-          2808
+          184,
+          420,
+          1106,
+          700,
+          371,
+          199,
+          2980
         ],
         "either_1st": [
           71,
@@ -1082,13 +1082,13 @@
           1880
         ],
         "have_ceo": [
-          89,
-          137,
-          337,
-          188,
-          105,
-          55,
-          911
+          113,
+          153,
+          383,
+          209,
+          109,
+          58,
+          1025
         ],
         "ceo_1st": [
           43,
@@ -1100,13 +1100,13 @@
           364
         ],
         "have_sl": [
-          39,
-          55,
-          155,
-          122,
-          65,
-          26,
-          462
+          43,
+          56,
+          159,
+          125,
+          66,
+          27,
+          476
         ],
         "sl_1st": [
           15,
@@ -1118,13 +1118,13 @@
           230
         ],
         "have_either": [
-          117,
-          163,
-          404,
-          236,
-          126,
-          60,
-          1106
+          142,
+          179,
+          452,
+          260,
+          131,
+          63,
+          1227
         ],
         "either_1st": [
           53,
@@ -1152,10 +1152,10 @@
           4711
         ],
         "have_ceo": [
-          1471,
-          477,
-          473,
-          2421
+          1572,
+          486,
+          520,
+          2578
         ],
         "ceo_1st": [
           438,
@@ -1164,10 +1164,10 @@
           747
         ],
         "have_sl": [
-          517,
-          206,
-          158,
-          881
+          529,
+          212,
+          164,
+          905
         ],
         "sl_1st": [
           223,
@@ -1176,10 +1176,10 @@
           375
         ],
         "have_either": [
-          1695,
-          557,
-          556,
-          2808
+          1806,
+          570,
+          604,
+          2980
         ],
         "either_1st": [
           592,
@@ -1195,7 +1195,7 @@
       "rows": [
         {
           "label": "3",
-          "cesl_pct": 39,
+          "cesl_pct": 45,
           "fields": [
             100,
             100,
@@ -1206,7 +1206,7 @@
         },
         {
           "label": "4",
-          "cesl_pct": 54,
+          "cesl_pct": 57,
           "fields": [
             100,
             100,
@@ -1217,7 +1217,7 @@
         },
         {
           "label": "5-9",
-          "cesl_pct": 60,
+          "cesl_pct": 64,
           "fields": [
             100,
             100,
@@ -1228,7 +1228,7 @@
         },
         {
           "label": "10-19",
-          "cesl_pct": 65,
+          "cesl_pct": 69,
           "fields": [
             100,
             100,
@@ -1239,7 +1239,7 @@
         },
         {
           "label": "20-49",
-          "cesl_pct": 67,
+          "cesl_pct": 69,
           "fields": [
             100,
             100,
@@ -1250,7 +1250,7 @@
         },
         {
           "label": "50+",
-          "cesl_pct": 69,
+          "cesl_pct": 70,
           "fields": [
             100,
             100,
@@ -1261,7 +1261,7 @@
         }
       ],
       "all": {
-        "cesl_pct": 60,
+        "cesl_pct": 63,
         "fields": [
           100,
           100,
@@ -1275,7 +1275,7 @@
       "rows": [
         {
           "label": "IT & Services",
-          "cesl_pct": 64,
+          "cesl_pct": 69,
           "fields": [
             100,
             100,
@@ -1286,7 +1286,7 @@
         },
         {
           "label": "Marketing",
-          "cesl_pct": 64,
+          "cesl_pct": 66,
           "fields": [
             100,
             100,
@@ -1297,7 +1297,7 @@
         },
         {
           "label": "Wholesale",
-          "cesl_pct": 62,
+          "cesl_pct": 63,
           "fields": [
             100,
             100,
@@ -1308,7 +1308,7 @@
         },
         {
           "label": "Construction",
-          "cesl_pct": 55,
+          "cesl_pct": 57,
           "fields": [
             100,
             100,
@@ -1319,7 +1319,7 @@
         },
         {
           "label": "Staffing",
-          "cesl_pct": 59,
+          "cesl_pct": 61,
           "fields": [
             100,
             100,
@@ -1330,7 +1330,7 @@
         },
         {
           "label": "Telecommunications",
-          "cesl_pct": 54,
+          "cesl_pct": 58,
           "fields": [
             100,
             100,
@@ -1341,7 +1341,7 @@
         },
         {
           "label": "Consulting",
-          "cesl_pct": 59,
+          "cesl_pct": 64,
           "fields": [
             100,
             100,
@@ -1363,7 +1363,7 @@
         },
         {
           "label": "Financial Services",
-          "cesl_pct": 61,
+          "cesl_pct": 72,
           "fields": [
             100,
             100,
@@ -1374,7 +1374,7 @@
         },
         {
           "label": "Machinery",
-          "cesl_pct": 39,
+          "cesl_pct": 49,
           "fields": [
             100,
             100,
@@ -1385,7 +1385,7 @@
         },
         {
           "label": "Human Resources",
-          "cesl_pct": 59,
+          "cesl_pct": 66,
           "fields": [
             100,
             100,
@@ -1396,7 +1396,7 @@
         },
         {
           "label": "Other",
-          "cesl_pct": 54,
+          "cesl_pct": 59,
           "fields": [
             100,
             100,
@@ -1407,7 +1407,7 @@
         }
       ],
       "all": {
-        "cesl_pct": 60,
+        "cesl_pct": 63,
         "fields": [
           100,
           100,
@@ -1421,7 +1421,7 @@
       "rows": [
         {
           "label": "HubSpot",
-          "cesl_pct": 54,
+          "cesl_pct": 62,
           "fields": [
             100,
             100,
@@ -1432,7 +1432,7 @@
         },
         {
           "label": "Salesforce",
-          "cesl_pct": 71,
+          "cesl_pct": 73,
           "fields": [
             100,
             100,
@@ -1454,7 +1454,7 @@
         },
         {
           "label": "Other CRM",
-          "cesl_pct": 67,
+          "cesl_pct": 70,
           "fields": [
             100,
             100,
@@ -1465,7 +1465,7 @@
         },
         {
           "label": "No CRM detected",
-          "cesl_pct": 56,
+          "cesl_pct": 58,
           "fields": [
             100,
             100,
@@ -1476,7 +1476,7 @@
         }
       ],
       "all": {
-        "cesl_pct": 60,
+        "cesl_pct": 63,
         "fields": [
           100,
           100,
