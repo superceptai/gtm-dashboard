@@ -615,30 +615,44 @@ def _build_completeness_pivot(companies, bucket_fn, order, roll):
     }
 
 
-def _build_band_crm_crosstab(companies):
-    """Account counts as a seller-band x CRM crosstab (rows = bands + All,
-    columns = HubSpot/Salesforce/Pipedrive/Other + All). Plain counts, so the
-    renderer is a straight read. Row/column totals reconcile with by_band and
-    by_crm."""
-    crms = CRM_COLUMNS[:-1]   # named CRMs + Other CRM + No CRM detected (drop All)
-    counts = {b: {c: 0 for c in crms} for b in BAND_VALUES}
+def _build_band_crosstab(companies, bucket_fn, columns):
+    """Account counts as a seller-band x <dimension> crosstab (rows = bands +
+    All, columns = the dimension buckets + All). Plain counts, so the renderer is
+    a straight read. Row totals (last column) and column totals (last row)
+    reconcile with by_band and the matching coverage pivot; the bottom-right cell
+    equals the ICP account count.
+
+    `bucket_fn(props)` maps a company to one of the non-All column labels;
+    `columns` is that label list with a trailing "All" (e.g. CRM_COLUMNS or
+    INDUSTRY_COLUMNS). Parameterised so the CRM and industry crosstabs share one
+    code path."""
+    cats = columns[:-1]   # drop the trailing "All"
+    counts = {b: {c: 0 for c in cats} for b in BAND_VALUES}
     for co in companies:
         props = co.get("properties", {}) or {}
         b = _band_bucket(props)
         if b is None:
             continue
-        counts[b][_crm_bucket(props)] += 1
+        col = bucket_fn(props)
+        if col is None or col not in counts[b]:
+            continue
+        counts[b][col] += 1
     matrix = []
     for b in BAND_VALUES:
-        row = [counts[b][c] for c in crms]
+        row = [counts[b][c] for c in cats]
         row.append(sum(row))
         matrix.append(row)
-    all_row = [sum(counts[b][c] for b in BAND_VALUES) for c in crms]
+    all_row = [sum(counts[b][c] for b in BAND_VALUES) for c in cats]
     all_row.append(sum(all_row))
     matrix.append(all_row)
-    return {"columns": crms + ["All"],
+    return {"columns": cats + ["All"],
             "row_labels": BAND_VALUES + ["All"],
             "matrix": matrix}
+
+
+def _build_band_crm_crosstab(companies):
+    """Seller-band x CRM crosstab (bands as rows, CRM buckets as columns)."""
+    return _build_band_crosstab(companies, _crm_bucket, CRM_COLUMNS)
 
 
 def _parse_hs_date(raw):
@@ -723,6 +737,7 @@ def build_coverage_and_completeness():
     coverage = {
         "by_crm": _build_coverage_pivot(companies, _crm_bucket, CRM_COLUMNS, roll),
         "by_band_crm": _build_band_crm_crosstab(companies),
+        "by_industry_band": _build_band_crosstab(companies, _industry_bucket, INDUSTRY_COLUMNS),
         "by_industry": _build_coverage_pivot(companies, _industry_bucket, INDUSTRY_COLUMNS, roll),
         "by_industry_hubspot": _build_coverage_pivot(hs_companies, _industry_bucket, INDUSTRY_COLUMNS, roll),
         "by_band": _build_coverage_pivot(companies, _band_bucket, BAND_COLUMNS, roll),

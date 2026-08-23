@@ -58,6 +58,9 @@
   .card-h h3{font-size:13.5px;font-weight:600}
   .card-h .hint{font-size:11px;color:var(--muted);margin-left:auto;font-family:var(--mono)}
   .pad{padding:14px 18px}
+  /* Wider coverage pivots (industry/CRM cuts, crosstabs) scroll horizontally
+     inside their card on narrow viewports instead of pushing the page wide. */
+  #coverage .pad{overflow-x:auto}
   .grid{display:grid;gap:14px}
   .g2{grid-template-columns:1fr 1fr}.g3{grid-template-columns:repeat(3,1fr)}
   @media(max-width:900px){.g2,.g3{grid-template-columns:1fr}}
@@ -187,6 +190,9 @@
 
     <div class="subhead">Account coverage &#8212; seller bands by CRM</div>
     <div class="card" id="card_cov_bandcrm"><div class="pad"><table class="pivfull" id="cov_bandcrm"></table></div></div>
+
+    <div class="subhead">Account coverage &#8212; industry &times; seller bands (account counts)</div>
+    <div class="card" id="card_cov_indband"><div class="pad"><table class="pivfull" id="cov_indband"></table></div></div>
 
     <div class="subhead">Account coverage &#8212; by industry</div>
     <div class="card" id="card_cov_ind"><div class="pad"><table class="pivfull" id="cov_ind"></table></div></div>
@@ -568,6 +574,10 @@ function renderCoverage(d){
   var xt=cov&&cov.by_band_crm;
   if(xt&&xt.columns&&xt.matrix){renderCrosstab('cov_bandcrm',xt);}
   else{awaitingCard('card_cov_bandcrm','This coverage breakdown');}
+  // industry x seller bands crosstab (account counts)
+  var xt2=cov&&cov.by_industry_band;
+  if(xt2&&xt2.columns&&xt2.matrix){renderCrosstab('cov_indband',xt2);}
+  else{awaitingCard('card_cov_indband','This coverage breakdown');}
 }
 
 // ---- completeness tables (REAL from data.completeness, else awaiting) ------
