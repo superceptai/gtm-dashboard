@@ -82,8 +82,12 @@ CONNECT_SEQUENCE_NAMES = [
 # Column orders match the mockup EXACTLY so the renderer stays a straight read.
 # ---------------------------------------------------------------------------
 # CRM dimension = company property `crm_detected` (BuiltWith detection). The
-# mockup collapses it to four visible buckets + All.
-CRM_COLUMNS = ["HubSpot", "Salesforce", "Pipedrive", "Other", "All"]
+# three named CRMs pass through; the former single "Other" bucket is split into
+# "Other CRM" (a competitor CRM we haven't named) and "No CRM detected" (no CRM
+# signal at all -- greenfield/HubSpot prospects) so the two very different sales
+# conversations are distinguishable. See _crm_bucket for the split rule.
+CRM_COLUMNS = ["HubSpot", "Salesforce", "Pipedrive",
+               "Other CRM", "No CRM detected", "All"]
 
 # Industry dimension = company `industry` (UPPER_SNAKE_CASE enum). The mockup
 # shows five named buckets + Other + All; everything not named maps to Other.
@@ -445,10 +449,20 @@ def build_funnel_ext_anchors():
 # ---- coverage + completeness (one bulk pull, all pivots derived) -----------
 
 def _crm_bucket(props):
+    # crm_detected (BuiltWith detection) drives the CRM cut.
+    #   * one of the three named CRMs -> return it unchanged.
+    #   * no CRM signal at all -> "No CRM detected". The field is empty/null, or
+    #     an explicit no-signal sentinel: HubSpot's "No CRM In Use", its
+    #     "Unassigned" null-rendering, or "none". This mirrors _crm_present()'s
+    #     "no CRM" test so this bucket and the CRM completeness % stay consistent.
+    #   * any other detected CRM tech (Dynamics, NetSuite, Zoho, ActiveCampaign,
+    #     SugarCRM, ...) -> "Other CRM": a competitor CRM we haven't named.
     v = (props.get("crm_detected") or "").strip()
     if v in ("HubSpot", "Salesforce", "Pipedrive"):
         return v
-    return "Other"
+    if v.lower() in ("", "no crm in use", "unassigned", "none"):
+        return "No CRM detected"
+    return "Other CRM"
 
 
 def _industry_bucket(props):
@@ -581,7 +595,7 @@ def _build_band_crm_crosstab(companies):
     columns = HubSpot/Salesforce/Pipedrive/Other + All). Plain counts, so the
     renderer is a straight read. Row/column totals reconcile with by_band and
     by_crm."""
-    crms = ["HubSpot", "Salesforce", "Pipedrive", "Other"]
+    crms = CRM_COLUMNS[:-1]   # named CRMs + Other CRM + No CRM detected (drop All)
     counts = {b: {c: 0 for c in crms} for b in BAND_VALUES}
     for co in companies:
         props = co.get("properties", {}) or {}
