@@ -82,20 +82,49 @@ CONNECT_SEQUENCE_NAMES = [
 # Column orders match the mockup EXACTLY so the renderer stays a straight read.
 # ---------------------------------------------------------------------------
 # CRM dimension = company property `crm_detected` (BuiltWith detection). The
-# mockup collapses it to four visible buckets + All.
-CRM_COLUMNS = ["HubSpot", "Salesforce", "Pipedrive", "Other", "All"]
+# three named CRMs pass through; the former single "Other" bucket is split into
+# "Other CRM" (a competitor CRM we haven't named) and "No CRM detected" (no CRM
+# signal at all -- greenfield/HubSpot prospects) so the two very different sales
+# conversations are distinguishable. See _crm_bucket for the split rule.
+CRM_COLUMNS = ["HubSpot", "Salesforce", "Pipedrive",
+               "Other CRM", "No CRM detected", "All"]
 
-# Industry dimension = company `industry` (UPPER_SNAKE_CASE enum). The mockup
-# shows five named buckets + Other + All; everything not named maps to Other.
+# Industry dimension = company `industry` (UPPER_SNAKE_CASE enum). Everything
+# not named maps to "Other". The bucket list was expanded 2026-08 (Part A) using
+# scripts/diag_industry_distribution.py against production HubSpot: the original
+# 5 buckets left "Other" at 2,207 / 4,711 = 46.8% of the ICP, which made the
+# industry cut nearly useless. Promoting the largest unmapped industries (and
+# combining a few near-synonyms) drops "Other" to ~885 (~18.8%). Labels are the
+# conversational names Aaron uses, not raw enum values. INDUSTRY_COLUMNS is
+# ordered by descending account count so the biggest buckets are leftmost.
 INDUSTRY_MAP = {
-    "INFORMATION_TECHNOLOGY_AND_SERVICES": "IT & Services",
-    "COMPUTER_SOFTWARE": "Software",
-    "STAFFING_AND_RECRUITING": "Staffing",
-    "MARKETING_AND_ADVERTISING": "Marketing",
-    "WHOLESALE": "Wholesale",
+    # --- original 5 buckets (unchanged) ---
+    "INFORMATION_TECHNOLOGY_AND_SERVICES": "IT & Services",   # 1078
+    "MARKETING_AND_ADVERTISING": "Marketing",                 # 682
+    "WHOLESALE": "Wholesale",                                 # 483
+    "STAFFING_AND_RECRUITING": "Staffing",                    # 232
+    "COMPUTER_SOFTWARE": "Software",                          # 29
+    # --- promoted 2026-08 (largest unmapped industries) ---
+    "BUILDING_MATERIALS": "Construction",                     # 389 } combined:
+    "CONSTRUCTION": "Construction",                           #  88 } 477
+    "TELECOMMUNICATIONS": "Telecommunications",               # 225
+    "MANAGEMENT_CONSULTING": "Consulting",                    # 156
+    "ENVIRONMENTAL_SERVICES": "Environmental",                # 135 } combined:
+    "RENEWABLES_ENVIRONMENT": "Environmental",                #  10 } 145
+    "FINANCIAL_SERVICES": "Financial Services",               #  68 }
+    "INSURANCE": "Financial Services",                        #  30 } combined:
+    "INVESTMENT_MANAGEMENT": "Financial Services",            #  10 } 127
+    "ACCOUNTING": "Financial Services",                       #  16 }
+    "BANKING": "Financial Services",                          #   3 }
+    "MACHINERY": "Machinery",                                 #  81 } combined:
+    "MECHANICAL_OR_INDUSTRIAL_ENGINEERING": "Machinery",      #  26 } 107
+    "HUMAN_RESOURCES": "Human Resources",                     #  85
 }
-INDUSTRY_COLUMNS = ["IT & Services", "Software", "Staffing",
-                    "Marketing", "Wholesale", "Other", "All"]
+# Ordered by descending account count (largest first); "Other" + "All" last.
+INDUSTRY_COLUMNS = ["IT & Services", "Marketing", "Wholesale", "Construction",
+                    "Staffing", "Telecommunications", "Consulting",
+                    "Environmental", "Financial Services", "Machinery",
+                    "Human Resources", "Software", "Other", "All"]
 
 # Seller-band dimension = company `no_sellers` (already one of BAND_VALUES).
 BAND_COLUMNS = BAND_VALUES + ["All"]
@@ -445,10 +474,20 @@ def build_funnel_ext_anchors():
 # ---- coverage + completeness (one bulk pull, all pivots derived) -----------
 
 def _crm_bucket(props):
+    # crm_detected (BuiltWith detection) drives the CRM cut.
+    #   * one of the three named CRMs -> return it unchanged.
+    #   * no CRM signal at all -> "No CRM detected". The field is empty/null, or
+    #     an explicit no-signal sentinel: HubSpot's "No CRM In Use", its
+    #     "Unassigned" null-rendering, or "none". This mirrors _crm_present()'s
+    #     "no CRM" test so this bucket and the CRM completeness % stay consistent.
+    #   * any other detected CRM tech (Dynamics, NetSuite, Zoho, ActiveCampaign,
+    #     SugarCRM, ...) -> "Other CRM": a competitor CRM we haven't named.
     v = (props.get("crm_detected") or "").strip()
     if v in ("HubSpot", "Salesforce", "Pipedrive"):
         return v
-    return "Other"
+    if v.lower() in ("", "no crm in use", "unassigned", "none"):
+        return "No CRM detected"
+    return "Other CRM"
 
 
 def _industry_bucket(props):
@@ -458,6 +497,23 @@ def _industry_bucket(props):
 def _band_bucket(props):
     v = (props.get("no_sellers") or "").strip()
     return v if v in BAND_VALUES else None   # None -> excluded (sub-floor)
+
+
+# Fit tiers group the seller bands by how we prioritise them:
+#   Core fit       = no_sellers in {5-9, 10-19}  -- highest-conversion band.
+#   High-value fit = no_sellers in {20-49, 50+}  -- larger deals, longer cycles.
+#   Borderline fit = no_sellers in {3, 4}        -- lower band, less priority but
+#                                                   still ICP.
+FIT_TIER_MAP = {
+    "5-9": "Core (5-19)", "10-19": "Core (5-19)",
+    "20-49": "High-value (20+)", "50+": "High-value (20+)",
+    "3": "Borderline (3-4)", "4": "Borderline (3-4)",
+}
+FIT_TIER_COLUMNS = ["Core (5-19)", "High-value (20+)", "Borderline (3-4)", "All"]
+
+
+def _fit_tier_bucket(props):
+    return FIT_TIER_MAP.get((props.get("no_sellers") or "").strip())
 
 
 def _is_hubspot_company(props):
@@ -576,30 +632,44 @@ def _build_completeness_pivot(companies, bucket_fn, order, roll):
     }
 
 
-def _build_band_crm_crosstab(companies):
-    """Account counts as a seller-band x CRM crosstab (rows = bands + All,
-    columns = HubSpot/Salesforce/Pipedrive/Other + All). Plain counts, so the
-    renderer is a straight read. Row/column totals reconcile with by_band and
-    by_crm."""
-    crms = ["HubSpot", "Salesforce", "Pipedrive", "Other"]
-    counts = {b: {c: 0 for c in crms} for b in BAND_VALUES}
+def _build_band_crosstab(companies, bucket_fn, columns):
+    """Account counts as a seller-band x <dimension> crosstab (rows = bands +
+    All, columns = the dimension buckets + All). Plain counts, so the renderer is
+    a straight read. Row totals (last column) and column totals (last row)
+    reconcile with by_band and the matching coverage pivot; the bottom-right cell
+    equals the ICP account count.
+
+    `bucket_fn(props)` maps a company to one of the non-All column labels;
+    `columns` is that label list with a trailing "All" (e.g. CRM_COLUMNS or
+    INDUSTRY_COLUMNS). Parameterised so the CRM and industry crosstabs share one
+    code path."""
+    cats = columns[:-1]   # drop the trailing "All"
+    counts = {b: {c: 0 for c in cats} for b in BAND_VALUES}
     for co in companies:
         props = co.get("properties", {}) or {}
         b = _band_bucket(props)
         if b is None:
             continue
-        counts[b][_crm_bucket(props)] += 1
+        col = bucket_fn(props)
+        if col is None or col not in counts[b]:
+            continue
+        counts[b][col] += 1
     matrix = []
     for b in BAND_VALUES:
-        row = [counts[b][c] for c in crms]
+        row = [counts[b][c] for c in cats]
         row.append(sum(row))
         matrix.append(row)
-    all_row = [sum(counts[b][c] for b in BAND_VALUES) for c in crms]
+    all_row = [sum(counts[b][c] for b in BAND_VALUES) for c in cats]
     all_row.append(sum(all_row))
     matrix.append(all_row)
-    return {"columns": crms + ["All"],
+    return {"columns": cats + ["All"],
             "row_labels": BAND_VALUES + ["All"],
             "matrix": matrix}
+
+
+def _build_band_crm_crosstab(companies):
+    """Seller-band x CRM crosstab (bands as rows, CRM buckets as columns)."""
+    return _build_band_crosstab(companies, _crm_bucket, CRM_COLUMNS)
 
 
 def _parse_hs_date(raw):
@@ -684,10 +754,12 @@ def build_coverage_and_completeness():
     coverage = {
         "by_crm": _build_coverage_pivot(companies, _crm_bucket, CRM_COLUMNS, roll),
         "by_band_crm": _build_band_crm_crosstab(companies),
+        "by_industry_band": _build_band_crosstab(companies, _industry_bucket, INDUSTRY_COLUMNS),
         "by_industry": _build_coverage_pivot(companies, _industry_bucket, INDUSTRY_COLUMNS, roll),
         "by_industry_hubspot": _build_coverage_pivot(hs_companies, _industry_bucket, INDUSTRY_COLUMNS, roll),
         "by_band": _build_coverage_pivot(companies, _band_bucket, BAND_COLUMNS, roll),
         "by_band_hubspot": _build_coverage_pivot(hs_companies, _band_bucket, BAND_COLUMNS, roll),
+        "by_fit_tier": _build_coverage_pivot(companies, _fit_tier_bucket, FIT_TIER_COLUMNS, roll),
     }
     completeness = {
         "by_band": _build_completeness_pivot(companies, _band_bucket, BAND_VALUES, roll),
