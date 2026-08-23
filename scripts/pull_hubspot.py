@@ -103,7 +103,7 @@ INDUSTRY_MAP = {
     "MARKETING_AND_ADVERTISING": "Marketing",                 # 682
     "WHOLESALE": "Wholesale",                                 # 483
     "STAFFING_AND_RECRUITING": "Staffing",                    # 232
-    "COMPUTER_SOFTWARE": "Software",                          # 29
+    "COMPUTER_SOFTWARE": "IT & Services",                     # 29 (folded in; too small for a standalone bucket, and largely a HubSpot tagging quirk)
     # --- promoted 2026-08 (largest unmapped industries) ---
     "BUILDING_MATERIALS": "Construction",                     # 389 } combined:
     "CONSTRUCTION": "Construction",                           #  88 } 477
@@ -124,7 +124,7 @@ INDUSTRY_MAP = {
 INDUSTRY_COLUMNS = ["IT & Services", "Marketing", "Wholesale", "Construction",
                     "Staffing", "Telecommunications", "Consulting",
                     "Environmental", "Financial Services", "Machinery",
-                    "Human Resources", "Software", "Other", "All"]
+                    "Human Resources", "Other", "All"]
 
 # Seller-band dimension = company `no_sellers` (already one of BAND_VALUES).
 BAND_COLUMNS = BAND_VALUES + ["All"]
