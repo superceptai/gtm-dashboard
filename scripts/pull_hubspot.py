@@ -89,17 +89,42 @@ CONNECT_SEQUENCE_NAMES = [
 CRM_COLUMNS = ["HubSpot", "Salesforce", "Pipedrive",
                "Other CRM", "No CRM detected", "All"]
 
-# Industry dimension = company `industry` (UPPER_SNAKE_CASE enum). The mockup
-# shows five named buckets + Other + All; everything not named maps to Other.
+# Industry dimension = company `industry` (UPPER_SNAKE_CASE enum). Everything
+# not named maps to "Other". The bucket list was expanded 2026-08 (Part A) using
+# scripts/diag_industry_distribution.py against production HubSpot: the original
+# 5 buckets left "Other" at 2,207 / 4,711 = 46.8% of the ICP, which made the
+# industry cut nearly useless. Promoting the largest unmapped industries (and
+# combining a few near-synonyms) drops "Other" to ~885 (~18.8%). Labels are the
+# conversational names Aaron uses, not raw enum values. INDUSTRY_COLUMNS is
+# ordered by descending account count so the biggest buckets are leftmost.
 INDUSTRY_MAP = {
-    "INFORMATION_TECHNOLOGY_AND_SERVICES": "IT & Services",
-    "COMPUTER_SOFTWARE": "Software",
-    "STAFFING_AND_RECRUITING": "Staffing",
-    "MARKETING_AND_ADVERTISING": "Marketing",
-    "WHOLESALE": "Wholesale",
+    # --- original 5 buckets (unchanged) ---
+    "INFORMATION_TECHNOLOGY_AND_SERVICES": "IT & Services",   # 1078
+    "MARKETING_AND_ADVERTISING": "Marketing",                 # 682
+    "WHOLESALE": "Wholesale",                                 # 483
+    "STAFFING_AND_RECRUITING": "Staffing",                    # 232
+    "COMPUTER_SOFTWARE": "Software",                          # 29
+    # --- promoted 2026-08 (largest unmapped industries) ---
+    "BUILDING_MATERIALS": "Construction",                     # 389 } combined:
+    "CONSTRUCTION": "Construction",                           #  88 } 477
+    "TELECOMMUNICATIONS": "Telecommunications",               # 225
+    "MANAGEMENT_CONSULTING": "Consulting",                    # 156
+    "ENVIRONMENTAL_SERVICES": "Environmental",                # 135 } combined:
+    "RENEWABLES_ENVIRONMENT": "Environmental",                #  10 } 145
+    "FINANCIAL_SERVICES": "Financial Services",               #  68 }
+    "INSURANCE": "Financial Services",                        #  30 } combined:
+    "INVESTMENT_MANAGEMENT": "Financial Services",            #  10 } 127
+    "ACCOUNTING": "Financial Services",                       #  16 }
+    "BANKING": "Financial Services",                          #   3 }
+    "MACHINERY": "Machinery",                                 #  81 } combined:
+    "MECHANICAL_OR_INDUSTRIAL_ENGINEERING": "Machinery",      #  26 } 107
+    "HUMAN_RESOURCES": "Human Resources",                     #  85
 }
-INDUSTRY_COLUMNS = ["IT & Services", "Software", "Staffing",
-                    "Marketing", "Wholesale", "Other", "All"]
+# Ordered by descending account count (largest first); "Other" + "All" last.
+INDUSTRY_COLUMNS = ["IT & Services", "Marketing", "Wholesale", "Construction",
+                    "Staffing", "Telecommunications", "Consulting",
+                    "Environmental", "Financial Services", "Machinery",
+                    "Human Resources", "Software", "Other", "All"]
 
 # Seller-band dimension = company `no_sellers` (already one of BAND_VALUES).
 BAND_COLUMNS = BAND_VALUES + ["All"]
