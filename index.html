@@ -33,6 +33,7 @@
   .mocktag{font-family:var(--mono);font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);background:#fff;border:1px solid var(--line);padding:2px 6px;border-radius:5px}
   .top-right{margin-left:auto;display:flex;align-items:center;gap:18px;flex-wrap:wrap}
   .asof{font-size:12px;color:var(--ink-2)}.asof b{font-family:var(--mono);font-weight:600}
+  .refresh-note{font-size:11px;color:var(--muted);font-weight:400}
   .freshness{display:flex;gap:10px;align-items:center}
   .fdot{display:inline-flex;align-items:center;gap:5px;font-size:11px;color:var(--muted)}
   .fdot i{width:7px;height:7px;border-radius:50%;background:var(--pos);display:inline-block}
@@ -131,7 +132,7 @@
     <div class="brand"><span class="mark">GTM <b>Command</b></span></div>
     <div class="top-right">
       <div class="freshness" id="freshness"></div>
-      <span class="asof">as of <b id="asof">&#8212;</b></span>
+      <span class="asof">as of <b id="asof">&#8212;</b><br><span class="refresh-note">refreshes daily at 6pm AEST</span></span>
       <div class="periods"><button>Wk</button><button class="on">30d</button><button>90d</button><button>Qtr</button><button>YTD</button></div>
     </div>
   </div>
