@@ -1,24 +1,24 @@
 {
   "schema_version": 1,
-  "last_updated": "2026-09-01T01:38:38+10:00",
+  "last_updated": "2026-09-01T22:52:15+10:00",
   "as_of_label": "1 Sep 2026",
   "feed_label": "refresh: HS_ICP_LIVE, REPLY_LIVE, GA4_LIVE, LINKEDIN_MANUAL",
   "source_status": {
     "hubspot_icp": {
       "status": "fresh",
-      "last_success": "2026-09-01T01:38:30+10:00"
+      "last_success": "2026-09-01T22:52:07+10:00"
     },
     "reply_io": {
       "status": "fresh",
-      "last_success": "2026-09-01T01:38:31+10:00"
+      "last_success": "2026-09-01T22:52:08+10:00"
     },
     "ga4": {
       "status": "fresh",
-      "last_success": "2026-09-01T01:38:35+10:00"
+      "last_success": "2026-09-01T22:52:12+10:00"
     },
     "linkedin": {
       "status": "fresh",
-      "last_success": "2026-09-01T01:38:38+10:00"
+      "last_success": "2026-09-01T22:52:15+10:00"
     }
   },
   "icp": {
