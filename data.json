@@ -1,30 +1,30 @@
 {
   "schema_version": 1,
-  "last_updated": "2026-09-01T22:52:15+10:00",
-  "as_of_label": "1 Sep 2026",
+  "last_updated": "2026-09-02T22:22:36+10:00",
+  "as_of_label": "2 Sep 2026",
   "feed_label": "refresh: HS_ICP_LIVE, REPLY_LIVE, GA4_LIVE, LINKEDIN_MANUAL",
   "source_status": {
     "hubspot_icp": {
       "status": "fresh",
-      "last_success": "2026-09-01T22:52:07+10:00"
+      "last_success": "2026-09-02T22:22:27+10:00"
     },
     "reply_io": {
       "status": "fresh",
-      "last_success": "2026-09-01T22:52:08+10:00"
+      "last_success": "2026-09-02T22:22:28+10:00"
     },
     "ga4": {
       "status": "fresh",
-      "last_success": "2026-09-01T22:52:12+10:00"
+      "last_success": "2026-09-02T22:22:32+10:00"
     },
     "linkedin": {
       "status": "fresh",
-      "last_success": "2026-09-01T22:52:15+10:00"
+      "last_success": "2026-09-02T22:22:36+10:00"
     }
   },
   "icp": {
     "combined": {
-      "total": 4711,
-      "core_5_19": 2736,
+      "total": 4712,
+      "core_5_19": 2737,
       "core_pct": 58.1,
       "borderline_3_4": 1150,
       "borderline_pct": 24.4,
@@ -54,9 +54,9 @@
       "cro_1st_pct": 30.0
     },
     "non_hubspot": {
-      "total": 2827,
-      "core_5_19": 1734,
-      "core_pct": 61.3,
+      "total": 2828,
+      "core_5_19": 1735,
+      "core_pct": 61.4,
       "borderline_3_4": 530,
       "borderline_pct": 18.7,
       "high_value_20p": 563,
@@ -90,7 +90,7 @@
     "non_hubspot": [
       98,
       432,
-      1080,
+      1081,
       654,
       361,
       202
@@ -434,12 +434,8 @@
     "setup_note": "GA4 property 536587504, last 7 days (incl. today)",
     "sessions": 8,
     "users": 7,
-    "engaged_pct": 12.5,
+    "engaged_pct": 0.0,
     "daily": [
-      {
-        "date": "2026-08-25",
-        "sessions": 1
-      },
       {
         "date": "2026-08-26",
         "sessions": 1
@@ -462,6 +458,10 @@
       },
       {
         "date": "2026-08-31",
+        "sessions": 1
+      },
+      {
+        "date": "2026-09-01",
         "sessions": 1
       }
     ],
@@ -490,8 +490,8 @@
           861,
           11,
           546,
-          2166,
-          4711
+          2167,
+          4712
         ],
         "have_ceo": [
           694,
@@ -583,8 +583,8 @@
           236,
           3,
           216,
-          887,
-          1719
+          888,
+          1720
         ],
         [
           205,
@@ -615,8 +615,8 @@
           861,
           11,
           546,
-          2166,
-          4711
+          2167,
+          4712
         ]
       ]
     },
@@ -679,7 +679,7 @@
         [
           402,
           242,
-          204,
+          205,
           163,
           90,
           86,
@@ -689,7 +689,7 @@
           42,
           38,
           295,
-          1719
+          1720
         ],
         [
           213,
@@ -739,7 +739,7 @@
         [
           1107,
           682,
-          483,
+          484,
           477,
           232,
           226,
@@ -749,7 +749,7 @@
           107,
           85,
           884,
-          4711
+          4712
         ]
       ]
     },
@@ -773,7 +773,7 @@
         "accounts": [
           1107,
           682,
-          483,
+          484,
           477,
           232,
           226,
@@ -783,7 +783,7 @@
           107,
           85,
           884,
-          4711
+          4712
         ],
         "have_ceo": [
           684,
@@ -1015,11 +1015,11 @@
         "accounts": [
           409,
           741,
-          1719,
+          1720,
           1017,
           539,
           286,
-          4711
+          4712
         ],
         "have_ceo": [
           236,
@@ -1162,10 +1162,10 @@
       ],
       "rows": {
         "accounts": [
-          2736,
+          2737,
           825,
           1150,
-          4711
+          4712
         ],
         "have_ceo": [
           1686,
@@ -1313,7 +1313,7 @@
         },
         {
           "label": "Wholesale",
-          "cesl_pct": 82,
+          "cesl_pct": 81,
           "fields": [
             100,
             100,
