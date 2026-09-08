@@ -1,24 +1,24 @@
 {
   "schema_version": 1,
-  "last_updated": "2026-09-07T23:46:32+10:00",
-  "as_of_label": "7 Sep 2026",
+  "last_updated": "2026-09-08T22:22:08+10:00",
+  "as_of_label": "8 Sep 2026",
   "feed_label": "refresh: HS_ICP_LIVE, REPLY_LIVE, GA4_LIVE, LINKEDIN_MANUAL",
   "source_status": {
     "hubspot_icp": {
       "status": "fresh",
-      "last_success": "2026-09-07T23:46:24+10:00"
+      "last_success": "2026-09-08T22:22:00+10:00"
     },
     "reply_io": {
       "status": "fresh",
-      "last_success": "2026-09-07T23:46:25+10:00"
+      "last_success": "2026-09-08T22:22:01+10:00"
     },
     "ga4": {
       "status": "fresh",
-      "last_success": "2026-09-07T23:46:29+10:00"
+      "last_success": "2026-09-08T22:22:05+10:00"
     },
     "linkedin": {
       "status": "fresh",
-      "last_success": "2026-09-07T23:46:32+10:00"
+      "last_success": "2026-09-08T22:22:08+10:00"
     }
   },
   "icp": {
@@ -432,14 +432,10 @@
   "ga4": {
     "status": "live",
     "setup_note": "GA4 property 536587504, last 7 days (incl. today)",
-    "sessions": 11,
-    "users": 9,
-    "engaged_pct": 54.5,
+    "sessions": 12,
+    "users": 10,
+    "engaged_pct": 50.0,
     "daily": [
-      {
-        "date": "2026-08-31",
-        "sessions": 1
-      },
       {
         "date": "2026-09-01",
         "sessions": 1
@@ -459,6 +455,10 @@
       {
         "date": "2026-09-06",
         "sessions": 4
+      },
+      {
+        "date": "2026-09-07",
+        "sessions": 2
       }
     ],
     "intake": 0,
@@ -1449,7 +1449,7 @@
             100,
             100,
             65,
-            95,
+            96,
             100
           ]
         },
