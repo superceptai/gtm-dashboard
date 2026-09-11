@@ -1,24 +1,24 @@
 {
   "schema_version": 1,
-  "last_updated": "2026-09-10T22:27:39+10:00",
-  "as_of_label": "10 Sep 2026",
+  "last_updated": "2026-09-11T22:26:02+10:00",
+  "as_of_label": "11 Sep 2026",
   "feed_label": "refresh: HS_ICP_LIVE, REPLY_LIVE, GA4_LIVE, LINKEDIN_MANUAL",
   "source_status": {
     "hubspot_icp": {
       "status": "fresh",
-      "last_success": "2026-09-10T22:27:30+10:00"
+      "last_success": "2026-09-11T22:25:54+10:00"
     },
     "reply_io": {
       "status": "fresh",
-      "last_success": "2026-09-10T22:27:32+10:00"
+      "last_success": "2026-09-11T22:25:55+10:00"
     },
     "ga4": {
       "status": "fresh",
-      "last_success": "2026-09-10T22:27:36+10:00"
+      "last_success": "2026-09-11T22:25:59+10:00"
     },
     "linkedin": {
       "status": "fresh",
-      "last_success": "2026-09-10T22:27:39+10:00"
+      "last_success": "2026-09-11T22:26:02+10:00"
     }
   },
   "icp": {
@@ -432,14 +432,10 @@
   "ga4": {
     "status": "live",
     "setup_note": "GA4 property 536587504, last 7 days (incl. today)",
-    "sessions": 19,
-    "users": 17,
-    "engaged_pct": 57.9,
+    "sessions": 18,
+    "users": 16,
+    "engaged_pct": 61.1,
     "daily": [
-      {
-        "date": "2026-09-03",
-        "sessions": 1
-      },
       {
         "date": "2026-09-04",
         "sessions": 3
@@ -482,27 +478,27 @@
       ],
       "rows": {
         "accounts": [
-          1126,
-          858,
+          1125,
+          860,
           11,
-          547,
-          2170,
+          548,
+          2168,
           4712
         ],
         "have_ceo": [
           694,
-          566,
+          568,
           7,
           372,
-          1243,
+          1241,
           2882
         ],
         "ceo_1st": [
           218,
-          162,
+          163,
           1,
           91,
-          281,
+          280,
           753
         ],
         "have_sl": [
@@ -523,18 +519,18 @@
         ],
         "have_either": [
           850,
-          696,
+          698,
           9,
           446,
-          1548,
+          1546,
           3549
         ],
         "either_1st": [
           294,
-          245,
+          246,
           2,
           119,
-          354,
+          353,
           1014
         ]
       }
@@ -559,35 +555,35 @@
       ],
       "matrix": [
         [
-          223,
-          39,
+          222,
+          40,
           4,
           47,
           96,
           409
         ],
         [
-          209,
+          208,
           78,
           0,
-          80,
+          81,
           374,
           741
         ],
         [
           378,
-          234,
+          235,
           3,
           215,
-          890,
+          889,
           1720
         ],
         [
-          204,
+          205,
           202,
           2,
           109,
-          500,
+          499,
           1017
         ],
         [
@@ -607,11 +603,11 @@
           286
         ],
         [
-          1126,
-          858,
+          1125,
+          860,
           11,
-          547,
-          2170,
+          548,
+          2168,
           4712
         ]
       ]
@@ -1337,7 +1333,7 @@
             100,
             51,
             96,
-            45
+            46
           ]
         },
         {
@@ -1433,7 +1429,7 @@
       "rows": [
         {
           "label": "HubSpot",
-          "cesl_pct": 75,
+          "cesl_pct": 76,
           "fields": [
             100,
             100,
@@ -1466,7 +1462,7 @@
         },
         {
           "label": "Other CRM",
-          "cesl_pct": 82,
+          "cesl_pct": 81,
           "fields": [
             100,
             100,
