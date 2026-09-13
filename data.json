@@ -1,24 +1,24 @@
 {
   "schema_version": 1,
-  "last_updated": "2026-09-12T21:47:24+10:00",
-  "as_of_label": "12 Sep 2026",
+  "last_updated": "2026-09-13T22:55:15+10:00",
+  "as_of_label": "13 Sep 2026",
   "feed_label": "refresh: HS_ICP_LIVE, REPLY_LIVE, GA4_LIVE, LINKEDIN_MANUAL",
   "source_status": {
     "hubspot_icp": {
       "status": "fresh",
-      "last_success": "2026-09-12T21:47:15+10:00"
+      "last_success": "2026-09-13T22:55:06+10:00"
     },
     "reply_io": {
       "status": "fresh",
-      "last_success": "2026-09-12T21:47:16+10:00"
+      "last_success": "2026-09-13T22:55:07+10:00"
     },
     "ga4": {
       "status": "fresh",
-      "last_success": "2026-09-12T21:47:20+10:00"
+      "last_success": "2026-09-13T22:55:13+10:00"
     },
     "linkedin": {
       "status": "fresh",
-      "last_success": "2026-09-12T21:47:24+10:00"
+      "last_success": "2026-09-13T22:55:15+10:00"
     }
   },
   "icp": {
@@ -33,7 +33,7 @@
       "ceo_contacts": 4037,
       "ceo_1st": 849,
       "ceo_1st_pct": 21.0,
-      "cro_contacts": 1968,
+      "cro_contacts": 1964,
       "cro_1st": 446,
       "cro_1st_pct": 22.7
     },
@@ -65,9 +65,9 @@
       "ceo_contacts": 2358,
       "ceo_1st": 433,
       "ceo_1st_pct": 18.4,
-      "cro_contacts": 1038,
+      "cro_contacts": 1034,
       "cro_1st": 167,
-      "cro_1st_pct": 16.1
+      "cro_1st_pct": 16.2
     }
   },
   "bands": {
@@ -167,8 +167,8 @@
     "source": "carry_forward"
   },
   "funnel": {
-    "icp_contacts": 6005,
-    "enrolled": 4886,
+    "icp_contacts": 6001,
+    "enrolled": 4882,
     "enrolled_pct_of_icp": 81.4,
     "invite_sent": 2382,
     "invite_sent_pct_of_enrolled": 48.8,
@@ -176,7 +176,7 @@
     "connected_pct_of_invited": 54.4,
     "track_a": {
       "label": "Coverage (ICP contacts -> connected, incl. pre-existing)",
-      "icp_contacts": 6005,
+      "icp_contacts": 6001,
       "connected": 1295,
       "connected_pct_of_icp": 21.6,
       "pre_existing_connected": 752,
@@ -184,7 +184,7 @@
     },
     "track_b": {
       "label": "Outreach conversion (enrolled -> invited -> connected -> intake -> deal)",
-      "enrolled": 4886,
+      "enrolled": 4882,
       "invited": 2382,
       "invited_pct_of_enrolled": 48.8,
       "connected_via_outreach": 543,
@@ -199,13 +199,13 @@
     }
   },
   "funnel_ext": {
-    "icp_contacts": 6005,
+    "icp_contacts": 6001,
     "invites_sent": 2382,
     "connections_accepted": 543,
     "first_connections_total": 1295,
     "already_connected": 752,
-    "no_li_profile": 2871,
-    "added_to_sequence": 4886,
+    "no_li_profile": 2867,
+    "added_to_sequence": 4882,
     "first_connections_weekly": [
       {
         "w": "2026-03-09",
@@ -318,7 +318,7 @@
     ],
     "uninvited_breakdown": {
       "already_connected": 752,
-      "routed_other_sequence": 1194,
+      "routed_other_sequence": 1190,
       "connect_invite_queued": 586,
       "not_yet_enrolled": 1091
     },
@@ -432,9 +432,9 @@
   "ga4": {
     "status": "live",
     "setup_note": "GA4 property 536587504, last 7 days (incl. today)",
-    "sessions": 18,
-    "users": 16,
-    "engaged_pct": 44.4,
+    "sessions": 20,
+    "users": 18,
+    "engaged_pct": 40.0,
     "daily": [
       {
         "date": "2026-09-06",
@@ -455,6 +455,10 @@
       {
         "date": "2026-09-11",
         "sessions": 3
+      },
+      {
+        "date": "2026-09-12",
+        "sessions": 2
       }
     ],
     "intake": 0,
@@ -481,8 +485,8 @@
           1124,
           862,
           11,
-          551,
-          2164,
+          552,
+          2163,
           4712
         ],
         "have_ceo": [
@@ -505,9 +509,9 @@
           348,
           308,
           4,
-          166,
-          482,
-          1308
+          167,
+          480,
+          1307
         ],
         "sl_1st": [
           130,
@@ -521,9 +525,9 @@
           849,
           700,
           9,
-          449,
-          1542,
-          3549
+          450,
+          1540,
+          3548
         ],
         "either_1st": [
           295,
@@ -590,8 +594,8 @@
           90,
           160,
           2,
-          63,
-          224,
+          64,
+          223,
           539
         ],
         [
@@ -606,8 +610,8 @@
           1124,
           862,
           11,
-          551,
-          2164,
+          552,
+          2163,
           4712
         ]
       ]
@@ -813,14 +817,14 @@
           186,
           182,
           22,
-          54,
+          53,
           27,
           35,
           23,
           43,
           10,
           216,
-          1308
+          1307
         ],
         "sl_1st": [
           156,
@@ -843,14 +847,14 @@
           393,
           393,
           159,
-          143,
+          142,
           118,
           123,
           101,
           76,
           59,
           642,
-          3549
+          3548
         ],
         "either_1st": [
           335,
@@ -1036,9 +1040,9 @@
           153,
           433,
           338,
-          207,
+          206,
           96,
-          1308
+          1307
         ],
         "sl_1st": [
           18,
@@ -1054,9 +1058,9 @@
           506,
           1286,
           800,
-          435,
+          434,
           237,
-          3549
+          3548
         ],
         "either_1st": [
           72,
@@ -1173,9 +1177,9 @@
         ],
         "have_sl": [
           771,
-          303,
+          302,
           234,
-          1308
+          1307
         ],
         "sl_1st": [
           225,
@@ -1185,9 +1189,9 @@
         ],
         "have_either": [
           2086,
-          672,
+          671,
           791,
-          3549
+          3548
         ],
         "either_1st": [
           595,
@@ -1253,7 +1257,7 @@
             100,
             61,
             94,
-            58
+            59
           ]
         },
         {
@@ -1462,7 +1466,7 @@
         },
         {
           "label": "Other CRM",
-          "cesl_pct": 81,
+          "cesl_pct": 82,
           "fields": [
             100,
             100,
