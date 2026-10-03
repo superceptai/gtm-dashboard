@@ -1,36 +1,36 @@
 {
   "schema_version": 1,
-  "last_updated": "2026-10-03T00:17:32+10:00",
+  "last_updated": "2026-10-03T22:49:46+10:00",
   "as_of_label": "3 Oct 2026",
   "feed_label": "refresh: HS_ICP_LIVE, REPLY_LIVE, GA4_LIVE, LINKEDIN_MANUAL",
   "source_status": {
     "hubspot_icp": {
       "status": "fresh",
-      "last_success": "2026-10-03T00:17:22+10:00"
+      "last_success": "2026-10-03T22:49:39+10:00"
     },
     "reply_io": {
       "status": "fresh",
-      "last_success": "2026-10-03T00:17:23+10:00"
+      "last_success": "2026-10-03T22:49:40+10:00"
     },
     "ga4": {
       "status": "fresh",
-      "last_success": "2026-10-03T00:17:28+10:00"
+      "last_success": "2026-10-03T22:49:43+10:00"
     },
     "linkedin": {
       "status": "fresh",
-      "last_success": "2026-10-03T00:17:32+10:00"
+      "last_success": "2026-10-03T22:49:46+10:00"
     }
   },
   "icp": {
     "combined": {
-      "total": 4711,
-      "core_5_19": 2736,
+      "total": 4709,
+      "core_5_19": 2735,
       "core_pct": 58.1,
-      "borderline_3_4": 1150,
+      "borderline_3_4": 1149,
       "borderline_pct": 24.4,
       "high_value_20p": 825,
       "high_value_pct": 17.5,
-      "ceo_contacts": 4037,
+      "ceo_contacts": 4036,
       "ceo_1st": 849,
       "ceo_1st_pct": 21.0,
       "cro_contacts": 1964,
@@ -38,34 +38,34 @@
       "cro_1st_pct": 22.7
     },
     "hubspot": {
-      "total": 1890,
+      "total": 1891,
       "core_5_19": 1006,
       "core_pct": 53.2,
       "borderline_3_4": 620,
       "borderline_pct": 32.8,
-      "high_value_20p": 264,
-      "hv_20_49": 179,
+      "high_value_20p": 265,
+      "hv_20_49": 180,
       "hv_50p": 85,
       "ceo_contacts": 1686,
       "ceo_1st": 418,
       "ceo_1st_pct": 24.8,
-      "cro_contacts": 931,
+      "cro_contacts": 932,
       "cro_1st": 280,
-      "cro_1st_pct": 30.1
+      "cro_1st_pct": 30.0
     },
     "non_hubspot": {
-      "total": 2821,
-      "core_5_19": 1730,
-      "core_pct": 61.3,
-      "borderline_3_4": 530,
+      "total": 2818,
+      "core_5_19": 1729,
+      "core_pct": 61.4,
+      "borderline_3_4": 529,
       "borderline_pct": 18.8,
-      "high_value_20p": 561,
-      "hv_20_49": 360,
+      "high_value_20p": 560,
+      "hv_20_49": 359,
       "hv_50p": 201,
-      "ceo_contacts": 2351,
+      "ceo_contacts": 2350,
       "ceo_1st": 431,
       "ceo_1st_pct": 18.3,
-      "cro_contacts": 1033,
+      "cro_contacts": 1032,
       "cro_1st": 166,
       "cro_1st_pct": 16.1
     }
@@ -84,15 +84,15 @@
       309,
       641,
       365,
-      179,
+      180,
       85
     ],
     "non_hubspot": [
       98,
-      432,
-      1078,
+      431,
+      1077,
       652,
-      360,
+      359,
       201
     ]
   },
@@ -167,16 +167,16 @@
     "source": "carry_forward"
   },
   "funnel": {
-    "icp_contacts": 6001,
-    "enrolled": 4882,
-    "enrolled_pct_of_icp": 81.4,
+    "icp_contacts": 6000,
+    "enrolled": 4881,
+    "enrolled_pct_of_icp": 81.3,
     "invite_sent": 2382,
     "invite_sent_pct_of_enrolled": 48.8,
     "connected": 1295,
     "connected_pct_of_invited": 54.4,
     "track_a": {
       "label": "Coverage (ICP contacts -> connected, incl. pre-existing)",
-      "icp_contacts": 6001,
+      "icp_contacts": 6000,
       "connected": 1295,
       "connected_pct_of_icp": 21.6,
       "pre_existing_connected": 752,
@@ -184,7 +184,7 @@
     },
     "track_b": {
       "label": "Outreach conversion (enrolled -> invited -> connected -> intake -> deal)",
-      "enrolled": 4882,
+      "enrolled": 4881,
       "invited": 2382,
       "invited_pct_of_enrolled": 48.8,
       "connected_via_outreach": 543,
@@ -199,13 +199,13 @@
     }
   },
   "funnel_ext": {
-    "icp_contacts": 6001,
+    "icp_contacts": 6000,
     "invites_sent": 2382,
     "connections_accepted": 543,
     "first_connections_total": 1295,
     "already_connected": 752,
-    "no_li_profile": 2867,
-    "added_to_sequence": 4882,
+    "no_li_profile": 2866,
+    "added_to_sequence": 4881,
     "first_connections_weekly": [
       {
         "w": "2026-03-30",
@@ -318,7 +318,7 @@
     ],
     "uninvited_breakdown": {
       "already_connected": 752,
-      "routed_other_sequence": 1190,
+      "routed_other_sequence": 1189,
       "connect_invite_queued": 586,
       "not_yet_enrolled": 1091
     },
@@ -478,58 +478,58 @@
       ],
       "rows": {
         "accounts": [
-          1113,
-          863,
+          1108,
+          858,
           11,
-          571,
-          2153,
-          4711
+          576,
+          2156,
+          4709
         ],
         "have_ceo": [
-          690,
-          564,
+          688,
+          560,
           7,
-          387,
-          1234,
-          2882
+          391,
+          1235,
+          2881
         ],
         "ceo_1st": [
           220,
-          163,
+          162,
           1,
-          92,
+          93,
           277,
           753
         ],
         "have_sl": [
-          345,
-          311,
+          343,
+          310,
           4,
-          168,
-          479,
+          170,
+          480,
           1307
         ],
         "sl_1st": [
-          129,
+          128,
           120,
           2,
-          38,
+          39,
           88,
           377
         ],
         "have_either": [
-          844,
-          697,
+          840,
+          692,
           9,
-          463,
-          1535,
-          3548
+          468,
+          1538,
+          3547
         ],
         "either_1st": [
           295,
-          248,
+          247,
           2,
-          121,
+          122,
           348,
           1014
         ]
@@ -563,35 +563,35 @@
           409
         ],
         [
-          206,
-          80,
+          205,
+          79,
           1,
-          89,
+          90,
           365,
-          741
+          740
         ],
         [
-          377,
-          236,
+          375,
+          234,
           3,
-          221,
-          882,
-          1719
+          223,
+          883,
+          1718
         ],
         [
-          203,
+          201,
           201,
           2,
-          112,
+          114,
           499,
           1017
         ],
         [
           87,
-          159,
+          157,
           1,
           66,
-          226,
+          228,
           539
         ],
         [
@@ -603,12 +603,12 @@
           286
         ],
         [
-          1113,
-          863,
+          1108,
+          858,
           11,
-          571,
-          2153,
-          4711
+          576,
+          2156,
+          4709
         ]
       ]
     },
@@ -656,7 +656,7 @@
         [
           227,
           115,
-          48,
+          47,
           61,
           35,
           36,
@@ -666,10 +666,10 @@
           16,
           14,
           121,
-          741
+          740
         ],
         [
-          401,
+          400,
           241,
           205,
           164,
@@ -681,7 +681,7 @@
           41,
           38,
           295,
-          1719
+          1718
         ],
         [
           212,
@@ -729,9 +729,9 @@
           286
         ],
         [
-          1105,
+          1104,
           680,
-          483,
+          482,
           478,
           231,
           227,
@@ -741,7 +741,7 @@
           105,
           85,
           887,
-          4711
+          4709
         ]
       ]
     },
@@ -763,9 +763,9 @@
       ],
       "rows": {
         "accounts": [
-          1105,
+          1104,
           680,
-          483,
+          482,
           478,
           231,
           227,
@@ -775,12 +775,12 @@
           105,
           85,
           887,
-          4711
+          4709
         ],
         "have_ceo": [
           683,
           451,
-          269,
+          268,
           267,
           149,
           118,
@@ -790,7 +790,7 @@
           49,
           54,
           545,
-          2882
+          2881
         ],
         "ceo_1st": [
           236,
@@ -840,7 +840,7 @@
         "have_either": [
           831,
           510,
-          392,
+          391,
           393,
           159,
           142,
@@ -850,7 +850,7 @@
           74,
           59,
           645,
-          3548
+          3547
         ],
         "either_1st": [
           335,
@@ -887,7 +887,7 @@
       ],
       "rows": {
         "accounts": [
-          578,
+          579,
           222,
           88,
           169,
@@ -899,7 +899,7 @@
           86,
           27,
           427,
-          1890
+          1891
         ],
         "have_ceo": [
           394,
@@ -932,7 +932,7 @@
           371
         ],
         "have_sl": [
-          230,
+          231,
           52,
           38,
           63,
@@ -944,7 +944,7 @@
           38,
           6,
           127,
-          618
+          619
         ],
         "sl_1st": [
           117,
@@ -962,7 +962,7 @@
           232
         ],
         "have_either": [
-          470,
+          471,
           164,
           71,
           128,
@@ -974,7 +974,7 @@
           61,
           18,
           320,
-          1462
+          1463
         ],
         "either_1st": [
           224,
@@ -1006,21 +1006,21 @@
       "rows": {
         "accounts": [
           409,
-          741,
-          1719,
+          740,
+          1718,
           1017,
           539,
           286,
-          4711
+          4709
         ],
         "have_ceo": [
           236,
-          432,
+          431,
           1053,
           633,
           339,
           189,
-          2882
+          2881
         ],
         "ceo_1st": [
           59,
@@ -1051,12 +1051,12 @@
         ],
         "have_either": [
           285,
-          506,
+          505,
           1286,
           800,
           434,
           237,
-          3548
+          3547
         ],
         "either_1st": [
           72,
@@ -1085,9 +1085,9 @@
           309,
           641,
           365,
-          179,
+          180,
           85,
-          1890
+          1891
         ],
         "have_ceo": [
           185,
@@ -1112,9 +1112,9 @@
           78,
           206,
           152,
-          81,
+          82,
           36,
-          618
+          619
         ],
         "sl_1st": [
           15,
@@ -1130,9 +1130,9 @@
           223,
           502,
           289,
-          151,
+          152,
           74,
-          1462
+          1463
         ],
         "either_1st": [
           54,
@@ -1154,16 +1154,16 @@
       ],
       "rows": {
         "accounts": [
-          2736,
+          2735,
           825,
-          1150,
-          4711
+          1149,
+          4709
         ],
         "have_ceo": [
           1686,
           528,
-          668,
-          2882
+          667,
+          2881
         ],
         "ceo_1st": [
           439,
@@ -1186,8 +1186,8 @@
         "have_either": [
           2086,
           671,
-          791,
-          3548
+          790,
+          3547
         ],
         "either_1st": [
           595,
@@ -1252,7 +1252,7 @@
             100,
             100,
             61,
-            94,
+            95,
             58
           ]
         },
@@ -1355,7 +1355,7 @@
             99,
             27,
             95,
-            56
+            55
           ]
         },
         {
