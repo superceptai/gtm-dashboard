@@ -1,24 +1,24 @@
 {
   "schema_version": 1,
-  "last_updated": "2026-10-20T23:08:03+10:00",
-  "as_of_label": "20 Oct 2026",
+  "last_updated": "2026-10-21T23:18:37+10:00",
+  "as_of_label": "21 Oct 2026",
   "feed_label": "refresh: HS_ICP_LIVE, REPLY_LIVE, GA4_LIVE, LINKEDIN_MANUAL",
   "source_status": {
     "hubspot_icp": {
       "status": "fresh",
-      "last_success": "2026-10-20T23:07:56+10:00"
+      "last_success": "2026-10-21T23:18:28+10:00"
     },
     "reply_io": {
       "status": "fresh",
-      "last_success": "2026-10-20T23:07:57+10:00"
+      "last_success": "2026-10-21T23:18:29+10:00"
     },
     "ga4": {
       "status": "fresh",
-      "last_success": "2026-10-20T23:08:00+10:00"
+      "last_success": "2026-10-21T23:18:33+10:00"
     },
     "linkedin": {
       "status": "fresh",
-      "last_success": "2026-10-20T23:08:03+10:00"
+      "last_success": "2026-10-21T23:18:37+10:00"
     }
   },
   "icp": {
@@ -432,14 +432,10 @@
   "ga4": {
     "status": "live",
     "setup_note": "GA4 property 536587504, last 7 days (incl. today)",
-    "sessions": 19,
-    "users": 11,
-    "engaged_pct": 47.4,
+    "sessions": 16,
+    "users": 7,
+    "engaged_pct": 50.0,
     "daily": [
-      {
-        "date": "2026-10-13",
-        "sessions": 5
-      },
       {
         "date": "2026-10-17",
         "sessions": 1
@@ -447,12 +443,16 @@
       {
         "date": "2026-10-19",
         "sessions": 13
+      },
+      {
+        "date": "2026-10-20",
+        "sessions": 2
       }
     ],
     "intake": 0,
     "intake_cvr": 0.0,
-    "qualified": 1,
-    "qualified_cvr": 5.3,
+    "qualified": 0,
+    "qualified_cvr": 0.0,
     "disqualified": 0,
     "disqualified_cvr": 0.0,
     "purchase": 0,
@@ -470,11 +470,11 @@
       ],
       "rows": {
         "accounts": [
-          1105,
+          1104,
           854,
           11,
           585,
-          2152,
+          2153,
           4707
         ],
         "have_ceo": [
@@ -495,10 +495,10 @@
         ],
         "have_sl": [
           342,
-          310,
+          309,
           4,
           171,
-          479,
+          480,
           1306
         ],
         "sl_1st": [
@@ -563,8 +563,8 @@
           740
         ],
         [
-          375,
-          232,
+          374,
+          233,
           3,
           225,
           881,
@@ -580,10 +580,10 @@
         ],
         [
           88,
-          156,
+          155,
           1,
           65,
-          229,
+          230,
           539
         ],
         [
@@ -595,11 +595,11 @@
           285
         ],
         [
-          1105,
+          1104,
           854,
           11,
           585,
-          2152,
+          2153,
           4707
         ]
       ]
@@ -1245,7 +1245,7 @@
             100,
             61,
             95,
-            58
+            57
           ]
         },
         {
