@@ -1,24 +1,24 @@
 {
   "schema_version": 1,
-  "last_updated": "2026-10-25T22:50:37+10:00",
-  "as_of_label": "25 Oct 2026",
+  "last_updated": "2026-10-27T00:39:42+10:00",
+  "as_of_label": "27 Oct 2026",
   "feed_label": "refresh: HS_ICP_LIVE, REPLY_LIVE, GA4_LIVE, LINKEDIN_MANUAL",
   "source_status": {
     "hubspot_icp": {
       "status": "fresh",
-      "last_success": "2026-10-25T22:50:29+10:00"
+      "last_success": "2026-10-27T00:39:34+10:00"
     },
     "reply_io": {
       "status": "fresh",
-      "last_success": "2026-10-25T22:50:31+10:00"
+      "last_success": "2026-10-27T00:39:35+10:00"
     },
     "ga4": {
       "status": "fresh",
-      "last_success": "2026-10-25T22:50:34+10:00"
+      "last_success": "2026-10-27T00:39:39+10:00"
     },
     "linkedin": {
       "status": "fresh",
-      "last_success": "2026-10-25T22:50:37+10:00"
+      "last_success": "2026-10-27T00:39:42+10:00"
     }
   },
   "icp": {
@@ -208,10 +208,6 @@
     "added_to_sequence": 4879,
     "first_connections_weekly": [
       {
-        "w": "2026-04-20",
-        "v": 771
-      },
-      {
         "w": "2026-04-27",
         "v": 788
       },
@@ -313,6 +309,10 @@
       },
       {
         "w": "2026-10-19",
+        "v": 1294
+      },
+      {
+        "w": "2026-10-26",
         "v": 1294
       }
     ],
@@ -432,14 +432,10 @@
   "ga4": {
     "status": "live",
     "setup_note": "GA4 property 536587504, last 7 days (incl. today)",
-    "sessions": 24,
-    "users": 13,
-    "engaged_pct": 41.7,
+    "sessions": 20,
+    "users": 16,
+    "engaged_pct": 50.0,
     "daily": [
-      {
-        "date": "2026-10-19",
-        "sessions": 13
-      },
       {
         "date": "2026-10-20",
         "sessions": 2
@@ -455,14 +451,22 @@
       {
         "date": "2026-10-24",
         "sessions": 1
+      },
+      {
+        "date": "2026-10-25",
+        "sessions": 8
+      },
+      {
+        "date": "2026-10-26",
+        "sessions": 1
       }
     ],
-    "intake": 0,
-    "intake_cvr": 0.0,
-    "qualified": 1,
-    "qualified_cvr": 4.2,
-    "disqualified": 0,
-    "disqualified_cvr": 0.0,
+    "intake": 1,
+    "intake_cvr": 5.0,
+    "qualified": 5,
+    "qualified_cvr": 25.0,
+    "disqualified": 1,
+    "disqualified_cvr": 5.0,
     "purchase": 0,
     "purchase_cvr": 0.0
   },
@@ -478,18 +482,18 @@
       ],
       "rows": {
         "accounts": [
-          1104,
+          1102,
           858,
           11,
-          585,
+          587,
           2149,
           4707
         ],
         "have_ceo": [
-          687,
+          686,
           560,
           7,
-          396,
+          397,
           1230,
           2880
         ],
@@ -502,10 +506,10 @@
           752
         ],
         "have_sl": [
-          342,
+          341,
           310,
           4,
-          171,
+          172,
           479,
           1306
         ],
@@ -518,10 +522,10 @@
           377
         ],
         "have_either": [
-          838,
+          836,
           692,
           9,
-          474,
+          476,
           1532,
           3545
         ],
@@ -571,18 +575,18 @@
           740
         ],
         [
-          374,
+          373,
           234,
           3,
-          225,
+          226,
           880,
           1716
         ],
         [
-          199,
+          198,
           203,
           2,
-          117,
+          118,
           497,
           1018
         ],
@@ -603,10 +607,10 @@
           285
         ],
         [
-          1104,
+          1102,
           858,
           11,
-          585,
+          587,
           2149,
           4707
         ]
