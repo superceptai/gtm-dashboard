@@ -1,24 +1,24 @@
 {
   "schema_version": 1,
-  "last_updated": "2026-10-29T00:40:10+10:00",
-  "as_of_label": "29 Oct 2026",
+  "last_updated": "2026-10-30T00:44:46+10:00",
+  "as_of_label": "30 Oct 2026",
   "feed_label": "refresh: HS_ICP_LIVE, REPLY_LIVE, GA4_LIVE, LINKEDIN_MANUAL",
   "source_status": {
     "hubspot_icp": {
       "status": "fresh",
-      "last_success": "2026-10-29T00:40:02+10:00"
+      "last_success": "2026-10-30T00:44:39+10:00"
     },
     "reply_io": {
       "status": "fresh",
-      "last_success": "2026-10-29T00:40:02+10:00"
+      "last_success": "2026-10-30T00:44:40+10:00"
     },
     "ga4": {
       "status": "fresh",
-      "last_success": "2026-10-29T00:40:07+10:00"
+      "last_success": "2026-10-30T00:44:43+10:00"
     },
     "linkedin": {
       "status": "fresh",
-      "last_success": "2026-10-29T00:40:10+10:00"
+      "last_success": "2026-10-30T00:44:46+10:00"
     }
   },
   "icp": {
@@ -329,12 +329,12 @@
       {
         "key": "2792549842",
         "label": "\ud83d\udd35 Cold",
-        "deals": 9
+        "deals": 0
       },
       {
         "key": "2792549843",
         "label": "\u274c Waitlist",
-        "deals": 1
+        "deals": 0
       },
       {
         "key": "2792549844",
@@ -344,7 +344,7 @@
       {
         "key": "2792549845",
         "label": "\ud83d\udfe0 Passed Baseline - Awaiting Intake Call Booking",
-        "deals": 2
+        "deals": 0
       },
       {
         "key": "2846887383",
@@ -407,19 +407,15 @@
         "deals": 0
       }
     ],
-    "note": "HubSpot pipeline 1663910348 (Beta Pilot). ZTEST records excluded. 14 live deal(s)."
+    "note": "HubSpot pipeline 1663910348 (Beta Pilot). ZTEST records excluded. 2 live deal(s)."
   },
   "ga4": {
     "status": "live",
     "setup_note": "GA4 property 536587504, last 7 days (incl. today)",
-    "sessions": 38,
-    "users": 31,
-    "engaged_pct": 55.3,
+    "sessions": 36,
+    "users": 29,
+    "engaged_pct": 55.6,
     "daily": [
-      {
-        "date": "2026-10-22",
-        "sessions": 4
-      },
       {
         "date": "2026-10-24",
         "sessions": 1
@@ -439,14 +435,18 @@
       {
         "date": "2026-10-28",
         "sessions": 4
+      },
+      {
+        "date": "2026-10-29",
+        "sessions": 2
       }
     ],
     "intake": 2,
-    "intake_cvr": 5.3,
-    "qualified": 8,
-    "qualified_cvr": 21.1,
+    "intake_cvr": 5.6,
+    "qualified": 7,
+    "qualified_cvr": 19.4,
     "disqualified": 4,
-    "disqualified_cvr": 10.5,
+    "disqualified_cvr": 11.1,
     "purchase": 0,
     "purchase_cvr": 0.0
   },
@@ -463,18 +463,18 @@
       "rows": {
         "accounts": [
           1103,
-          883,
+          884,
           12,
-          591,
-          2122,
+          592,
+          2120,
           4711
         ],
         "have_ceo": [
           686,
           572,
           7,
-          399,
-          1216,
+          400,
+          1215,
           2880
         ],
         "ceo_1st": [
@@ -505,8 +505,8 @@
           837,
           705,
           9,
-          479,
-          1515,
+          480,
+          1514,
           3545
         ],
         "either_1st": [
@@ -556,10 +556,10 @@
         ],
         [
           373,
-          240,
+          241,
           4,
-          227,
-          873,
+          228,
+          871,
           1717
         ],
         [
@@ -588,10 +588,10 @@
         ],
         [
           1103,
-          883,
+          884,
           12,
-          591,
-          2122,
+          592,
+          2120,
           4711
         ]
       ]
@@ -660,11 +660,11 @@
           90,
           85,
           61,
-          64,
+          65,
           34,
           41,
           38,
-          293,
+          292,
           1717
         ],
         [
@@ -720,11 +720,11 @@
           231,
           227,
           156,
-          146,
+          147,
           128,
           105,
           85,
-          889,
+          888,
           4711
         ]
       ]
@@ -754,11 +754,11 @@
           231,
           227,
           156,
-          146,
+          147,
           128,
           105,
           85,
-          889,
+          888,
           4711
         ],
         "have_ceo": [
@@ -799,11 +799,11 @@
           22,
           52,
           27,
-          35,
+          36,
           23,
           41,
           10,
-          221,
+          220,
           1306
         ],
         "sl_1st": [
@@ -829,11 +829,11 @@
           159,
           141,
           119,
-          124,
+          125,
           101,
           74,
           59,
-          646,
+          645,
           3545
         ],
         "either_1st": [
@@ -1317,7 +1317,7 @@
             100,
             51,
             96,
-            46
+            47
           ]
         },
         {
