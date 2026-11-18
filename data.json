@@ -1,24 +1,24 @@
 {
   "schema_version": 1,
-  "last_updated": "2026-11-18T03:11:36+10:00",
-  "as_of_label": "18 Nov 2026",
+  "last_updated": "2026-11-19T02:48:20+10:00",
+  "as_of_label": "19 Nov 2026",
   "feed_label": "refresh: HS_ICP_LIVE, REPLY_LIVE, GA4_LIVE, LINKEDIN_MANUAL",
   "source_status": {
     "hubspot_icp": {
       "status": "fresh",
-      "last_success": "2026-11-18T03:11:28+10:00"
+      "last_success": "2026-11-19T02:48:13+10:00"
     },
     "reply_io": {
       "status": "fresh",
-      "last_success": "2026-11-18T03:11:30+10:00"
+      "last_success": "2026-11-19T02:48:14+10:00"
     },
     "ga4": {
       "status": "fresh",
-      "last_success": "2026-11-18T03:11:33+10:00"
+      "last_success": "2026-11-19T02:48:17+10:00"
     },
     "linkedin": {
       "status": "fresh",
-      "last_success": "2026-11-18T03:11:36+10:00"
+      "last_success": "2026-11-19T02:48:19+10:00"
     }
   },
   "icp": {
@@ -34,8 +34,8 @@
       "ceo_1st": 849,
       "ceo_1st_pct": 21.0,
       "cro_contacts": 1963,
-      "cro_1st": 448,
-      "cro_1st_pct": 22.8
+      "cro_1st": 449,
+      "cro_1st_pct": 22.9
     },
     "hubspot": {
       "total": 1902,
@@ -50,8 +50,8 @@
       "ceo_1st": 418,
       "ceo_1st_pct": 24.7,
       "cro_contacts": 935,
-      "cro_1st": 283,
-      "cro_1st_pct": 30.3
+      "cro_1st": 284,
+      "cro_1st_pct": 30.4
     },
     "non_hubspot": {
       "total": 2809,
@@ -172,14 +172,14 @@
     "enrolled_pct_of_icp": 81.3,
     "invite_sent": 2382,
     "invite_sent_pct_of_enrolled": 48.8,
-    "connected": 1297,
+    "connected": 1298,
     "connected_pct_of_invited": 54.5,
     "track_a": {
       "label": "Coverage (ICP contacts -> connected, incl. pre-existing)",
       "icp_contacts": 5998,
-      "connected": 1297,
+      "connected": 1298,
       "connected_pct_of_icp": 21.6,
-      "pre_existing_connected": 754,
+      "pre_existing_connected": 755,
       "outreach_connected": 543
     },
     "track_b": {
@@ -202,9 +202,9 @@
     "icp_contacts": 5998,
     "invites_sent": 2382,
     "connections_accepted": 543,
-    "first_connections_total": 1297,
-    "already_connected": 754,
-    "no_li_profile": 2862,
+    "first_connections_total": 1298,
+    "already_connected": 755,
+    "no_li_profile": 2861,
     "added_to_sequence": 4879,
     "first_connections_weekly": [
       {
@@ -313,26 +313,107 @@
       },
       {
         "w": "2026-11-16",
-        "v": 1297
+        "v": 1298
       }
     ],
     "uninvited_breakdown": {
-      "already_connected": 754,
+      "already_connected": 755,
       "routed_other_sequence": 1187,
       "connect_invite_queued": 586,
-      "not_yet_enrolled": 1089
+      "not_yet_enrolled": 1088
     },
     "no_li_profile_raw": 5
   },
   "pipeline": {
-    "stages": [],
-    "note": "No deals in pipeline 1663910348 (Beta Pilot) as of last query. ZTEST deals excluded from count."
+    "stages": [
+      {
+        "key": "2792549842",
+        "label": "\ud83d\udd35 Soft Enquiries",
+        "deals": 1
+      },
+      {
+        "key": "2792549843",
+        "label": "\u274c Waitlist",
+        "deals": 0
+      },
+      {
+        "key": "2792549844",
+        "label": "\ud83d\udfe1 New Applicant",
+        "deals": 0
+      },
+      {
+        "key": "2792549845",
+        "label": "\ud83d\udfe0 Passed Baseline - Awaiting Intake Call Booking",
+        "deals": 0
+      },
+      {
+        "key": "2846887383",
+        "label": "\ud83d\udfe0 Passed Baseline - No Call Booked",
+        "deals": 0
+      },
+      {
+        "key": "2792549846",
+        "label": "\ud83d\udfe3 Intake Call Booked",
+        "deals": 0
+      },
+      {
+        "key": "2792549848",
+        "label": "\ud83d\udfe7 Intake Call - No Show",
+        "deals": 0
+      },
+      {
+        "key": "2792549849",
+        "label": "\ud83d\udfe7 Disqualified Lead",
+        "deals": 0
+      },
+      {
+        "key": "2792549847",
+        "label": "\ud83d\udfe2 Intake Call Complete \u2014 Decision Pending",
+        "deals": 0
+      },
+      {
+        "key": "2852057567",
+        "label": "\ud83d\udfe7 Rejected Beta Application",
+        "deals": 0
+      },
+      {
+        "key": "2792549850",
+        "label": "\u2705 Accepted To Beta \u2014 Awaiting Onboarding Call",
+        "deals": 0
+      },
+      {
+        "key": "2852054505",
+        "label": "\ud83d\udfe7 Onboarding Call - No Show",
+        "deals": 0
+      },
+      {
+        "key": "2792549852",
+        "label": "\u2705 Onboarding Booked",
+        "deals": 0
+      },
+      {
+        "key": "2792549856",
+        "label": "\u2705 CRM Connected",
+        "deals": 0
+      },
+      {
+        "key": "2795346410",
+        "label": "\u2705 In Beta ",
+        "deals": 0
+      },
+      {
+        "key": "2792549854",
+        "label": " \ud83d\udd04 Not Interested / Nurture",
+        "deals": 0
+      }
+    ],
+    "note": "HubSpot pipeline 1663910348 (Beta Pilot). ZTEST records excluded. 1 live deal(s)."
   },
   "ga4": {
     "status": "live",
     "setup_note": "GA4 property 536587504, last 7 days (incl. today)",
-    "sessions": 66,
-    "users": 53,
+    "sessions": 87,
+    "users": 72,
     "engaged_pct": 37.9,
     "daily": [
       {
@@ -358,6 +439,10 @@
       {
         "date": "2026-11-17",
         "sessions": 9
+      },
+      {
+        "date": "2026-11-18",
+        "sessions": 21
       }
     ],
     "intake": 0,
@@ -417,8 +502,8 @@
           121,
           2,
           43,
-          88,
-          379
+          89,
+          380
         ],
         "have_either": [
           830,
@@ -433,8 +518,8 @@
           251,
           2,
           133,
-          344,
-          1016
+          345,
+          1017
         ]
       }
     },
@@ -729,7 +814,7 @@
           159,
           49,
           33,
-          23,
+          24,
           8,
           10,
           10,
@@ -738,7 +823,7 @@
           4,
           6,
           60,
-          379
+          380
         ],
         "have_either": [
           826,
@@ -759,7 +844,7 @@
           337,
           166,
           60,
-          57,
+          58,
           47,
           24,
           50,
@@ -768,7 +853,7 @@
           17,
           21,
           176,
-          1016
+          1017
         ]
       }
     },
@@ -853,7 +938,7 @@
           120,
           21,
           10,
-          15,
+          16,
           2,
           4,
           5,
@@ -862,7 +947,7 @@
           2,
           4,
           39,
-          235
+          236
         ],
         "have_either": [
           470,
@@ -883,7 +968,7 @@
           227,
           59,
           14,
-          28,
+          29,
           12,
           8,
           25,
@@ -892,7 +977,7 @@
           13,
           10,
           93,
-          522
+          523
         ]
       }
     },
@@ -947,10 +1032,10 @@
           18,
           41,
           111,
-          113,
+          114,
           63,
           33,
-          379
+          380
         ],
         "have_either": [
           285,
@@ -965,10 +1050,10 @@
           73,
           142,
           342,
-          251,
+          252,
           126,
           82,
-          1016
+          1017
         ]
       }
     },
@@ -1023,10 +1108,10 @@
           15,
           26,
           76,
-          63,
+          64,
           35,
           20,
-          235
+          236
         ],
         "have_either": [
           224,
@@ -1041,10 +1126,10 @@
           55,
           79,
           182,
-          114,
+          115,
           56,
           36,
-          522
+          523
         ]
       }
     },
@@ -1081,10 +1166,10 @@
           1306
         ],
         "sl_1st": [
-          224,
+          225,
           96,
           59,
-          379
+          380
         ],
         "have_either": [
           2082,
@@ -1093,10 +1178,10 @@
           3545
         ],
         "either_1st": [
-          593,
+          594,
           208,
           215,
-          1016
+          1017
         ]
       }
     }
