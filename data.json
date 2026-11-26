@@ -1,24 +1,24 @@
 {
   "schema_version": 1,
-  "last_updated": "2026-11-26T04:16:24+10:00",
-  "as_of_label": "26 Nov 2026",
+  "last_updated": "2026-11-27T03:58:00+10:00",
+  "as_of_label": "27 Nov 2026",
   "feed_label": "refresh: HS_ICP_LIVE, REPLY_LIVE, GA4_LIVE, LINKEDIN_MANUAL",
   "source_status": {
     "hubspot_icp": {
       "status": "fresh",
-      "last_success": "2026-11-26T04:16:17+10:00"
+      "last_success": "2026-11-27T03:57:53+10:00"
     },
     "reply_io": {
       "status": "fresh",
-      "last_success": "2026-11-26T04:16:18+10:00"
+      "last_success": "2026-11-27T03:57:54+10:00"
     },
     "ga4": {
       "status": "fresh",
-      "last_success": "2026-11-26T04:16:21+10:00"
+      "last_success": "2026-11-27T03:57:57+10:00"
     },
     "linkedin": {
       "status": "fresh",
-      "last_success": "2026-11-26T04:16:24+10:00"
+      "last_success": "2026-11-27T03:58:00+10:00"
     }
   },
   "icp": {
@@ -189,8 +189,8 @@
       "invited_pct_of_enrolled": 48.8,
       "connected_via_outreach": 549,
       "connected_pct_of_invited": 23.0,
-      "intake": 0,
-      "intake_pct_of_connected": 0.0,
+      "intake": 1,
+      "intake_pct_of_connected": 0.2,
       "deal": 0
     },
     "targets": {
@@ -354,7 +354,7 @@
       {
         "key": "2792549846",
         "label": "\ud83d\udfe3 Intake Call Booked",
-        "deals": 0
+        "deals": 1
       },
       {
         "key": "2792549848",
@@ -407,19 +407,15 @@
         "deals": 0
       }
     ],
-    "note": "HubSpot pipeline 1663910348 (Beta Pilot). ZTEST records excluded. 4 live deal(s)."
+    "note": "HubSpot pipeline 1663910348 (Beta Pilot). ZTEST records excluded. 5 live deal(s)."
   },
   "ga4": {
     "status": "live",
     "setup_note": "GA4 property 536587504, last 7 days (incl. today)",
-    "sessions": 87,
-    "users": 75,
-    "engaged_pct": 43.7,
+    "sessions": 80,
+    "users": 70,
+    "engaged_pct": 37.5,
     "daily": [
-      {
-        "date": "2026-11-19",
-        "sessions": 17
-      },
       {
         "date": "2026-11-20",
         "sessions": 6
@@ -443,14 +439,18 @@
       {
         "date": "2026-11-25",
         "sessions": 19
+      },
+      {
+        "date": "2026-11-26",
+        "sessions": 10
       }
     ],
     "intake": 0,
     "intake_cvr": 0.0,
     "qualified": 3,
-    "qualified_cvr": 3.4,
-    "disqualified": 5,
-    "disqualified_cvr": 5.7,
+    "qualified_cvr": 3.8,
+    "disqualified": 4,
+    "disqualified_cvr": 5.0,
     "purchase": 0,
     "purchase_cvr": 0.0
   },
@@ -466,18 +466,18 @@
       ],
       "rows": {
         "accounts": [
-          1095,
+          1094,
           859,
           12,
-          639,
+          640,
           2106,
           4711
         ],
         "have_ceo": [
-          681,
+          680,
           551,
           8,
-          428,
+          429,
           1212,
           2880
         ],
@@ -506,10 +506,10 @@
           385
         ],
         "have_either": [
-          830,
+          829,
           674,
           10,
-          518,
+          519,
           1513,
           3545
         ],
@@ -567,10 +567,10 @@
           1717
         ],
         [
-          195,
+          194,
           200,
           2,
-          131,
+          132,
           488,
           1016
         ],
@@ -591,10 +591,10 @@
           287
         ],
         [
-          1095,
+          1094,
           859,
           12,
-          639,
+          640,
           2106,
           4711
         ]
